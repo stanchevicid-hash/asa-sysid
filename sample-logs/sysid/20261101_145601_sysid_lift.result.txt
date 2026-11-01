@@ -1,0 +1,11 @@
+lift ELEVATOR  GOOD  R2=1.0000
+kS=0.1176  kG=6.3069  kV=14.8977  kA=0.6337
++/-  kS 2%  kG 0%  kV 0%  kA 0%
+windows 702 used, 4 rejected, rmse 6.628e-03 V
+
+// ASA SysId ELEVATOR 'lift'  R2=1.0000  windows=702  quality=GOOD
+public static final double LIFT_kS = 0.1176;
+public static final double LIFT_kG = 6.3069;
+public static final double LIFT_kV = 14.8977;
+public static final double LIFT_kA = 0.6337;
+public static final Feedforward LIFT_FF = Feedforward.elevator(LIFT_kS, LIFT_kG, LIFT_kV, LIFT_kA);

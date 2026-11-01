@@ -24,7 +24,8 @@ import java.util.List;
  *       protected SysIdMechanism mechanism() { ... }
  *   }
  *
- * gamepad1: dpad up/down = choose test, A = run, B = abort, X = analyze + save, Y = clear results,
+ * gamepad1: left stick = move the mechanism between tests, dpad up/down = choose test, A = run, B = abort,
+ * X = analyze + save, Y = clear results,
  * right bumper = verification (PID only vs feedforward + PID) with the analyzed constants.
  * Motors only move after START and only while a test runs. STOP always cuts power.
  */
@@ -56,7 +57,7 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
 
         while (!isStarted() && !isStopRequested()) {      // works on every SDK version (opModeInInit is 8.0+)
             telemetry.addLine("ASA SysId: " + mech.name + " (" + mech.model + ")");
-            telemetry.addLine("After START: dpad test, A run, B abort");
+            telemetry.addLine("After START: left stick move, dpad test, A run, B abort");
             telemetry.addLine("X analyze, RB verify, Y clear");
             telemetry.addLine("Keep hands clear. Soft limits stop each test.");
             if (!AsaWeb.url().isEmpty()) telemetry.addLine("Web: " + AsaWeb.url());
@@ -85,6 +86,7 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
                         else try { verify = verifier(mech, result.feedforward()); verify.start(); }
                         catch (IllegalArgumentException e) { saved = e.getMessage(); verify = null; }
                     }
+                    routine.jog(-gamepad1.left_stick_y);       // stick up = forward; capped, stops at the soft limits
                     if (up) sel = (sel + tests.length - 1) % tests.length;
                     if (down) sel = (sel + 1) % tests.length;
                     if (a) routine.start(tests[sel]);

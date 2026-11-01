@@ -15,3 +15,7 @@ jobs:
         run: |
           javac --release 8 -d out-dash src/org/asa/tools/core/*.java $(find test/fakes -name '*.java') test/DashboardTest.java
           java -cp out-dash DashboardTest
+      - name: Monte Carlo - 300 random mechanisms, a quarter with setup faults; must never be confidently wrong
+        run: |
+          javac --release 8 -d out-fuzz src/org/asa/tools/core/*.java src/org/asa/tools/sysid/*.java test/SysIdSelfTest.java test/SysIdFuzz.java
+          java -cp out-fuzz SysIdFuzz 300 1

@@ -1,0 +1,8 @@
+lift VERIFY: MODEL VALIDATED  RMS -86.6%
+              PID only   FF + PID
+RMS error        0.0770     0.0103
+overshoot        0.0384     0.0036
+settle s         1.0000     1.0000
+final error      0.0769     0.0073
+peak V           6.6802    10.0966
+moves 6 + 6, not settled 6 / 6

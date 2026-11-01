@@ -1,0 +1,27 @@
+name: android
+on: [push, pull_request]
+jobs:
+  control-hub-compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: Android 7.1 platform (Control Hub) + official FTC SDK 12.0.0
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-25" "build-tools;34.0.0" > /dev/null
+          for a in RobotCore Hardware; do
+            curl -sfL -o $a.aar https://repo1.maven.org/maven2/org/firstinspires/ftc/$a/12.0.0/$a-12.0.0.aar
+            unzip -p $a.aar classes.jar > $a.jar
+          done
+      - name: Library uses only Java APIs that exist on Android 7.1
+        run: |
+          mkdir out
+          javac -nowarn -source 8 -target 8 -bootclasspath "$ANDROID_HOME/platforms/android-25/android.jar" \
+            -cp RobotCore.jar:Hardware.jar -d out $(find src -name '*.java' -not -path '*/examples/*')
+      - name: Converts to Android bytecode (D8, min API 24)
+        run: |
+          (cd out && jar cf ../asa.jar .)
+          "$ANDROID_HOME/build-tools/34.0.0/d8" --release --min-api 24 --lib "$ANDROID_HOME/platforms/android-25/android.jar" \
+            --classpath RobotCore.jar --classpath Hardware.jar --output . asa.jar
+          ls -la classes.dex

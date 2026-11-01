@@ -49,7 +49,10 @@ public class SysIdRoutine {
         stopMotors();
         try {
             double p = m.position.get();
-            if (atLimit(t.dir, p)) { status = t.code + ": at limit, move the mechanism first"; return false; }
+            if (atLimit(t.dir, p)) {
+                status = t.code + ": at the " + (t.dir > 0 ? "top" : "bottom") + " limit, move it " + (t.dir > 0 ? "down" : "up") + " with the left stick first";
+                return false;
+            }
         } catch (Throwable e) { status = "position read failed: " + e; return false; }
         running = t;
         startT = Double.NaN;
@@ -59,6 +62,17 @@ public class SysIdRoutine {
         data.put(t, new ArrayList<double[]>());
         status = t.code + " running";
         return true;
+    }
+
+    /**
+     * Manual move between tests (e.g. left stick): power is capped at maxPower (a heavy lift needs it just to
+     * hold) and cut at the soft limits in the direction of travel. Ignored while a test runs.
+     */
+    public void jog(double power) {
+        if (running != null) return;
+        double p = Math.max(-m.maxPower, Math.min(m.maxPower, power));
+        try { if (p != 0 && atLimit(p > 0 ? 1 : -1, m.position.get())) p = 0; } catch (Throwable e) { p = 0; }
+        setPower(p);
     }
 
     public void abort() { if (running != null) status = running.code + " aborted"; running = null; stopMotors(); }

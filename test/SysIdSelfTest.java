@@ -54,9 +54,13 @@ public class SysIdSelfTest {
         void tick() {
             step(0.001);
             double drive = sign * power * battery() - (arm ? kG * Math.cos(pos) : kG);
-            double target = Math.abs(drive) < 0.05 ? gap : Math.signum(drive) * backlash / 2;
+            // the unloaded motor only crosses the gap once the drive beats its own friction (~30% of kS),
+            // and no faster than it would spin free at that voltage (about 3x the loaded speed)
+            double free = Math.abs(drive) - 0.3 * kS;
+            double target = free <= 0 ? gap : Math.signum(drive) * backlash / 2;
+            double rate = free <= 0 ? 0 : Math.min(40 * backlash, 3 * free / kV);
             double before = gap;
-            gap += Math.max(-0.001 * 40 * backlash, Math.min(0.001 * 40 * backlash, target - gap));   // crosses in ~25 ms
+            gap += Math.max(-0.001 * rate, Math.min(0.001 * rate, target - gap));
             gapRate = (gap - before) / 0.001;
             hist[++ms & 255] = pos + gap;
         }

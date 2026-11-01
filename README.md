@@ -1,6 +1,7 @@
 # ASA SysId for FTC
 
 [![tests](https://github.com/stanchevicid-hash/asa-sysid/actions/workflows/tests.yml/badge.svg)](https://github.com/stanchevicid-hash/asa-sysid/actions/workflows/tests.yml)
+[![android](https://github.com/stanchevicid-hash/asa-sysid/actions/workflows/android.yml/badge.svg)](https://github.com/stanchevicid-hash/asa-sysid/actions/workflows/android.yml)
 
 **Measure your mechanism, get feedforward constants, and prove they help.** System identification
 for FTC lifts, arms, flywheels and slides. It runs on the Control Hub and you drive it from the Driver Hub.
@@ -72,6 +73,7 @@ Select **ASA SysId Lift** and press INIT. The robot does not move during INIT. P
 
 | Button | Action |
 |---|---|
+| left stick | move the mechanism between tests (capped at `maxPower`, stops at the soft limits) |
 | dpad up / down | choose a test |
 | **A** | run the selected test (order: QF, QR, DF, DR) |
 | **B** | abort (STOP always cuts power too) |
@@ -121,6 +123,10 @@ stops, battery sag, sensor noise) and requires the constants back:
 | Extreme backlash (~115°) on a flywheel | kV, kA fine; kS 10% low (0.02 V) |
 | Reversed motor, jammed, too heavy, wrong units | reported, no constants given |
 | Verification with the true feedforward | **−89% RMS tracking error**, settles 6/6 vs 0/6 |
+| **Monte Carlo, 2400 random mechanisms** (model, constants, travel, power, noise, REV hub, glitches, backlash), a quarter with setup faults | **601/601 faults caught**; of 1799 healthy mechanisms, every result was correct, honestly POOR, or OK with the inexact constant named, except 2 (0.1%) where kA alone was >30% off |
+
+Every result shows the uncertainty of each constant (`+/- kS 3% kG 1% kV 1% kA 1%`), and GOOD requires it to be
+small. Run the Monte Carlo yourself: `java -cp out SysIdFuzz 300 <seed>`.
 | Verification with a zero feedforward (control) | −0.4% (no difference, as it should be) |
 
 In the ASA ftc-sim simulator (an independent Rapier physics model), the flywheel fit was GOOD with R² = 0.9998, and the lift
@@ -129,8 +135,12 @@ was **MODEL VALIDATED, −86.6% RMS error**. The raw data is in `sample-logs/`.
 
 ## Status
 
-- Verified: compiles against the official FTC SDK **12.0.0** and **9.2.0** (RobotCore + Hardware from Maven),
-  the self-test passes, and it ran end to end in a physics simulator.
+- Verified: compiles against the official FTC SDK **12.0.0** and **9.2.0** (RobotCore + Hardware from Maven).
+- Verified in CI on every push: the library uses only Java APIs present on **Android 7.1 (Control Hub)** and
+  converts with **D8** for min API 24. The self-test and the Monte Carlo run there too.
+- Verified end to end in a physics simulator, **driven from the gamepad like a driver**: every button,
+  the left-stick move, all 4 tests, analysis (GOOD, R² 1.0000) and verification (MODEL VALIDATED, −86.6%).
+- Speed: analysis ≈ 9 ms on a laptop (about 0.1 s on a Control Hub).
 - **Not yet verified on a physical Control Hub.** If you run it on a real robot, please
   [send your result](https://github.com/stanchevicid-hash/asa-sysid/issues/new?template=robot-result.yml), good or bad.
   Every result makes the next version better.

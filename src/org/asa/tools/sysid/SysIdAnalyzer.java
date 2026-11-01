@@ -25,6 +25,8 @@ public class SysIdAnalyzer {
         public final String name;
         public final SysIdMechanism.Model model;
         public double kS, kG, kV, kA, r2 = Double.NaN, rmse = Double.NaN;
+        /** One standard error of each constant (same units); NaN if unknown. */
+        public double kSerr = Double.NaN, kGerr = Double.NaN, kVerr = Double.NaN, kAerr = Double.NaN;
         public int used, rejected;
         public Quality quality = Quality.POOR;
         public final List<String> notes = new ArrayList<String>();
@@ -67,6 +69,8 @@ public class SysIdAnalyzer {
             List<String> l = new ArrayList<String>();
             l.add(name + " " + model + "  " + quality + "  R2=" + f(r2));
             l.add("kS=" + f(kS) + (model != SysIdMechanism.Model.SIMPLE ? "  kG=" + f(kG) : "") + "  kV=" + f(kV) + "  kA=" + f(kA));
+            if (!Double.isNaN(kVerr))
+                l.add("+/-  kS " + pct(kSerr, kS) + (model != SysIdMechanism.Model.SIMPLE ? "  kG " + pct(kGerr, kG) : "") + "  kV " + pct(kVerr, kV) + "  kA " + pct(kAerr, kA));
             l.add("windows " + used + " used, " + rejected + " rejected, rmse " + f(rmse) + " V");
             l.addAll(notes);
             return l;
@@ -77,6 +81,8 @@ public class SysIdAnalyzer {
             for (String line : lines()) s.append(line).append('\n');
             return s.append('\n').append(toJava()).toString();
         }
+
+        private static String pct(double err, double v) { return v == 0 ? "-" : Math.round(100 * Math.abs(err / v)) + "%"; }
 
         private static String f(double v) {
             if (Double.isNaN(v)) return "NaN";
@@ -110,7 +116,15 @@ public class SysIdAnalyzer {
         Result comp = analyze(name, model, shift(data, lag), lag);
         boolean worse = comp.quality.ordinal() > plain.quality.ordinal() || comp.r2 < plain.r2 - 0.005
                 || (comp.kS < 0 && plain.kS >= 0);
-        return worse ? plain : comp;
+        Result res = worse ? plain : comp;
+        // the hub averages velocity over ~2x the lag; a mechanism faster than that hides its acceleration from us
+        double tau = res.kA / res.kV;
+        if (res.kV > 0 && tau < 2.5 * lag) {
+            res.notes.add("kA approximate: the mechanism (time constant " + Math.round(tau * 1000) + " ms) is faster than the hub's "
+                    + "velocity averaging; kA only shapes acceleration, kS/kV/kG are fine");
+            if (res.quality == Quality.GOOD) res.quality = Quality.OK;
+        }
+        return res;
     }
 
     private Result analyze(String name, SysIdMechanism.Model model, Map<SysIdRoutine.Test, List<double[]>> data, double lag) {
@@ -119,13 +133,25 @@ public class SysIdAnalyzer {
         int p = model == SysIdMechanism.Model.SIMPLE ? 3 : 4;
         int w = window;
 
+        // every test is needed: without both directions kS and kG mix, without the dynamic tests kA is a guess
+        boolean missing = false;
         for (SysIdRoutine.Test t : SysIdRoutine.Test.values()) {
             List<double[]> d = data.get(t);
-            if (d == null || d.size() <= w + 1) r.notes.add("missing test " + t.code);
+            if (d == null) { r.notes.add("missing test " + t.code + ": all 4 tests are needed"); missing = true; }
+            else if (d.size() <= w + 1) {
+                r.notes.add(t.code + " too short (" + d.size() + " samples): lower " + (t.quasistatic ? "rampRate" : "stepVoltage")
+                        + " or allow more travel, then run it again");
+                missing = true;
+            }
         }
 
-        double maxVel = 0;
-        for (List<double[]> d : data.values()) for (double[] s : d) maxVel = Math.max(maxVel, Math.abs(s[VEL]));
+        // typical top speed, robust to a glitched reading (one -150 would otherwise set the motion threshold)
+        int nAll = 0;
+        for (List<double[]> d : data.values()) nAll += d.size();
+        double[] speeds = new double[nAll];
+        int k0 = 0;
+        for (List<double[]> d : data.values()) for (double[] s : d) speeds[k0++] = Math.abs(s[VEL]);
+        double maxVel = nAll == 0 ? 0 : percentile(speeds, 0.98);
         if (maxVel == 0) { r.notes.add("velocity is always 0: check the velocity source / encoder cable"); return r; }
         double minVel = minVelFraction * maxVel;
 
@@ -168,7 +194,18 @@ public class SysIdAnalyzer {
             else if (nGlitch > 0.1 * d.size()) bad = "too many glitches (" + nGlitch + " of " + d.size() + "): fix the encoder wiring";
             if (bad != null) { r.notes.add(code + " " + bad); badData = true; r.rejected += d.size(); continue; }
 
-            for (int i = 0; i + w < d.size(); i++) {
+            int testWindows = 0;
+            // backlash: in a slow ramp the motor first crosses the gearbox play unloaded, stops at the load, then
+            // really moves. Only the last continuous stretch of motion is the mechanism itself.
+            int first = 0;
+            if (e.getKey().quasistatic)
+                for (int i = d.size() - 1; i > 0; i--)
+                    if (Math.abs(d.get(i)[VEL]) < minVel && !glitch[i]) {
+                        boolean movedAfter = false;
+                        for (int j = i + 1; j < d.size() && !movedAfter; j++) movedAfter = Math.abs(d.get(j)[VEL]) >= minVel;
+                        if (movedAfter) { first = i; break; }
+                    }
+            for (int i = first; i + w < d.size(); i++) {
                 double sg = Math.signum(d.get(i)[VEL]);
                 double intV = 0, intVel = 0, intG = 0;
                 boolean ok = true;
@@ -194,7 +231,10 @@ public class SysIdAnalyzer {
                 row[p + 1] = (d.get(i + w - 1)[VEL] - d.get(i + 1)[VEL]) / len;
                 rows.add(row);
                 (e.getKey().quasistatic ? quasi : dyn).add(row);
+                testWindows++;
             }
+            // a test that contributes nothing would let the fit "explain" the rest with the wrong terms
+            if (testWindows == 0) { r.notes.add(code + " gave no usable data (too slow or too short): check its notes, run it again"); missing = true; }
         }
         r.used = rows.size();
         if (r.used < 30) { r.notes.add("too few moving windows (" + r.used + "): raise maxPower/stepVoltage, allow more travel or lower window()"); return r; }
@@ -220,6 +260,28 @@ public class SysIdAnalyzer {
         r.rmse = Math.sqrt(ssRes / rows.size());
         r.r2 = ssTot > 0 ? 1 - ssRes / ssTot : Double.NaN;
 
+        // uncertainty of each constant: OLS covariance, residual variance inflated by the window length
+        // because overlapping windows share samples (about rows/window independent ones)
+        double[] se = standardErrors(rows, p, beta, window);
+        if (se != null) {
+            if (model == SysIdMechanism.Model.SIMPLE) { r.kSerr = se[0]; r.kVerr = se[1]; r.kAerr = se[2]; }
+            else { r.kGerr = se[0]; r.kSerr = se[1]; r.kVerr = se[2]; r.kAerr = se[3]; }
+        }
+        // how sure we must be: kV drives cruise, kG holding, kA only the transients
+        double uV = rel(r.kVerr, r.kV), uA = rel(r.kAerr, r.kA);
+        // kS, kG: relative, but an error under 0.03 V is negligible whatever the percentage (0.03 / 0.08 = 0.375)
+        double uS = Math.abs(r.kSerr) / Math.max(Math.abs(r.kS), 0.375);
+        double uG = model == SysIdMechanism.Model.SIMPLE ? 0 : Math.abs(r.kGerr) / Math.max(Math.abs(r.kG), 0.75);
+        boolean sure = uV < 0.02 && uA < 0.10 && uS < 0.08 && uG < 0.04;
+        boolean fair = uV < 0.05 && uA < 0.15 && uS < 0.20 && uG < 0.10;
+        if (se == null) { sure = false; fair = false; }
+        if (!sure && se != null) {                       // name every constant that is not sure, so none is trusted blindly
+            if (uA >= 0.10) r.notes.add("kA uncertain +/-" + Math.round(uA * 100) + "%: dynamic tests too short, allow more travel or lower stepVoltage");
+            if (uV >= 0.02) r.notes.add("kV uncertain +/-" + Math.round(uV * 100) + "%: quasistatic tests too short, allow more travel or lower rampRate");
+            if (uS >= 0.08) r.notes.add("kS uncertain +/-" + Math.round(100 * rel(r.kSerr, r.kS)) + "%: run the quasistatic tests over more travel");
+            if (uG >= 0.04) r.notes.add("kG uncertain +/-" + Math.round(100 * rel(r.kGerr, r.kG)) + "%: run the quasistatic tests over more travel");
+        }
+
         boolean signsOk = true;
         if (r.kV <= 0) { signsOk = false; r.notes.add("kV <= 0: check units and motor/encoder direction"); }
         if (r.kA < 0) { signsOk = false; r.notes.add("kA < 0: acceleration too noisy; raise window() or step voltage"); }
@@ -227,8 +289,9 @@ public class SysIdAnalyzer {
         if (r.r2 < 0.85) r.notes.add("poor fit: backlash, slipping belt, wrong units, or too little excitation");
 
         if (badData) r.notes.add("some tests were left out: fix the notes above and run them again");
-        if (!badData && signsOk && r.r2 >= 0.95) r.quality = Quality.GOOD;
-        else if (!badData && signsOk && r.r2 >= 0.85) r.quality = Quality.OK;
+        boolean complete = !badData && !missing;
+        if (complete && signsOk && sure && r.r2 >= 0.95) r.quality = Quality.GOOD;
+        else if (complete && signsOk && fair && r.r2 >= 0.85) r.quality = Quality.OK;
         else r.quality = Quality.POOR;
         return r;
     }
@@ -291,6 +354,44 @@ public class SysIdAnalyzer {
             out.put(e.getKey(), n);
         }
         return out;
+    }
+
+    private static double rel(double err, double v) { return Double.isNaN(err) ? Double.POSITIVE_INFINITY : Math.abs(err / v); }
+
+    /** Standard error of each coefficient; null if the design matrix is singular. */
+    static double[] standardErrors(List<double[]> rows, int p, double[] beta, int window) {
+        int n = rows.size();
+        if (n <= p) return null;
+        double[] scale = new double[p];
+        for (double[] row : rows) for (int j = 0; j < p; j++) scale[j] += row[j] * row[j];
+        for (int j = 0; j < p; j++) { scale[j] = Math.sqrt(scale[j] / n); if (scale[j] == 0) return null; }
+        double[][] a = new double[p][2 * p];
+        for (double[] row : rows)
+            for (int i = 0; i < p; i++) for (int j = 0; j < p; j++) a[i][j] += row[i] / scale[i] * row[j] / scale[j];
+        for (int i = 0; i < p; i++) a[i][p + i] = 1;
+        for (int c = 0; c < p; c++) {                      // Gauss-Jordan inverse
+            int best = c;
+            for (int i = c + 1; i < p; i++) if (Math.abs(a[i][c]) > Math.abs(a[best][c])) best = i;
+            if (Math.abs(a[best][c]) < 1e-9 * n) return null;
+            double[] t = a[c]; a[c] = a[best]; a[best] = t;
+            double piv = a[c][c];
+            for (int j = 0; j < 2 * p; j++) a[c][j] /= piv;
+            for (int i = 0; i < p; i++) {
+                if (i == c) continue;
+                double f = a[i][c];
+                for (int j = 0; j < 2 * p; j++) a[i][j] -= f * a[c][j];
+            }
+        }
+        double ss = 0;
+        for (double[] row : rows) {
+            double pred = 0;
+            for (int j = 0; j < p; j++) pred += beta[j] * row[j];
+            ss += (row[p] - pred) * (row[p] - pred);
+        }
+        double sigma2 = ss / (n - p) * Math.max(1, window);
+        double[] se = new double[p];
+        for (int j = 0; j < p; j++) se[j] = Math.sqrt(sigma2 * a[j][p + j]) / scale[j];
+        return se;
     }
 
     /**
