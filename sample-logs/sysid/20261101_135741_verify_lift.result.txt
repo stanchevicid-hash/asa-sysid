@@ -1,0 +1,8 @@
+lift VERIFY: NOT VALIDATED  RMS -NaN%
+              PID only   FF + PID
+RMS error        0.0000     0.0000
+overshoot        0.0000     0.0000
+settle s         0.0000     0.0000
+final error      0.0000     0.0000
+peak V           0.0000     0.0000
+moves 0 + 0, not settled 0 / 0

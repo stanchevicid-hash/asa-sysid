@@ -1,0 +1,79 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASA Tools</title>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--line:#2a2f3a;--fg:#e6e8ee;--dim:#8a91a0;--acc:#4da3ff;--warn:#ffb020;--crit:#ff4d5e;--ok:#3ccf7a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,sans-serif}
+header{display:flex;gap:4px;padding:10px 16px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
+header b{margin-right:12px}button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
+button.on{border-color:var(--acc);color:var(--acc)}main{padding:16px;max-width:1200px;margin:auto}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px;overflow:auto}
+.list div{padding:5px 8px;border-radius:5px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list div:hover,.list div.on{background:#232835}
+table{border-collapse:collapse;width:100%}td{padding:3px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}td:last-child{text-align:right}
+.WARNING{color:var(--warn)}.CRITICAL{color:var(--crit)}.INFO{color:var(--dim)}.dim{color:var(--dim)}
+canvas{width:100%;height:110px;display:block;margin-bottom:6px}label{display:inline-block;margin:2px 10px 2px 0;white-space:nowrap}
+pre{margin:0;white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace}.hide{display:none}
+</style></head><body>
+<header><b>ASA Tools</b><button data-tab="live" class="on">Live</button><button data-tab="sessions">Sessions</button><button data-tab="sysid">SysId</button><span id="st" class="dim" style="margin-left:auto"></span></header>
+<main>
+<section id="live"><div class="card"><pre id="lstatus" class="dim"></pre></div><div class="grid"><div class="card"><table id="ltab"></table></div><div class="card" id="lwarn"></div></div></section>
+<section id="sessions" class="hide"><div class="grid"><div class="card list" id="slist"></div><div><div class="card" id="scols"></div><div class="card" id="splots"></div><div class="card"><pre id="sinfo" class="dim"></pre></div></div></div></section>
+<section id="sysid" class="hide"><div class="grid"><div class="card list" id="ylist"></div><div><div class="card"><button id="copy">Copy Java</button> <span id="cst" class="dim"></span><pre id="yres" style="margin-top:8px"></pre></div><div class="card" id="yplots"></div></div></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.textContent=h;return e};
+let tab='live';
+document.querySelectorAll('header button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('header button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hide',s.id!==tab));if(tab!=='live')loadFiles();});
+const get=u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw r.status;return r.text()});
+const sev=s=>(s.match(/\b(WARNING|CRITICAL|INFO)\b/)||['','INFO'])[1];
+
+async function live(){
+  if(tab==='live'){try{const j=JSON.parse(await get('/api/live'));$('#st').textContent='connected';
+    $('#lstatus').textContent=j.status||'no OpMode publishing';const t=$('#ltab');t.innerHTML='';
+    j.names.forEach((n,i)=>{const r=t.insertRow();r.insertCell().textContent=n;r.insertCell().textContent=j.values[i]==null?'-':(+j.values[i]).toFixed(3)});
+    const w=$('#lwarn');w.innerHTML='';if(!j.warnings.length)w.append(el('div','dim','no warnings'));j.warnings.forEach(x=>w.append(el('div',sev(x),x)));
+  }catch(e){$('#st').textContent='offline'}}
+  setTimeout(live,500);
+}
+live();
+
+function csv(text){const L=text.trim().split('\n'),h=L[0].split(','),cols=h.map(()=>[]);
+  for(let i=1;i<L.length;i++){const p=L[i].split(',');for(let j=0;j<h.length;j++)cols[j].push(p[j]===''||p[j]==null?NaN:(isNaN(+p[j])?p[j]:+p[j]))}return{h,cols}}
+
+function plot(box,name,xs,ys,marks){
+  const c=el('canvas');box.append(c);const W=c.width=c.clientWidth*devicePixelRatio,H=c.height=110*devicePixelRatio,g=c.getContext('2d');
+  let lo=Infinity,hi=-Infinity;ys.forEach(v=>{if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}});if(!isFinite(lo)){lo=0;hi=1}if(hi===lo){hi+=1;lo-=1}
+  const x0=xs[0],x1=xs[xs.length-1]||1,X=x=>(x-x0)/(x1-x0||1)*(W-2)+1,Y=y=>H-4-(y-lo)/(hi-lo)*(H-22);
+  g.strokeStyle='#2a2f3a';g.beginPath();g.moveTo(0,Y(0));g.lineTo(W,Y(0));g.stroke();
+  (marks||[]).forEach(m=>{g.strokeStyle=m.c;g.beginPath();g.moveTo(X(m.t),14);g.lineTo(X(m.t),H);g.stroke()});
+  g.strokeStyle='#4da3ff';g.lineWidth=1.5*devicePixelRatio;g.beginPath();const step=Math.max(1,Math.floor(xs.length/W));let pen=false;
+  for(let i=0;i<xs.length;i+=step){const v=ys[i];if(!isFinite(v)){pen=false;continue}pen?g.lineTo(X(xs[i]),Y(v)):g.moveTo(X(xs[i]),Y(v));pen=true}g.stroke();
+  g.fillStyle='#8a91a0';g.font=11*devicePixelRatio+'px system-ui';g.fillText(name+'   '+lo.toFixed(3)+' .. '+hi.toFixed(3),4,11*devicePixelRatio);
+}
+
+let files=[];
+async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}
+  const s=$('#slist');s.innerHTML='';files.filter(f=>/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!f.startsWith('sysid/')).forEach(f=>{const d=el('div',null,f);d.onclick=()=>openSession(f,d);s.append(d)});
+  if(!s.children.length)s.append(el('div','dim','no sessions'));
+  const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const d=el('div',null,f.slice(6));d.onclick=()=>openSysId(f,d);y.append(d)});
+  if(!y.children.length)y.append(el('div','dim','no results'));
+}
+const pick=(box,d)=>{box.querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))};
+
+async function openSession(f,d){pick($('#slist'),d);const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
+  try{ev=csv(await get('/file/'+f.replace(/\.csv$/,'.events.csv')))}catch(e){}try{rep=await get('/file/'+f.replace(/\.csv$/,'.report.txt'))}catch(e){}
+  const marks=(ev.cols[0]||[]).map((t,i)=>({t,c:ev.cols[1][i]==='CRITICAL'?'#ff4d5e':ev.cols[1][i]==='WARNING'?'#ffb020':'#3a4252'}));
+  const cols=$('#scols');cols.innerHTML='';const chosen=new Set(data.h.slice(1,5));
+  const draw=()=>{const p=$('#splots');p.innerHTML='';data.h.forEach((n,i)=>{if(chosen.has(n))plot(p,n,data.cols[0],data.cols[i],marks)})};
+  data.h.slice(1).forEach(n=>{const l=el('label'),c=el('input');c.type='checkbox';c.checked=chosen.has(n);c.onchange=()=>{c.checked?chosen.add(n):chosen.delete(n);draw()};l.append(c,' '+n);cols.append(l)});
+  draw();$('#sinfo').textContent=(rep?rep+'\n':'')+(ev.cols[0]||[]).map((t,i)=>t.toFixed(2)+' s  '+ev.cols[1][i]+'  '+(ev.cols[2][i]||'')).join('\n');
+}
+
+async function openSysId(f,d){pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';
+  $('#copy').onclick=()=>{const j=txt.slice(txt.indexOf('// ASA SysId'));(navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>$('#cst').textContent='copied',()=>$('#cst').textContent='select the text and copy')};
+  const p=$('#yplots');p.innerHTML='';try{const data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv'))),idx=data.cols[0].map((_,i)=>i);
+    ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i])})}catch(e){}
+}
+</script></body></html>

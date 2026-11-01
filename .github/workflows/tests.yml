@@ -1,0 +1,13 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: Self-test (pure Java part, no FTC SDK needed)
+        run: |
+          javac --release 8 -d out src/org/asa/tools/core/*.java src/org/asa/tools/sysid/*.java test/SysIdSelfTest.java
+          java -cp out SysIdSelfTest
