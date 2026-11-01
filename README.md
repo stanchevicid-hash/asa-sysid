@@ -96,6 +96,7 @@ See `src/org/asa/tools/examples/ExampleLiftFeedforward.java`.
 | `moved against the command` | `setDirection` flips motor **and** encoder. If the mechanism moved the right way, negate position+velocity in code; if it moved the wrong way, reverse the motor |
 | `velocity does not match position` | velocity must be in position units **per second** (ticks/s vs inches is the classic mistake) |
 | `ignored N glitched samples` | glitches were removed. If you see this often, check the encoder cable |
+| `velocity lag N ms measured and compensated` | informational: the hub averages velocity over time; SysId corrected for it |
 | `poor fit` | backlash, a slipping belt, or too little travel |
 
 Re-analyze saved data on a laptop: `SysIdRoutine.load(file)` then `new SysIdAnalyzer().analyze(...)`.
@@ -109,6 +110,9 @@ stops, battery sag, sensor noise) and requires the constants back:
 |---|---|
 | Elevator, arm, flywheel, 1% velocity noise | kS, kG, kV within 3%, kA within 5% (typically < 1.5%) |
 | Same elevator with injected encoder glitches | all constants within 2% |
+| **Real REV hub signals**: quantized encoder, hub velocity averaged over 50 ms, 5 ms latency, 8–25 ms loop jitter | lag measured (26 ms) and compensated; every constant within 2% except arm kA (6%) |
+| Gearbox backlash, 2.9° at the arm | all constants within 3% |
+| Extreme backlash (~115°) on a flywheel | kV, kA fine; kS 10% low (0.02 V) |
 | Reversed motor, jammed, too heavy, wrong units | reported, no constants given |
 | Verification with the true feedforward | **−89% RMS tracking error**, settles 6/6 vs 0/6 |
 | Verification with a zero feedforward (control) | −0.4% (no difference, as it should be) |

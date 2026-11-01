@@ -101,7 +101,21 @@ public class SysIdAnalyzer {
      * No differentiated acceleration: noise is averaged instead of amplified, and fast transients stay exact.
      */
     public Result analyze(String name, SysIdMechanism.Model model, Map<SysIdRoutine.Test, List<double[]>> data) {
+        Result plain = analyze(name, model, data, 0);
+        // hub velocity is averaged over a time window, so it lags the position: measure that lag and undo it.
+        // The lag is confirmed by the position, so the compensated fit wins unless it is clearly worse
+        // (R2 hides this kind of bias, so a tie goes to compensation).
+        double lag = velocityLag(data, window);
+        if (lag < 0.004) return plain;
+        Result comp = analyze(name, model, shift(data, lag), lag);
+        boolean worse = comp.quality.ordinal() > plain.quality.ordinal() || comp.r2 < plain.r2 - 0.005
+                || (comp.kS < 0 && plain.kS >= 0);
+        return worse ? plain : comp;
+    }
+
+    private Result analyze(String name, SysIdMechanism.Model model, Map<SysIdRoutine.Test, List<double[]>> data, double lag) {
         Result r = new Result(name, model);
+        if (lag > 0) r.notes.add("velocity lag " + Math.round(lag * 1000) + " ms measured and compensated");
         int p = model == SysIdMechanism.Model.SIMPLE ? 3 : 4;
         int w = window;
 
@@ -217,6 +231,66 @@ public class SysIdAnalyzer {
         else if (!badData && signsOk && r.r2 >= 0.85) r.quality = Quality.OK;
         else r.quality = Quality.POOR;
         return r;
+    }
+
+    /**
+     * Delay of the velocity reading relative to the position (0..100 ms): the shift that makes the integral of
+     * velocity over each moving window best match the position change (L1, so glitches do not steer it).
+     * Returns 0 when the best shift sits at the edge of the search (no clear answer) or barely helps.
+     */
+    static double velocityLag(Map<SysIdRoutine.Test, List<double[]>> data, int w) {
+        double best = 0, bestErr = Double.POSITIVE_INFINITY, err0 = Double.NaN;
+        final int steps = 50;
+        for (int k = 0; k <= steps; k++) {
+            double lag = k * 0.002, err = 0;
+            for (List<double[]> d : data.values()) {
+                double[] vs = shiftedVel(d, lag);
+                for (int i = 0; i + w < d.size(); i += w) {
+                    if (Double.isNaN(vs[i + w])) break;
+                    double dPos = d.get(i + w)[POS] - d.get(i)[POS];
+                    if (dPos == 0 || Math.signum(dPos) != Math.signum(d.get(i)[VEL]) || Math.signum(dPos) != Math.signum(d.get(i + w)[VEL])) continue;   // moving windows only
+                    double integral = 0;
+                    for (int j = i + 1; j <= i + w; j++) integral += (vs[j - 1] + vs[j]) / 2 * (d.get(j)[T] - d.get(j - 1)[T]);
+                    double e = Math.abs(d.get(i + w)[POS] - d.get(i)[POS] - integral);
+                    if (!Double.isNaN(e)) err += e;
+                }
+            }
+            if (k == 0) err0 = err;
+            if (err < bestErr) { bestErr = err; best = lag; }
+        }
+        if (best >= steps * 0.002 || !(bestErr < 0.9 * err0)) return 0;
+        return best;
+    }
+
+    /** Velocity read lag seconds later, i.e. what the sensor reported for each sample time; NaN past the end. */
+    private static double[] shiftedVel(List<double[]> d, double lag) {
+        double[] out = new double[d.size()];
+        int j = 0;
+        for (int i = 0; i < d.size(); i++) {
+            double t = d.get(i)[T] + lag;
+            while (j + 1 < d.size() && d.get(j + 1)[T] < t) j++;
+            if (j + 1 >= d.size()) { out[i] = t <= d.get(j)[T] ? d.get(j)[VEL] : Double.NaN; continue; }
+            double[] a = d.get(j), b = d.get(j + 1);
+            double f = b[T] > a[T] ? Math.max(0, Math.min(1, (t - a[T]) / (b[T] - a[T]))) : 0;
+            out[i] = a[VEL] + f * (b[VEL] - a[VEL]);
+        }
+        return out;
+    }
+
+    private static Map<SysIdRoutine.Test, List<double[]>> shift(Map<SysIdRoutine.Test, List<double[]>> data, double lag) {
+        Map<SysIdRoutine.Test, List<double[]>> out = new java.util.EnumMap<SysIdRoutine.Test, List<double[]>>(SysIdRoutine.Test.class);
+        for (Map.Entry<SysIdRoutine.Test, List<double[]>> e : data.entrySet()) {
+            List<double[]> d = e.getValue(), n = new ArrayList<double[]>(d.size());
+            double[] vs = shiftedVel(d, lag);
+            for (int i = 0; i < d.size(); i++) {
+                if (Double.isNaN(vs[i])) break;
+                double[] c = d.get(i).clone();
+                c[VEL] = vs[i];
+                n.add(c);
+            }
+            out.put(e.getKey(), n);
+        }
+        return out;
     }
 
     /**

@@ -48,6 +48,8 @@ public class Recorder {
     private long t0Ns;
     private volatile boolean started;
     private volatile long dropped;
+    private volatile String writeError;
+    private int maxSlowReads = 2;
 
     // ---------------------------------------------------------------- setup
 
@@ -69,6 +71,13 @@ public class Recorder {
     }
 
     public boolean has(String name) { return index.containsKey(name); }
+
+    /**
+     * At most this many rate-limited signals (those with periodMs) are read per update (default 2), so slow
+     * hardware reads such as motor current (~2 ms each on a REV hub) are spread over loops instead of all
+     * landing in one loop every period.
+     */
+    public Recorder maxSlowReadsPerUpdate(int n) { maxSlowReads = Math.max(1, n); return this; }
 
     /** Default log folder: /sdcard/FIRST/asa on the robot, ./asa-logs on a laptop. */
     public static File defaultDir() {
@@ -112,8 +121,11 @@ public class Recorder {
         long now = System.nanoTime();
         StringBuilder row = new StringBuilder(16 + values.length * 10);
         row.append(fmt((now - t0Ns) / 1e9));
+        int slow = 0;
         for (int i = 0; i < values.length; i++) {
-            if (now - lastReadNs[i] >= period[i]) {
+            boolean due = now - lastReadNs[i] >= period[i];
+            if (due && period[i] > 0 && slow++ >= maxSlowReads) due = false;   // stays due, read next loop
+            if (due) {
                 lastReadNs[i] = now;
                 double v;
                 try { v = sources.get(i).get(); } catch (Throwable e) { v = Double.NaN; }
@@ -168,6 +180,8 @@ public class Recorder {
     public File dir() { return dir; }
     public String session() { return session; }
     public boolean isStarted() { return started; }
+    /** Why the files are not being written, or null when all is well. */
+    public String writeError() { return writeError; }
 
     public List<String> recentEvents() {
         synchronized (recentEvents) { return new ArrayList<String>(recentEvents); }
@@ -194,8 +208,9 @@ public class Recorder {
                 // ponytail: flush every 250 ms, so a power cut loses at most that much
                 if (System.nanoTime() - lastFlush > 250_000_000L) { data.flush(); events.flush(); lastFlush = System.nanoTime(); }
             }
-        } catch (Exception ignored) {
-            // disk missing/full: keep the robot running, data is lost
+        } catch (Exception e) {
+            // disk missing/full: keep the robot running; FtcBlackBox.show() puts this on the Driver Hub
+            writeError = e.toString();
         } finally {
             close(data);
             close(events);

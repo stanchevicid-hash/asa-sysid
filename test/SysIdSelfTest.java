@@ -18,6 +18,10 @@ public class SysIdSelfTest {
 
     static int failures = 0;
     static int glitchEvery = 0;
+    /** > 0: model a REV hub: encoder quantized to this many ticks per unit, hub velocity over a 50 ms window, 5 ms read latency, 8-25 ms loop jitter. */
+    static double revTicksPerUnit = 0;
+    /** > 0: gearbox backlash in position units; the encoder sits on the motor side of the gap. */
+    static double backlash = 0;
 
     /** 1 kHz physics of V = g(pos) + kS sgn(v) + kV v + kA a, with static friction, hard stops and sensor noise. */
     static class Plant {
@@ -42,11 +46,31 @@ public class SysIdSelfTest {
             if (pos < lo) { pos = lo; vel = 0; }
             if (pos > hi) { pos = hi; vel = 0; }
         }
+        // true position each millisecond, for the hub-style readings
+        final double[] hist = new double[256];
+        int ms;
+        // backlash: the motor (and its encoder) crosses the gap quickly whenever the drive torque changes sign
+        double gap, gapRate;
+        void tick() {
+            step(0.001);
+            double drive = sign * power * battery() - (arm ? kG * Math.cos(pos) : kG);
+            double target = Math.abs(drive) < 0.05 ? gap : Math.signum(drive) * backlash / 2;
+            double before = gap;
+            gap += Math.max(-0.001 * 40 * backlash, Math.min(0.001 * 40 * backlash, target - gap));   // crosses in ~25 ms
+            gapRate = (gap - before) / 0.001;
+            hist[++ms & 255] = pos + gap;
+        }
+        double ago(int msBack) { return hist[(ms - Math.min(msBack, Math.min(ms, 250))) & 255]; }
+        double ticks(double x) { return Math.round(x * revTicksPerUnit); }
+        double revPos() { return ticks(ago(5)) / revTicksPerUnit; }
+        double revVel() { return (ticks(ago(5)) - ticks(ago(55))) / 0.05 / revTicksPerUnit; }
         int reads;
         double measuredVel() {
+            if (revTicksPerUnit > 0) return revVel();
+            if (backlash > 0) return vel + gapRate + rnd.nextGaussian() * 0.01 * (1 + Math.abs(vel));
             if (glitchEvery > 0 && ++reads % glitchEvery == 0) return -150;   // one bad velocity read
  return vel + rnd.nextGaussian() * Double.parseDouble(System.getProperty("noise", "0.01")) * (1 + Math.abs(vel)); }
-        double measuredPos() { return pos + rnd.nextGaussian() * 1e-4 + (glitchEvery > 0 && reads % glitchEvery == 7 ? 300 : 0); }
+        double measuredPos() { if (revTicksPerUnit > 0) return revPos(); if (backlash > 0) return pos + gap; return pos + rnd.nextGaussian() * 1e-4 + (glitchEvery > 0 && reads % glitchEvery == 7 ? 300 : 0); }
     }
 
     static SysIdAnalyzer.Result run(SysIdMechanism.Model model, final Plant plant, double minPos, double maxPos, double startLow, double startHigh) {
@@ -65,10 +89,13 @@ public class SysIdSelfTest {
             // operator moves the mechanism to the start position
             plant.pos = t.name().endsWith("FORWARD") ? startLow : startHigh;
             plant.vel = 0;
+            for (int i = 0; i < 100; i++) plant.tick();       // settle so the hub history is at rest
             check(r.start(t), "start " + t + ": " + r.status());
+            Random jitter = new Random(7);
             while (r.isRunning()) {
-                for (int i = 0; i < 10; i++) plant.step(0.001);   // 10 ms loop
-                now += 0.010;
+                int loopMs = revTicksPerUnit > 0 ? 8 + jitter.nextInt(18) : 10;   // FTC loops are not regular
+                for (int i = 0; i < loopMs; i++) plant.tick();
+                now += loopMs / 1000.0;
                 r.update(now);
             }
             check(r.has(t), t + " recorded: " + r.status());
@@ -86,7 +113,7 @@ public class SysIdSelfTest {
         for (Test t : Test.values()) {
             plant.pos = Math.max(plant.lo, Math.min(plant.hi, t.name().endsWith("FORWARD") ? 1.5 : 28.5)); plant.vel = 0;
             r.start(t);
-            while (r.isRunning()) { for (int i = 0; i < 10; i++) plant.step(0.001); now += 0.01; r.update(now); }
+            while (r.isRunning()) { for (int i = 0; i < 10; i++) plant.tick(); now += 0.01; r.update(now); }
         }
         return new SysIdAnalyzer().analyze("bad", SysIdMechanism.Model.ELEVATOR, r.data());
     }
@@ -136,6 +163,35 @@ public class SysIdSelfTest {
         check(flagged && rev.quality == SysIdAnalyzer.Quality.POOR, "reversed motor flagged: " + rev.notes + " " + rev.quality);
         System.out.println("  " + (flagged ? "ok   flagged" : "FAIL not flagged"));
 
+        System.out.println("REAL REV HUB SIGNALS: quantized encoder, 50 ms hub velocity, latency, 8-25 ms loop jitter");
+        revTicksPerUnit = 56.5;      // 0.0177 in per tick (goBILDA 312 RPM on a 38 mm spool)
+        SysIdAnalyzer.Result re = run(SysIdMechanism.Model.ELEVATOR, new Plant(0.4, 0.8, 0.12, 0.02, 0, 30, false, 1), 1, 29, 1.5, 28.5);
+        System.out.println("  elevator " + re.lines());
+        near("kS", re.kS, 0.4, 0.05); near("kG", re.kG, 0.8, 0.05); near("kV", re.kV, 0.12, 0.05); near("kA", re.kA, 0.02, 0.10);
+        revTicksPerUnit = 537.7 * 5 / (2 * Math.PI);   // 312 RPM motor, 5:1 to the arm, radians
+        SysIdAnalyzer.Result ra = run(SysIdMechanism.Model.ARM, new Plant(0.3, 0.6, 1.0, 0.08, -0.6, 1.5, true, 1), -0.5, 1.4, -0.45, 1.35);
+        System.out.println("  arm " + ra.lines());
+        near("kS", ra.kS, 0.3, 0.05); near("kG", ra.kG, 0.6, 0.05); near("kV", ra.kV, 1.0, 0.05); near("kA", ra.kA, 0.08, 0.10);
+        revTicksPerUnit = 28 / (2 * Math.PI);          // bare 6000 RPM motor on the flywheel, rad
+        SysIdAnalyzer.Result rf = run(SysIdMechanism.Model.SIMPLE, new Plant(0.2, 0, 0.02, 0.004, -1e9, 1e9, false, 1),
+                Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 0);
+        System.out.println("  flywheel " + rf.lines());
+        near("kS", rf.kS, 0.2, 0.05); near("kV", rf.kV, 0.02, 0.05); near("kA", rf.kA, 0.004, 0.10);
+        revTicksPerUnit = 0;
+
+        System.out.println("GEARBOX BACKLASH (encoder on the motor side of the gap)");
+        backlash = 0.05;             // 0.05 rad = 2.9 deg of play at the arm
+        SysIdAnalyzer.Result ba = run(SysIdMechanism.Model.ARM, new Plant(0.3, 0.6, 1.0, 0.08, -0.6, 1.5, true, 1), -0.5, 1.4, -0.45, 1.35);
+        System.out.println("  arm " + ba.lines());
+        near("kS", ba.kS, 0.3, 0.10); near("kG", ba.kG, 0.6, 0.05); near("kV", ba.kV, 1.0, 0.05); near("kA", ba.kA, 0.08, 0.15);
+        backlash = 2.0;              // 2 rad of play on the flywheel shaft
+        SysIdAnalyzer.Result bf = run(SysIdMechanism.Model.SIMPLE, new Plant(0.2, 0, 0.02, 0.004, -1e9, 1e9, false, 1),
+                Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 0);
+        System.out.println("  flywheel " + bf.lines());
+        // extreme play (~115 deg): the motor crosses the gap unloaded, which pulls kS a little low (-10%, i.e. 0.02 V)
+        near("kS", bf.kS, 0.2, 0.15); near("kV", bf.kV, 0.02, 0.05); near("kA", bf.kA, 0.004, 0.15);
+        backlash = 0;
+
         System.out.println("ENCODER GLITCHES are ignored (position spike + velocity spike, like the sim lift)");
         glitchEvery = 150;
         SysIdAnalyzer.Result gl = run(SysIdMechanism.Model.ELEVATOR, new Plant(0.4, 0.8, 0.12, 0.02, 0, 30, false, 1), 1, 29, 1.5, 28.5);
@@ -172,7 +228,7 @@ public class SysIdSelfTest {
         SysIdVerify v = new SysIdVerify(m, ff, 8, 22, 1.07, 0.02, 14, 72, 3);
         v.start();
         double now = 0;
-        while (v.isRunning() && now < 120) { for (int i = 0; i < 10; i++) plant.step(0.001); now += 0.01; v.update(now); }
+        while (v.isRunning() && now < 120) { for (int i = 0; i < 10; i++) plant.tick(); now += 0.01; v.update(now); }
         check(v.status().equals("done"), "verify finished: " + v.status());
         return v.result();
     }
