@@ -11,3 +11,7 @@ jobs:
         run: |
           javac --release 8 -d out src/org/asa/tools/core/*.java src/org/asa/tools/sysid/*.java test/SysIdSelfTest.java
           java -cp out SysIdSelfTest
+      - name: FTC Dashboard bridge (with a Dashboard look-alike on the classpath)
+        run: |
+          javac --release 8 -d out-dash src/org/asa/tools/core/*.java $(find test/fakes -name '*.java') test/DashboardTest.java
+          java -cp out-dash DashboardTest

@@ -1,0 +1,32 @@
+name: Result from a real robot
+description: You ran it on your robot. Good or bad, this is the most useful thing you can send us.
+labels: [real-robot]
+body:
+  - type: input
+    id: team
+    attributes: {label: Team number (optional)}
+  - type: input
+    id: sdk
+    attributes: {label: FTC SDK version, placeholder: "e.g. 12.0.0"}
+    validations: {required: true}
+  - type: dropdown
+    id: hub
+    attributes:
+      label: Robot controller
+      options: [Control Hub, Android phone (RC)]
+    validations: {required: true}
+  - type: textarea
+    id: mechanism
+    attributes:
+      label: Mechanism
+      description: What it is (lift, arm, flywheel...), motors, gearing, units you used.
+    validations: {required: true}
+  - type: textarea
+    id: result
+    attributes:
+      label: Result
+      description: Paste the Driver Hub result, and attach the files from /sdcard/FIRST/asa/ (sysid/*.csv, *.result.txt, or the session csv).
+    validations: {required: true}
+  - type: textarea
+    id: notes
+    attributes: {label: What happened / what you expected}

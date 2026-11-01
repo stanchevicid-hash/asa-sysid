@@ -23,14 +23,20 @@ Made by **ASA, FTC team 28284**. MIT license, free for every team.
 - **Verification**: alternating moves with PID only vs. feedforward + the same PID, with RMS error,
   overshoot, settling time, final error and peak voltage. This is the evidence for a Control Award.
 - **Web UI** at `http://192.168.43.1:8099/` with results, graphs and a "Copy Java" button.
+- **FTC Dashboard**: if your team uses it, volts, position, velocity and battery stream there as live graphs
+  automatically. It is found at runtime, so there is no dependency to add.
 
-## Install
+## Install (2 minutes)
 
-1. Copy `src/org` into `TeamCode/src/main/java/` (Android Studio).
-2. Copy `src/org/asa/tools/examples/ExampleLiftSysId.java`, rename it, change the hardware names and the units,
-   and remove `@Disabled`.
+**Android Studio:** download `asa-sysid-dropin.zip` from the
+[latest release](https://github.com/stanchevicid-hash/asa-sysid/releases/latest) and unzip it at the root of your
+FtcRobotController project. The files land in `TeamCode/src/main/java/org/asa/tools/`. Or copy `src/org` there yourself.
 
-No Gradle changes and no other dependencies. It works with FTC SDK 9.x through 12.x.
+**OnBot Java:** create the folders `org/asa/tools/core`, `org/asa/tools/ftc` and `org/asa/tools/sysid`, then upload
+the `.java` files from the matching folders in `src/`. The library itself uses plain Java 7 syntax; only the examples use lambdas.
+
+Then copy `src/org/asa/tools/examples/ExampleLiftSysId.java`, rename it, change the hardware names and the units,
+and remove `@Disabled`. No Gradle changes and no other dependencies. It works with FTC SDK 9.x through 12.x.
 
 ## Describe your mechanism
 
@@ -125,8 +131,9 @@ was **MODEL VALIDATED, −86.6% RMS error**. The raw data is in `sample-logs/`.
 
 - Verified: compiles against the official FTC SDK **12.0.0** and **9.2.0** (RobotCore + Hardware from Maven),
   the self-test passes, and it ran end to end in a physics simulator.
-- **Not yet verified on a physical Control Hub.** If you run it on a real robot, please open an issue with
-  your result file, good or bad.
+- **Not yet verified on a physical Control Hub.** If you run it on a real robot, please
+  [send your result](https://github.com/stanchevicid-hash/asa-sysid/issues/new?template=robot-result.yml), good or bad.
+  Every result makes the next version better.
 - Code runs on the Control Hub (or an RC phone). The Driver Hub only shows the OpMode, telemetry and gamepad.
 
 ## Tests

@@ -2,6 +2,7 @@ package org.asa.tools.ftc;
 
 import org.asa.tools.core.Live;
 import org.asa.tools.core.Recorder;
+import org.asa.tools.core.WpiLog;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -107,7 +108,7 @@ public final class AsaWeb {
             Socket s = null;
             try {
                 s = server.accept();
-                s.setSoTimeout(3000);
+                s.setSoTimeout(30000);   // a long session's WPILOG download takes a while
                 handle(s);
             } catch (Throwable ignored) {
                 // one bad request must not stop the server
@@ -140,6 +141,7 @@ public final class AsaWeb {
         else if (path.equals("/api/live")) send(out, 200, "application/json", bytes(liveJson()));
         else if (path.equals("/api/files")) send(out, 200, "application/json", bytes(filesJson()));
         else if (path.startsWith("/file/")) sendFile(out, path.substring(6));
+        else if (path.startsWith("/wpilog/")) sendWpiLog(out, path.substring(8));
         else send(out, 404, "text/plain", bytes("not found"));
     }
 
@@ -156,6 +158,18 @@ public final class AsaWeb {
             for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
         } finally { in.close(); }
         out.flush();
+    }
+
+    /** A Black Box session converted to WPILOG on the fly for AdvantageScope (streamed, never fully in memory). */
+    private void sendWpiLog(OutputStream out, String rel) throws Exception {
+        if (!rel.matches("[A-Za-z0-9_.-]+\\.csv") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
+        File f = new File(dir, rel);
+        if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
+        out.write(("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Disposition: attachment; filename=\""
+                + rel.replace(".csv", ".wpilog") + "\"\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
+        OutputStream buffered = new java.io.BufferedOutputStream(out, 65536);
+        WpiLog.convert(f, buffered);
+        buffered.flush();
     }
 
     private static void send(OutputStream out, int code, String type, byte[] body) throws Exception {

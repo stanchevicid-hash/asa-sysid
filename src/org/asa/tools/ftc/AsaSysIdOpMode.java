@@ -2,6 +2,7 @@ package org.asa.tools.ftc;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.asa.tools.core.Dashboard;
 import org.asa.tools.core.Recorder;
 import org.asa.tools.sysid.SysIdAnalyzer;
 import org.asa.tools.sysid.SysIdMechanism;
@@ -12,6 +13,8 @@ import org.asa.tools.sysid.SysIdRoutine.Test;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * SysId on the Driver Hub. Subclass it, describe the mechanism, add @TeleOp:
@@ -37,6 +40,7 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
     protected SysIdVerify verifier(SysIdMechanism mech, Feedforward ff) { return SysIdVerify.auto(mech, ff); }
 
     private final boolean[] last = new boolean[7];
+    private static final List<String> DASH_NAMES = Arrays.asList("sysid.volts", "sysid.pos", "sysid.vel", "sysid.battery");
 
     @Override
     public void runOpMode() {
@@ -107,6 +111,8 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
                 } else if (result != null) for (String l : result.lines()) telemetry.addLine(l);
                 if (!saved.isEmpty()) telemetry.addLine(saved);
                 telemetry.update();
+                Dashboard.send(DASH_NAMES, new double[]{routine.lastVolts(), routine.lastPosition(), routine.lastVelocity(), routine.lastBattery()},
+                        Arrays.asList(mech.name + ": " + (verify != null ? "verify " + verify.status() : routine.status())), 20);
                 AsaWeb.status(mech.name + ": " + routine.status() + (result != null ? "\n" + result.lines().get(0) + "\n" + result.lines().get(1) : ""));
             }
         } finally {

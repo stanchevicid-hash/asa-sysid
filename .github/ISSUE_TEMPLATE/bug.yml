@@ -1,0 +1,23 @@
+name: Bug or crash
+description: Something does not compile, crashes, or behaves wrong.
+labels: [bug]
+body:
+  - type: input
+    id: sdk
+    attributes: {label: FTC SDK version}
+    validations: {required: true}
+  - type: dropdown
+    id: env
+    attributes:
+      label: How you build
+      options: [Android Studio, OnBot Java]
+    validations: {required: true}
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Error text, Driver Hub message, or robot log (Robot Controller > menu > View logs).
+    validations: {required: true}
+  - type: textarea
+    id: code
+    attributes: {label: Your code that uses it (the relevant part), render: java}
