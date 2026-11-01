@@ -36,6 +36,7 @@ public class Recorder {
     private long[] lastReadNs = new long[0];
     private double[] sumAbs, peakAbs;
     private long[] counts, period;
+    private boolean[] readNow;
     private long samples;
 
     private final LinkedList<String> recentEvents = new LinkedList<String>();
@@ -97,6 +98,7 @@ public class Recorder {
         peakAbs = new double[n];
         counts = new long[n];
         period = new long[n];
+        readNow = new boolean[n];
         t0Ns = System.nanoTime();
         for (int i = 0; i < n; i++) { values[i] = Double.NaN; period[i] = periodNs.get(i); lastReadNs[i] = t0Ns - period[i] - 1; }
 
@@ -112,19 +114,39 @@ public class Recorder {
 
     // ---------------------------------------------------------------- loop
 
-    /** Seconds since start(). */
-    public double time() { return (System.nanoTime() - t0Ns) / 1e9; }
+    private double simTime = Double.NaN;
+
+    /** Seconds since start(), or the last time given to update(double). */
+    public double time() { return Double.isNaN(simTime) ? (System.nanoTime() - t0Ns) / 1e9 : simTime; }
 
     /** Read due signals and queue one CSV row. Call once per loop. */
     public void update() {
         if (!started) return;
-        long now = System.nanoTime();
+        sample(System.nanoTime());
+    }
+
+    /** Same, on a given clock (seconds since start): for simulations and replaying logs through new rules. */
+    public void update(double timeSeconds) {
+        if (!started) return;
+        simTime = timeSeconds;
+        sample(t0Ns + (long) (timeSeconds * 1e9));
+    }
+
+    private void sample(long now) {
         StringBuilder row = new StringBuilder(16 + values.length * 10);
         row.append(fmt((now - t0Ns) / 1e9));
-        int slow = 0;
+        // rate-limited signals: read the most overdue first, at most maxSlowReads per loop, so with many motors and
+        // a slow loop every signal still gets its turn (the period stretches evenly instead of starving the last ones)
+        for (int k = 0; k < maxSlowReads; k++) {
+            int pick = -1;
+            for (int i = 0; i < values.length; i++)
+                if (period[i] > 0 && !readNow[i] && now - lastReadNs[i] >= period[i] && (pick < 0 || lastReadNs[i] < lastReadNs[pick])) pick = i;
+            if (pick < 0) break;
+            readNow[pick] = true;
+        }
         for (int i = 0; i < values.length; i++) {
-            boolean due = now - lastReadNs[i] >= period[i];
-            if (due && period[i] > 0 && slow++ >= maxSlowReads) due = false;   // stays due, read next loop
+            boolean due = period[i] > 0 ? readNow[i] : true;
+            readNow[i] = false;
             if (due) {
                 lastReadNs[i] = now;
                 double v;

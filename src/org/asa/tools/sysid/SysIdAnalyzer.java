@@ -119,7 +119,7 @@ public class SysIdAnalyzer {
         Result res = worse ? plain : comp;
         // the hub averages velocity over ~2x the lag; a mechanism faster than that hides its acceleration from us
         double tau = res.kA / res.kV;
-        if (res.kV > 0 && tau < 2.5 * lag) {
+        if (res.kV > 0 && tau < 3 * lag) {
             res.notes.add("kA approximate: the mechanism (time constant " + Math.round(tau * 1000) + " ms) is faster than the hub's "
                     + "velocity averaging; kA only shapes acceleration, kS/kV/kG are fine");
             if (res.quality == Quality.GOOD) res.quality = Quality.OK;
@@ -198,13 +198,17 @@ public class SysIdAnalyzer {
             // backlash: in a slow ramp the motor first crosses the gearbox play unloaded, stops at the load, then
             // really moves. Only the last continuous stretch of motion is the mechanism itself.
             int first = 0;
-            if (e.getKey().quasistatic)
-                for (int i = d.size() - 1; i > 0; i--)
+            if (e.getKey().quasistatic) {
+                for (int i = d.size() - 1; i > 0; i--) {
                     if (Math.abs(d.get(i)[VEL]) < minVel && !glitch[i]) {
                         boolean movedAfter = false;
                         for (int j = i + 1; j < d.size() && !movedAfter; j++) movedAfter = Math.abs(d.get(j)[VEL]) >= minVel;
                         if (movedAfter) { first = i; break; }
                     }
+                }
+            } else {
+                first = afterBacklashDip(d, glitch);
+            }
             for (int i = first; i + w < d.size(); i++) {
                 double sg = Math.signum(d.get(i)[VEL]);
                 double intV = 0, intVel = 0, intG = 0;
@@ -302,14 +306,19 @@ public class SysIdAnalyzer {
      * Returns 0 when the best shift sits at the edge of the search (no clear answer) or barely helps.
      */
     static double velocityLag(Map<SysIdRoutine.Test, List<double[]>> data, int w) {
+        java.util.IdentityHashMap<List<double[]>, boolean[]> glitchCache = new java.util.IdentityHashMap<List<double[]>, boolean[]>();
         double best = 0, bestErr = Double.POSITIVE_INFINITY, err0 = Double.NaN;
         final int steps = 50;
         for (int k = 0; k <= steps; k++) {
             double lag = k * 0.002, err = 0;
             for (List<double[]> d : data.values()) {
                 double[] vs = shiftedVel(d, lag);
+                boolean[] g = glitchCache.get(d);
+                if (g == null) { g = glitches(d); glitchCache.put(d, g); }
+                windows:
                 for (int i = 0; i + w < d.size(); i += w) {
                     if (Double.isNaN(vs[i + w])) break;
+                    for (int j = i; j <= i + w; j++) if (g[j]) continue windows;   // glitches would pull the lag anywhere
                     double dPos = d.get(i + w)[POS] - d.get(i)[POS];
                     if (dPos == 0 || Math.signum(dPos) != Math.signum(d.get(i)[VEL]) || Math.signum(dPos) != Math.signum(d.get(i + w)[VEL])) continue;   // moving windows only
                     double integral = 0;
@@ -354,6 +363,37 @@ public class SysIdAnalyzer {
             out.put(e.getKey(), n);
         }
         return out;
+    }
+
+    /**
+     * Dynamic step with gearbox play: the motor spins up unloaded, hits the load (speed dips), then accelerates the
+     * mechanism. Returns the index of the bottom of that dip in the first half of the test, or 0 if the speed rises
+     * monotonically (no play) - a dip smaller than 8% of the peak so far is treated as noise.
+     */
+    static int afterBacklashDip(List<double[]> d, boolean[] glitch) {
+        // raw speeds, except a lone spike (over 1.5x both neighbours: a glitch) which takes its neighbours' mean;
+        // the crossing of the play lasts 2-3 samples, so it is not a lone spike and its dip stays visible
+        int n = d.size() / 2;
+        double[] v = new double[n];
+        for (int i = 0; i < n; i++) {
+            double a = Math.abs(d.get(Math.max(0, i - 1))[VEL]), b = Math.abs(d.get(i)[VEL]), c = Math.abs(d.get(Math.min(d.size() - 1, i + 1))[VEL]);
+            v[i] = i > 0 && b > 1.5 * a && b > 1.5 * c ? (a + c) / 2 : b;
+        }
+        // the play is crossed right after the step: only look in the first 0.3 s and below 90% of top speed, so
+        // ordinary noise near top speed (a sample 8% under a noisy peak) is never mistaken for a dip
+        double[] tail = new double[Math.max(1, d.size() / 10)];
+        for (int i = 0; i < tail.length; i++) tail[i] = Math.abs(d.get(d.size() - 1 - i)[VEL]);
+        double top = percentile(tail, 0.5);
+        double peak = 0;
+        int dipAt = 0;
+        boolean dipping = false;
+        for (int i = 0; i < n; i++) {
+            if (!dipping && (v[i] > 0.9 * top || d.get(i)[T] - d.get(0)[T] > 0.3)) break;
+            if (v[i] > peak && !dipping) peak = v[i];
+            else if (v[i] < 0.92 * peak) { dipping = true; if (dipAt == 0 || v[i] < v[dipAt]) dipAt = i; }
+            else if (dipping && v[i] >= v[dipAt] * 1.05) break;   // climbing out of the dip: done
+        }
+        return dipAt;
     }
 
     private static double rel(double err, double v) { return Double.isNaN(err) ? Double.POSITIVE_INFINITY : Math.abs(err / v); }

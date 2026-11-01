@@ -19,3 +19,7 @@ jobs:
         run: |
           javac --release 8 -d out-fuzz src/org/asa/tools/core/*.java src/org/asa/tools/sysid/*.java test/SysIdSelfTest.java test/SysIdFuzz.java
           java -cp out-fuzz SysIdFuzz 300 1
+      - name: Monte Carlo - verification (RB) on 200 random lifts and arms
+        run: |
+          javac --release 8 -d out-verify src/org/asa/tools/core/*.java src/org/asa/tools/sysid/*.java test/SysIdSelfTest.java test/VerifyFuzz.java
+          java -cp out-verify VerifyFuzz 200 1

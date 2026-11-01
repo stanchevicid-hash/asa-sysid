@@ -120,6 +120,11 @@ public class SysIdVerify {
         return new SysIdVerify(m, ff, m.minPos + 0.25 * range, m.minPos + 0.75 * range, kP, kP * 0.02, vel, acc, 3);
     }
 
+    /** Same positions, gains and profile with another feedforward (e.g. to compare two sets of constants). */
+    public SysIdVerify withFeedforward(Feedforward ff) {
+        return new SysIdVerify(m, ff, from, to, kP, kD, maxVel, maxAcc, repeats);
+    }
+
     public void start() {
         stopMotors();
         result = new Result(m.name);

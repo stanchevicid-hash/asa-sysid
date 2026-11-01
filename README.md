@@ -123,7 +123,8 @@ stops, battery sag, sensor noise) and requires the constants back:
 | Extreme backlash (~115°) on a flywheel | kV, kA fine; kS 10% low (0.02 V) |
 | Reversed motor, jammed, too heavy, wrong units | reported, no constants given |
 | Verification with the true feedforward | **−89% RMS tracking error**, settles 6/6 vs 0/6 |
-| **Monte Carlo, 2400 random mechanisms** (model, constants, travel, power, noise, REV hub, glitches, backlash), a quarter with setup faults | **601/601 faults caught**; of 1799 healthy mechanisms, every result was correct, honestly POOR, or OK with the inexact constant named, except 2 (0.1%) where kA alone was >30% off |
+| **Monte Carlo, 8400 random mechanisms** (model, constants, travel, power, noise, REV hub, glitches, backlash), a quarter with setup faults | **2103/2103 faults caught**; of 6297 healthy mechanisms, every result was correct, honestly POOR, or OK with the inexact constant named, except 6 (0.1%), all extreme (large flywheel play, 80-360 tick encoders on slow mechanisms, an arm at its power limit) |
+| **Verification Monte Carlo, 1000 random lifts and arms** | always finished, never left the soft limits; true feedforward validated 1000/1000; zero-feedforward control showed no difference 1000/1000 |
 
 Every result shows the uncertainty of each constant (`+/- kS 3% kG 1% kV 1% kA 1%`), and GOOD requires it to be
 small. Run the Monte Carlo yourself: `java -cp out SysIdFuzz 300 <seed>`.

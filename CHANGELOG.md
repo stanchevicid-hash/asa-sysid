@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.2.0 (2026-11-01)
+
+Found by new Monte Carlo tests (8400 random mechanisms for SysId, 1000 for the verification, 3000 full matches for
+Black Box) and a soak test:
+
+- Black Box: with many motors and a slow loop, the 100 ms current reads always served the first motors, so the last
+  ones could go 0.5 s without a fresh reading. A held value then caused false stall warnings. Rate-limited signals
+  are now read most-overdue-first, and every one gets its turn.
+- Black Box: the stall rule now needs 0.5 s (a normal spin-up draws stall-like current for 0.1-0.3 s) and resets on
+  a direction change, so back-to-back reversals never add up to a stall.
+- Black Box: the encoder-lost rule no longer fires on a motor holding a load (encoder still, current ~power x 9 A);
+  it needs the low current of a motor spinning free.
+- Black Box: `update(time)` replays a session on a given clock (simulations, running old logs through new rules).
+- SysId: gearbox play in a dynamic step (the unloaded crossing, then a speed dip) is detected and skipped, which
+  removes a kA bias of +30-40%. The search is limited to the first 0.3 s, so noise at top speed is never taken for it.
+- SysId: glitched samples no longer steer the velocity-lag estimate.
+- SysId: `SysIdVerify.withFeedforward(ff)` compares two sets of constants with the same gains and profile.
+- AdvantageScope export writes a value only when it changes: a real session went from 4.3 MB to 0.52 MB, with the
+  same data (checked with the WPILib reader).
+- Results: Black Box caught 3364 of 3365 injected faults with 0 false alarms in 3000 matches; the only miss was a
+  0.7 s stall, at the detection limit. SysId: every one of 2103 setup faults caught; 6 of 6297 healthy mechanisms
+  (0.1%) got one constant outside tolerance without a warning, all in extreme setups. Verification: 1000/1000.
+  The soak test wrote 60000 rows with none dropped and flat memory.
+
 ## 1.1.0 (2026-11-01)
 
 Found by new tests (Monte Carlo over 2400 random mechanisms, gamepad-driven Driver Hub run, Android 7.1 checks):

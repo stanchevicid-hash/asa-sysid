@@ -12,7 +12,9 @@ import java.nio.charset.Charset;
 /**
  * Converts a Black Box session (.csv + .events.csv) into a WPILOG file that AdvantageScope opens directly.
  * Signals become double entries under "ASA/" ("lift.amps" -> "ASA/lift/amps"), events a string entry "ASA/events".
- * Streams row by row, so a long session never has to fit in memory.
+ * Streams row by row, so a long session never has to fit in memory. A value is written only when it changes
+ * (AdvantageScope holds the last value), which keeps held signals - 100 ms current reads, idle motors, servos -
+ * from repeating every loop.
  *
  *   java -cp asa.jar org.asa.tools.core.WpiLog 20261101_134141_teleop.csv      (writes .wpilog next to it)
  */
@@ -49,6 +51,8 @@ public final class WpiLog {
             for (int i = 1; i < names.length; i++) w.start(i, "ASA/" + names[i].replace('.', '/'), "double");
             int eventsId = names.length;
             w.start(eventsId, "ASA/events", "string");
+            long[] last = new long[names.length];
+            boolean[] has = new boolean[names.length];
 
             for (String line; (line = r.readLine()) != null; ) {
                 String[] p = line.split(",", -1);
@@ -59,6 +63,9 @@ public final class WpiLog {
                     double v;
                     try { v = Double.parseDouble(p[i]); } catch (Exception e) { continue; }
                     long bits = Double.doubleToLongBits(v);
+                    if (has[i] && last[i] == bits) continue;          // unchanged: AdvantageScope keeps the last value
+                    has[i] = true;
+                    last[i] = bits;
                     byte[] b = new byte[8];
                     for (int k = 0; k < 8; k++) b[k] = (byte) (bits >>> (8 * k));
                     w.record(i, ts, b);

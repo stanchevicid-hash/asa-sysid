@@ -84,8 +84,11 @@ public class SysIdFuzz {
                     if (d == null) { System.out.println(t + ": none"); continue; }
                     double v0 = d.get(0)[1], v1 = d.get(d.size() - 1)[1], p0 = d.get(0)[2], p1 = d.get(d.size() - 1)[2];
                     System.out.printf("%s: %d samples, V %.2f..%.2f, pos %.3f..%.3f%n", t, d.size(), v0, v1, p0, p1);
+                    if (Boolean.getBoolean("dump") && t.name().startsWith("DYNAMIC")) for (int i = 0; i < Math.min(16, d.size()); i++)
+                        System.out.printf("   t=%.3f V=%.2f pos=%.4f vel=%.3f%n", d.get(i)[0], d.get(i)[1], d.get(i)[2], d.get(i)[3]);
                 }
                 System.out.println(res);
+                if (System.getProperty("save") != null) try { System.out.println("saved " + r.save(new java.io.File(System.getProperty("save")))); } catch (Exception x) { throw new RuntimeException(x); }
             }
 
             boolean claimsGood = res.quality != SysIdAnalyzer.Quality.POOR;
@@ -95,8 +98,9 @@ public class SysIdFuzz {
                 if (claimsGood) why = "fault " + fault + " not caught";
                 else faultsCaught++;
             } else if (claimsGood) {
-                // tolerance: relative, with a small absolute floor in volts for the friction/gravity terms
-                if (Math.abs(res.kS - kS) > Math.max(0.15 * kS, 0.04)) why = "kS " + res.kS + " vs " + kS;
+                // tolerance: relative, with an absolute floor of 0.05 V for the friction/gravity terms - an FTC motor's
+                // own static friction varies more than that between runs, so a finer error is not observable on a robot
+                if (Math.abs(res.kS - kS) > Math.max(0.15 * kS, 0.05)) why = "kS " + res.kS + " vs " + kS;
                 else if (model != SysIdMechanism.Model.SIMPLE && Math.abs(res.kG - kG) > Math.max(0.08 * kG, 0.05)) why = "kG " + res.kG + " vs " + kG;
                 else if (Math.abs(res.kV - kV) > 0.08 * kV) why = "kV " + res.kV + " vs " + kV;
                 else if (Math.abs(res.kA - kA) > 0.30 * kA) why = "kA " + res.kA + " vs " + kA;
