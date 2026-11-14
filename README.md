@@ -96,6 +96,19 @@ lift.setPower(Feedforward.toPower(volts, battery));
 
 See `src/org/asa/tools/examples/ExampleLiftFeedforward.java`.
 
+## Robot mass from the drivetrain
+
+Run SysId on the drivetrain driving straight (`src/org/asa/tools/examples/ExampleDrivetrainSysId.java`, about 3 m of
+floor). Its kV and kA, together with the motor's datasheet, give the robot's mass:
+
+```java
+double kg = MotorSpec.GOBILDA_5203.robotMassKg(4, result.kV, result.kA);   // or MotorSpec.REV_HD_HEX
+```
+
+The gear ratio and wheel size cancel out, so you only pick the motor type. Expect about ±15% on a real robot
+(datasheet tolerance, roller friction). A scale is more exact; this is a cross-check, and in the self-test it
+recovers a simulated 12 kg robot as 12.3 kg.
+
 ## When it says POOR
 
 | Message | What to do |

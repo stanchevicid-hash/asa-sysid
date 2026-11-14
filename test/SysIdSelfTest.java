@@ -196,6 +196,21 @@ public class SysIdSelfTest {
         near("kS", bf.kS, 0.2, 0.15); near("kV", bf.kV, 0.02, 0.05); near("kA", bf.kA, 0.004, 0.15);
         backlash = 0;
 
+        System.out.println("ROBOT MASS from a drivetrain SysId (12 kg robot, 4 x goBILDA 312 rpm, 104 mm wheels, REV hub signals)");
+        {
+            org.asa.tools.sysid.MotorSpec spec = org.asa.tools.sysid.MotorSpec.GOBILDA_5203;
+            double mass = 12, n = 4, gear = 19.2, r = 0.052;
+            double kVtrue = spec.ke() * gear / r;
+            double mEff = mass + n * spec.rotorInertia * (gear / r) * (gear / r);
+            double kAtrue = mEff * spec.resistance() * r / (n * spec.kt() * spec.gearboxEfficiency * gear);
+            revTicksPerUnit = 537.7 / (Math.PI * 0.104);
+            SysIdAnalyzer.Result dr = run(SysIdMechanism.Model.SIMPLE, new Plant(0.6, 0, kVtrue, kAtrue, -1.3, 1.3, false, 1), -1.2, 1.2, -1.1, 1.1);
+            revTicksPerUnit = 0;
+            double est = spec.robotMassKg(4, dr.kV, dr.kA);
+            System.out.printf("  kV %.3f (true %.3f)  kA %.4f (true %.4f)  %s -> mass %.2f kg%n", dr.kV, kVtrue, dr.kA, kAtrue, dr.quality, est);
+            near("mass", est, mass, 0.05);
+        }
+
         System.out.println("ENCODER GLITCHES are ignored (position spike + velocity spike, like the sim lift)");
         glitchEvery = 150;
         SysIdAnalyzer.Result gl = run(SysIdMechanism.Model.ELEVATOR, new Plant(0.4, 0.8, 0.12, 0.02, 0, 30, false, 1), 1, 29, 1.5, 28.5);

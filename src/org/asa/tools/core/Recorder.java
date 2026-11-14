@@ -183,6 +183,9 @@ public class Recorder {
         offer(new String[]{"e", line});
     }
 
+    /** Write everything queued so far to disk now (e.g. before an OpMode dies); the session keeps recording. */
+    public void flush() { if (started) offer(new String[]{"f", ""}); }
+
     /** Flush and close the files. Safe to call twice. */
     public void stop() {
         if (!started) return;
@@ -225,6 +228,7 @@ public class Recorder {
             while (true) {
                 String[] item = queue.take();
                 if (item == POISON) break;
+                if (item[0].equals("f")) { data.flush(); events.flush(); lastFlush = System.nanoTime(); continue; }
                 BufferedWriter w = item[0].equals("d") ? data : events;
                 w.write(item[1]); w.write('\n');
                 // ponytail: flush every 250 ms, so a power cut loses at most that much

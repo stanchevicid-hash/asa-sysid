@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0 (2026-11-14)
+
+- Black Box: **hub resets** (every encoder of a hub back to 0 at once) and **hubs not responding** are reported;
+  `bb.encodersReset()` marks resets your code does on purpose. Hub temperature is logged.
+- Black Box: **battery health**: internal resistance of battery + wiring from normal driving (median of voltage/current
+  steps), tracked per battery in `batteries.csv` with `bb.battery("A")`; the report flags a battery worse than usual.
+  The self-test recovers 0.08 / 0.12 / 0.30 ohm within 1%.
+- Black Box: **loop profiler** (`bb.section`, `bb.profile`) and **crash capture** (`bb.crash(e)`).
+- New Driver Hub programs, no code needed: **ASA Health Check** (hubs, batteries, motor-by-motor encoder check) and
+  **ASA Center of Gravity** (balance method with the IMU: height, position, tipping limits).
+- SysId: **robot mass** from a drivetrain fit (`MotorSpec.robotMassKg`), new `ExampleDrivetrainSysId`.
+
 ## 1.2.0 (2026-11-01)
 
 Found by new Monte Carlo tests (8400 random mechanisms for SysId, 1000 for the verification, 3000 full matches for

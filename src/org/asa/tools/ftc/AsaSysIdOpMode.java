@@ -40,6 +40,9 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
     /** Override to verify with your own gains/positions: new SysIdVerify(mech, ff, from, to, kP, kD, vel, acc, 3). */
     protected SysIdVerify verifier(SysIdMechanism mech, Feedforward ff) { return SysIdVerify.auto(mech, ff); }
 
+    /** Extra lines under the result (e.g. the robot's mass from a drivetrain fit); null for none. */
+    protected String extra(SysIdAnalyzer.Result result) { return null; }
+
     private final boolean[] last = new boolean[7];
     private static final List<String> DASH_NAMES = Arrays.asList("sysid.volts", "sysid.pos", "sysid.vel", "sysid.battery");
 
@@ -92,7 +95,7 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
                     if (a) routine.start(tests[sel]);
                     if (x) {
                         result = analyzer().analyze(mech.name, mech.model, routine.data());
-                        saved = save(routine, result, dir);
+                        saved = save(routine, result, dir, extra(result));
                     }
                     if (y) { routine = new SysIdRoutine(mech); result = null; saved = ""; }
                 }
@@ -110,7 +113,11 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
                     telemetry.addLine("verify: " + verify.status());
                     if (!verify.isRunning() && verify.result() != null && verify.status().equals("done"))
                         for (String l : verify.result().lines()) telemetry.addLine(l);
-                } else if (result != null) for (String l : result.lines()) telemetry.addLine(l);
+                } else if (result != null) {
+                    for (String l : result.lines()) telemetry.addLine(l);
+                    String more = extra(result);
+                    if (more != null) telemetry.addLine(more);
+                }
                 if (!saved.isEmpty()) telemetry.addLine(saved);
                 telemetry.update();
                 Dashboard.send(DASH_NAMES, new double[]{routine.lastVolts(), routine.lastPosition(), routine.lastVelocity(), routine.lastBattery()},
@@ -124,12 +131,13 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
         }
     }
 
-    private static String save(SysIdRoutine routine, SysIdAnalyzer.Result result, File dir) {
+    private static String save(SysIdRoutine routine, SysIdAnalyzer.Result result, File dir, String more) {
         try {
             File csv = routine.save(dir);
             File txt = new File(dir, csv.getName().replace(".csv", ".result.txt"));
             FileWriter w = new FileWriter(txt);
             w.write(result.toString());
+            if (more != null) w.write(more + "\n");
             w.close();
             return "saved " + txt.getPath();
         } catch (Exception e) {
