@@ -13,6 +13,7 @@ DEFINE  →  MEASURE (4 tests)  →  IDENTIFY (kS kG kV kA)  →  USE (Feedforwa
 Made by **ASA, FTC team 28284**. MIT license, free for every team.
 
 **Полная инструкция на русском: [GUIDE.ru.md](GUIDE.ru.md)** (установка, запуск, все кнопки, как это работает).
+**Ghid complet în română: [GUIDE.ro.md](GUIDE.ro.md)** (instalare, rulare, toate butoanele și avertismentele, cum funcționează).
 
 ## What you get
 
