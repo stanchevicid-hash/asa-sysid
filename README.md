@@ -12,6 +12,8 @@ DEFINE  →  MEASURE (4 tests)  →  IDENTIFY (kS kG kV kA)  →  USE (Feedforwa
 
 Made by **ASA, FTC team 28284**. MIT license, free for every team.
 
+**Полная инструкция на русском: [GUIDE.ru.md](GUIDE.ru.md)** (установка, запуск, все кнопки, как это работает).
+
 ## What you get
 
 - **4 automatic tests** (quasistatic and dynamic, up and down) with soft limits, limit switches, a power cap,
@@ -86,8 +88,12 @@ it was saved (`/sdcard/FIRST/asa/sysid/`).
 
 ## Use the result
 
+X with a GOOD or OK result also saves the constants as `/sdcard/FIRST/asa/sysid/<name>.ff`. `Feedforward.load`
+reads them, so a new SysId run is used at the next INIT with no copy-paste. The numbers you give are the fallback
+(no file, another robot, a model mismatch); a POOR result is never saved. `LIFT_FF.source` says which one is used.
+
 ```java
-public static final Feedforward LIFT_FF = Feedforward.elevator(0.41, 0.76, 0.117, 0.018);  // pasted
+public static final Feedforward LIFT_FF = Feedforward.load("lift", Feedforward.elevator(0.41, 0.76, 0.117, 0.018));
 
 double[] sp = SysIdVerify.profile(goal - start, MAX_VEL, MAX_ACC, t);     // {pos, vel, acc}
 double volts = LIFT_FF.calculate(sp[1], sp[2]) + kP * (start + sp[0] - pos);

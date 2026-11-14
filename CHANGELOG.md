@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.4.0 (2026-11-14)
+
+- **Full Russian guide** in both repos: [GUIDE.ru.md](GUIDE.ru.md) (install, every Driver Hub button, every warning
+  and what to do, how it works inside).
+- Black Box notices more, with no extra code (`attachAll`):
+  - **motor overheating**: RMS current over ~2 minutes above 5 A (first-order thermal model)
+  - **drivetrain wheel dragging**: a wheel turning with the others at the same power but drawing 2x their current
+  - **frozen IMU** (hung I2C), **loop pause** (one loop over 150 ms), **low battery at INIT** (under 12.4 V idle)
+  - records the IMU heading, distance sensors, analog inputs and touch sensors
+  - `FtcBlackBox.attachGamepads(bb, gamepad1, gamepad2)`: drivers' sticks on the timeline, warning when a gamepad drops
+- ASA Health Check shows each hub's **firmware version**.
+- Fixed: a motor **without an encoder** always reads speed 0, so a long spin-up could look like a stall (1 false
+  alarm in 3000 simulated matches in 1.3.0). It now needs 1 s instead of 0.5 s.
+- SysId: **constants load themselves**. X saves `/sdcard/FIRST/asa/sysid/<name>.ff` (GOOD/OK only) and
+  `Feedforward.load("lift", fallback)` uses it at the next INIT, no copy-paste.
+- Results: Black Box caught 10163 of 10165 injected faults in 9000 simulated matches (3 seeds) with **0 false alarms**, the new detectors included; the 2 misses were 0.6 s stalls, at the detection limit. Each new detector is checked against its fault and a healthy look-alike (`BlackBoxDetectorsTest`). SysId Monte Carlo: never wrong; verification 200/200; soak 0 drops. Compiles against FTC SDK 12.0.0 and 9.2.0.
+
 ## 1.3.0 (2026-11-14)
 
 - Black Box: **hub resets** (every encoder of a hub back to 0 at once) and **hubs not responding** are reported;

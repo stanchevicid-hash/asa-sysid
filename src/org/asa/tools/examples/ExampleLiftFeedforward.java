@@ -19,8 +19,8 @@ import org.asa.tools.sysid.SysIdVerify;
 @Disabled
 public class ExampleLiftFeedforward extends LinearOpMode {
 
-    // pasted from the SysId result (X on the SysId OpMode)
-    public static final Feedforward LIFT_FF = Feedforward.elevator(0.41, 0.76, 0.117, 0.018);
+    // the constants SysId saved on X (/sdcard/FIRST/asa/sysid/lift.ff); these numbers only if that file is missing
+    public static final Feedforward LIFT_FF = Feedforward.load("lift", Feedforward.elevator(0.41, 0.76, 0.117, 0.018));
     static final double INCHES_PER_TICK = 0.0177, KP = 0.35;   // volts per inch of error
     static final double MAX_VEL = 30, MAX_ACC = 80;             // in/s, in/s^2
 
@@ -45,6 +45,7 @@ public class ExampleLiftFeedforward extends LinearOpMode {
             lift.setPower(Feedforward.toPower(volts, vBatt));
 
             telemetry.addData("lift", "%.1f in -> %.1f", pos, goal);
+            telemetry.addData("feedforward", LIFT_FF.source);
             telemetry.update();
         }
     }

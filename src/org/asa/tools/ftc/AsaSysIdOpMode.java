@@ -139,7 +139,10 @@ public abstract class AsaSysIdOpMode extends LinearOpMode {
             w.write(result.toString());
             if (more != null) w.write(more + "\n");
             w.close();
-            return "saved " + txt.getPath();
+            if (!result.ok()) return "saved " + txt.getPath() + " (POOR: constants not used)";
+            File ff = new File(dir, Recorder.safe(result.name) + ".ff");      // Feedforward.load(name, ...) reads it
+            result.feedforward().save(ff);
+            return "saved " + txt.getPath() + "\nFeedforward.load(\"" + result.name + "\", ...) now uses these";
         } catch (Exception e) {
             return "save failed: " + e.getMessage();
         }

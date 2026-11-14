@@ -229,6 +229,17 @@ public class SysIdSelfTest {
         check(Math.abs(ff.calculate(10, 0) - (e.kG + e.kS + e.kV * 10)) < 1e-9, "elevator ff formula");
         check(Feedforward.toPower(24, 12) == 1 && Feedforward.toPower(6, 12) == 0.5, "toPower clip");
         check(e.toJava().contains("LIFT_kG") && e.toJava().contains("Feedforward.elevator("), "toJava");
+        // auto-load: what X saves is what Feedforward.load returns; anything wrong falls back to the code's constants
+        java.io.File ffDir = new java.io.File(System.getProperty("java.io.tmpdir"), "asa-ff-" + System.nanoTime());
+        ffDir.mkdirs();
+        java.io.File ffFile = new java.io.File(ffDir, "lift.ff");
+        ff.save(ffFile);
+        Feedforward fb = Feedforward.elevator(1, 1, 1, 1), got = Feedforward.load(ffFile, fb);
+        check(got != fb && got.kS == ff.kS && got.kG == ff.kG && got.kV == ff.kV && got.kA == ff.kA, "load returns the saved constants exactly");
+        check(Feedforward.load(new java.io.File(ffDir, "missing.ff"), fb) == fb, "no file -> fallback");
+        check(Feedforward.load(ffFile, Feedforward.arm(1, 1, 1, 1)).model == SysIdMechanism.Model.ARM, "file of another model (elevator vs arm) -> fallback");
+        for (String bad : new String[]{"", "ELEVATOR 1 2", "LIFT 1 2 3 4", "ELEVATOR 0.4 0.8 NaN 0.02", "ELEVATOR 0.4 0.8 -0.1 0.02"})
+            check(Feedforward.parse(bad) == null, "rejects corrupt line '" + bad + "'");
         System.out.println("  ok");
 
         verify();
