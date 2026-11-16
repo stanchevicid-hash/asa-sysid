@@ -27,6 +27,12 @@
 
 ### OnBot Java (через браузер, без Android Studio)
 
+**Проще всего:** скачайте из релиза `asa-blackbox-onbot.zip`, распакуйте и загрузите все 14 файлов в вашу обычную
+папку `teamcode` в OnBot Java, без подпапок. Нажмите Build. Если первая сборка не прошла («bad source file»),
+нажмите Build ещё раз.
+
+**Или с папками:**
+
 1. Подключитесь к Wi-Fi робота и откройте `http://192.168.43.1:8080` → **OnBot Java**.
 2. Создайте папки `org/asa/tools/core`, `org/asa/tools/ftc`, `org/asa/tools/blackbox` (и `org/asa/tools/sysid` для
    SysId).
@@ -179,8 +185,9 @@ bb.update();
 ### Где смотреть результаты
 
 - **Driver Hub**: последние предупреждения прямо в телеметрии.
-- **Веб-страница**: на ноутбуке или телефоне, подключённом к Wi-Fi робота, откройте `http://192.168.43.1:8099/`.
-  Там живые значения, графики каждой сессии с отметками событий и отчёты.
+- **Веб-страница**: на ноутбуке или телефоне, подключённом к Wi-Fi робота, откройте `http://192.168.43.1:8099/`
+  (Driver Hub сам подсказывает этот адрес). Выберите запись: страница простыми словами скажет, что в порядке,
+  а что проверить и как. Графики — ниже. Язык: EN, RO, RU.
 - **FTC Dashboard**: если он у вас установлен, все сигналы сами появляются там как графики.
 - **AdvantageScope**: на веб-странице каждую сессию можно скачать как `.wpilog` и открыть в
   [AdvantageScope](https://github.com/Mechanical-Advantage/AdvantageScope).
@@ -359,3 +366,9 @@ double kg = MotorSpec.GOBILDA_5203.robotMassKg(4, result.kV, result.kA);   // и
 Versiunea în română: [GUIDE.ro.md](GUIDE.ro.md)
 
 Сделано командой **ASA, FTC 28284**. Лицензия MIT, бесплатно для всех команд.
+
+---
+
+**Подпишитесь на ASA:** [Instagram](https://www.instagram.com/asa.ftc_md/) · [TikTok](https://www.tiktok.com/@ftc.team.asa) · ⭐ поставьте звезду репозиторию, если помогло.
+**Напишите нам** ([форма отзыва](https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml)):
+что сработало, что нет, чего не хватает. По каждому отзыву мы делаем следующую версию лучше.

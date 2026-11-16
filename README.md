@@ -12,6 +12,8 @@ DEFINE  →  MEASURE (4 tests)  →  IDENTIFY (kS kG kV kA)  →  USE (Feedforwa
 
 Made by **ASA, FTC team 28284**. MIT license, free for every team.
 
+**Follow ASA:** [Instagram](https://www.instagram.com/asa.ftc_md/) · [TikTok](https://www.tiktok.com/@ftc.team.asa) · ⭐ star this repo if it helps · [send feedback](https://github.com/stanchevicid-hash/asa-sysid/issues/new?template=robot-result.yml): what worked, what did not, what to add. Every message makes the next version better.
+
 **Полная инструкция на русском: [GUIDE.ru.md](GUIDE.ru.md)** (установка, запуск, все кнопки, как это работает).
 **Ghid complet în română: [GUIDE.ro.md](GUIDE.ro.md)** (instalare, rulare, toate butoanele și avertismentele, cum funcționează).
 
@@ -176,3 +178,7 @@ java -cp out SysIdSelfTest
 
 Shares its core (`Recorder`, `Ftc`, `AsaWeb`) with [asa-blackbox](https://github.com/stanchevicid-hash/asa-blackbox), our flight
 recorder. Use both: SysId tells you how the robot *should* behave, and Black Box shows how it *does*.
+
+---
+
+**Follow ASA:** [Instagram](https://www.instagram.com/asa.ftc_md/) · [TikTok](https://www.tiktok.com/@ftc.team.asa) · ⭐ star this repo if it helps · [send feedback](https://github.com/stanchevicid-hash/asa-sysid/issues/new?template=robot-result.yml): what worked, what did not, what to add. Every message makes the next version better.

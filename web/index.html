@@ -1,46 +1,131 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ASA Tools</title>
+<title>ASA Black Box</title>
 <style>
 :root{--bg:#0f1115;--card:#181b22;--line:#2a2f3a;--fg:#e6e8ee;--dim:#8a91a0;--acc:#4da3ff;--warn:#ffb020;--crit:#ff4d5e;--ok:#3ccf7a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}
 header{display:flex;gap:4px;padding:10px 16px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
 header b{margin-right:12px}button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
-button.on{border-color:var(--acc);color:var(--acc)}main{padding:16px;max-width:1200px;margin:auto}
-.grid{display:grid;grid-template-columns:260px 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px;overflow:auto}
-.list div{padding:5px 8px;border-radius:5px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list div:hover,.list div.on{background:#232835}
+button.on{border-color:var(--acc);color:var(--acc)}main{padding:16px;max-width:1100px;margin:auto}
+.grid{display:grid;grid-template-columns:250px 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;overflow:auto}
+.list div{padding:7px 9px;border-radius:6px;cursor:pointer}.list div:hover,.list div.on{background:#232835}.list small{display:block;color:var(--dim)}
 table{border-collapse:collapse;width:100%}td{padding:3px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}td:last-child{text-align:right}
 .WARNING{color:var(--warn)}.CRITICAL{color:var(--crit)}.INFO{color:var(--dim)}.dim{color:var(--dim)}
 canvas{width:100%;height:110px;display:block;margin-bottom:6px}label{display:inline-block;margin:2px 10px 2px 0;white-space:nowrap}
 pre{margin:0;white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace}.hide{display:none}
+.verdict{font-size:22px;font-weight:700;margin:0 0 4px}.row{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.row:first-of-type{border-top:0}
+.dot{flex:0 0 14px;height:14px;border-radius:50%;margin-top:4px}.g{background:var(--ok)}.y{background:var(--warn)}.r{background:var(--crit)}.n{background:#4a5060}
+.row b{display:block}.todo{color:var(--dim);font-size:14px;margin-top:2px}.todo:before{content:"→ "}
+h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+footer{max-width:1100px;margin:0 auto 24px;padding:0 16px;color:var(--dim);font-size:14px}footer a{color:var(--acc);margin-right:14px;text-decoration:none}footer b{color:var(--fg)}
+summary{cursor:pointer;color:var(--acc);padding:4px 0}#lang{margin-left:8px}#lang button{padding:4px 8px}
 </style></head><body>
-<header><b>ASA Tools</b><button data-tab="live" class="on">Live</button><button data-tab="sessions">Sessions</button><button data-tab="sysid">SysId</button><span id="st" class="dim" style="margin-left:auto"></span></header>
+<header><b>ASA Black Box</b><button data-tab="sessions" class="on" id="t-sessions"></button><button data-tab="live" id="t-live"></button><button data-tab="sysid">SysId</button>
+<span id="lang"><button data-l="ru">RU</button><button data-l="ro">RO</button><button data-l="en">EN</button></span><span id="st" class="dim" style="margin-left:auto"></span></header>
 <main>
-<section id="live"><div class="card"><pre id="lstatus" class="dim"></pre></div><div class="grid"><div class="card"><table id="ltab"></table></div><div class="card" id="lwarn"></div></div></section>
-<section id="sessions" class="hide"><div class="grid"><div class="card list" id="slist"></div><div><div class="card" id="scols"></div><div class="card" id="splots"></div><div class="card"><pre id="sinfo" class="dim"></pre></div></div></div></section>
+<section id="sessions"><div class="grid"><div class="card list" id="slist"></div><div><div id="summary"></div>
+  <details class="card" id="raw"><summary id="t-raw"></summary><div id="scols" style="margin-top:8px"></div><div id="splots"></div><pre id="sinfo" class="dim"></pre></details></div></div></section>
+<section id="live" class="hide"><div class="card"><pre id="lstatus" class="dim"></pre></div><div class="grid"><div class="card"><table id="ltab"></table></div><div class="card" id="lwarn"></div></div></section>
 <section id="sysid" class="hide"><div class="grid"><div class="card list" id="ylist"></div><div><div class="card"><button id="copy">Copy Java</button> <span id="cst" class="dim"></span><pre id="yres" style="margin-top:8px"></pre></div><div class="card" id="yplots"></div></div></div></section>
 </main>
+<footer><div class="card"><b>ASA · FTC 28284 · Moldova</b> <span id="t-made"></span><br>
+<a href="https://www.instagram.com/asa.ftc_md/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@ftc.team.asa" target="_blank" rel="noopener">TikTok</a><a href="https://github.com/stanchevicid-hash/asa-blackbox" target="_blank" rel="noopener">⭐ GitHub</a><a id="t-fb" href="https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml" target="_blank" rel="noopener"></a>
+<div class="dim" id="t-net" style="font-size:12px;margin-top:4px"></div></div></footer>
 <script>
 const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.textContent=h;return e};
-let tab='live';
-document.querySelectorAll('header button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('header button').forEach(x=>x.classList.toggle('on',x===b));
+// ---------------------------------------------------------------- words (RU / RO / EN)
+const T={
+ ru:{made:'— бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
+  drive:'Езда',healthcheck:'Проверка моторов',session:'Запись',min:'мин',sec:'с',
+  allOk:'Всё в порядке',check:'Есть что проверить',urgent:'Срочно',
+  motors:'Моторы',power:'Питание и хаб',program:'Программа',events:'Что случилось во время езды',history:'По сравнению с прошлыми разами',
+  mOk:a=>`работает нормально (${a} А)`,mOff:'не включался',mNoCur:'не получает ток',mNoCurDo:'проверьте провод питания мотора и номер порта MOTOR',
+  mEnc:'энкодер не считает',mEncDo:'вставьте тонкий провод энкодера в порт ENCODER с тем же номером, что и MOTOR. Без него не работает точная автономка',
+  mEncAll:'энкодеры не подключены ни на одном колесе',
+  mMore:(p,a)=>`берёт на ${p}% больше тока, чем остальные (${a} А)`,mMoreDo:'покрутите колесо рукой: не туже ли оно, не трётся ли, не погнута ли ось',
+  bOk:(v,r)=>`батарея хорошая: ${v} В на старте${r}`,bLow:v=>`батарея была слабой на старте: ${v} В`,bLowDo:'зарядите или поставьте другую перед матчем',
+  bWeak:r=>`батарея устала: сопротивление ${r} Ом`,bWeakDo:'используйте её для тренировок, на матч ставьте другую',bWatch:r=>`батарея начинает уставать: ${r} Ом`,
+  bDrop:v=>`напряжение падало до ${v} В — хабы могли перезагрузиться`,bDropDo:'замените батарею, проверьте разъёмы и выключатель',
+  hubOk:t=>`Control Hub работал без сбоев, ${t} °C`,hubLost:'хаб переставал отвечать',hubLostDo:'проверьте провода между хабами и питание',
+  hubHot:t=>`хаб нагрелся до ${t} °C`,
+  loopOk:m=>`программа быстрая: цикл ${m} мс`,loopSlow:m=>`программа медленная: цикл ${m} мс`,loopSlowDo:'уберите sleep() и лишние чтения датчиков из цикла',
+  evNone:'ничего тревожного',at:'на',
+  rule:{stall:'мотор заклинило: большой ток, а колесо стоит',
+   'encoder-lost':'энкодер перестал считать, хотя мотор крутится',hot:'мотор перегревается',drags:'колесо тормозит: берёт намного больше тока, чем другие',
+   reset:'хаб перезагрузился (все энкодеры сбросились в 0) — статика или плохой контакт питания','not-responding':'хаб перестал отвечать',
+   disconnected:'геймпад отключился',frozen:'IMU завис: показания не меняются',brownout:'батарея просела ниже 8 В',
+   'battery-low-at-start':'батарея была слабой уже на старте','slow-loop':'программа долго работала медленно','loop-pause':'программа «замерла» на мгновение',crash:'программа упала с ошибкой'},
+  histMore:(n,p)=>`${n}: ток выше обычного на ${p}% — механизм может изнашиваться`,histBat:p=>`батарея проседает сильнее обычного`,
+  first:'Это первая такая запись — сравнивать пока не с чем.',liveIdle:'Сейчас программа с Black Box не запущена. Записи — во вкладке «Записи».'},
+ ro:{made:'— gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
+  drive:'Condus',healthcheck:'Verificare motoare',session:'Înregistrare',min:'min',sec:'s',
+  allOk:'Totul e în regulă',check:'De verificat',urgent:'Urgent',
+  motors:'Motoare',power:'Alimentare și hub',program:'Program',events:'Ce s-a întâmplat în timpul mersului',history:'Față de data trecută',
+  mOk:a=>`funcționează normal (${a} A)`,mOff:'nu a pornit',mNoCur:'nu primește curent',mNoCurDo:'verificați cablul de alimentare al motorului și numărul portului MOTOR',
+  mEnc:'encoderul nu numără',mEncDo:'conectați cablul subțire al encoderului în portul ENCODER cu același număr ca MOTOR. Fără el nu merge autonomia precisă',
+  mEncAll:'encoderele nu sunt conectate la nicio roată',
+  mMore:(p,a)=>`ia cu ${p}% mai mult curent decât celelalte (${a} A)`,mMoreDo:'învârtiți roata cu mâna: e mai strânsă, freacă, axul e îndoit?',
+  bOk:(v,r)=>`bateria e bună: ${v} V la start${r}`,bLow:v=>`bateria era slabă la start: ${v} V`,bLowDo:'încărcați-o sau puneți alta înainte de meci',
+  bWeak:r=>`bateria e obosită: rezistență ${r} Ω`,bWeakDo:'folosiți-o la antrenamente, la meci puneți alta',bWatch:r=>`bateria începe să obosească: ${r} Ω`,
+  bDrop:v=>`tensiunea a scăzut până la ${v} V — hub-urile puteau reporni`,bDropDo:'schimbați bateria, verificați conectorii și întrerupătorul',
+  hubOk:t=>`Control Hub a mers fără probleme, ${t} °C`,hubLost:'hub-ul nu a mai răspuns',hubLostDo:'verificați cablurile dintre hub-uri și alimentarea',
+  hubHot:t=>`hub-ul s-a încălzit până la ${t} °C`,
+  loopOk:m=>`programul e rapid: ciclu ${m} ms`,loopSlow:m=>`programul e lent: ciclu ${m} ms`,loopSlowDo:'scoateți sleep() și citirile inutile de senzori din ciclu',
+  evNone:'nimic îngrijorător',at:'la',
+  rule:{stall:'motor blocat: curent mare, roata stă',
+   'encoder-lost':'encoderul a încetat să numere, deși motorul se învârte',hot:'motorul se supraîncălzește',drags:'roata frânează: ia mult mai mult curent decât celelalte',
+   reset:'hub-ul a repornit (toate encoderele la 0) — electricitate statică sau contact slab','not-responding':'hub-ul nu a mai răspuns',
+   disconnected:'gamepad-ul s-a deconectat',frozen:'IMU s-a blocat: valorile nu se schimbă',brownout:'bateria a scăzut sub 8 V',
+   'battery-low-at-start':'bateria era slabă de la start','slow-loop':'programul a mers lent mult timp','loop-pause':'programul a „înghețat” o clipă',crash:'programul a căzut cu o eroare'},
+  histMore:(n,p)=>`${n}: curent mai mare decât de obicei cu ${p}% — mecanismul se poate uza`,histBat:p=>`bateria scade mai mult decât de obicei`,
+  first:'E prima înregistrare de acest fel — încă nu e cu ce compara.',liveIdle:'Acum nu rulează niciun program cu Black Box. Înregistrările sunt în „Înregistrări”.'},
+ en:{made:'— free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
+  drive:'Drive',healthcheck:'Motor check',session:'Session',min:'min',sec:'s',
+  allOk:'All good',check:'Worth checking',urgent:'Urgent',
+  motors:'Motors',power:'Power and hub',program:'Program',events:'What happened while driving',history:'Compared with earlier sessions',
+  mOk:a=>`works normally (${a} A)`,mOff:'was not used',mNoCur:'gets no current',mNoCurDo:'check the motor power cable and the MOTOR port number',
+  mEnc:'encoder does not count',mEncDo:'plug the thin encoder cable into the ENCODER port with the same number as MOTOR. Precise autonomous needs it',
+  mEncAll:'no wheel has its encoder connected',
+  mMore:(p,a)=>`draws ${p}% more current than the others (${a} A)`,mMoreDo:'turn the wheel by hand: is it tighter, rubbing, a bent axle?',
+  bOk:(v,r)=>`battery is good: ${v} V at start${r}`,bLow:v=>`battery was low at start: ${v} V`,bLowDo:'charge it or swap it before a match',
+  bWeak:r=>`battery is worn: ${r} Ω resistance`,bWeakDo:'use it for practice, put another one in for matches',bWatch:r=>`battery is starting to wear: ${r} Ω`,
+  bDrop:v=>`voltage dropped to ${v} V — hubs may have rebooted`,bDropDo:'swap the battery, check the connectors and the switch',
+  hubOk:t=>`Control Hub ran without problems, ${t} °C`,hubLost:'a hub stopped answering',hubLostDo:'check the cables between hubs and their power',
+  hubHot:t=>`hub got hot: ${t} °C`,
+  loopOk:m=>`program is fast: ${m} ms loop`,loopSlow:m=>`program is slow: ${m} ms loop`,loopSlowDo:'remove sleep() and extra sensor reads from the loop',
+  evNone:'nothing alarming',at:'at',
+  rule:{stall:'motor stalled: high current, the wheel does not move',
+   'encoder-lost':'encoder stopped counting while the motor turns',hot:'motor is overheating',drags:'a wheel drags: much more current than the others',
+   reset:'a hub rebooted (every encoder back to 0) — static or a loose power contact','not-responding':'a hub stopped answering',
+   disconnected:'gamepad disconnected',frozen:'IMU froze: readings do not change',brownout:'battery dropped below 8 V',
+   'battery-low-at-start':'battery was low already at start','slow-loop':'the program was slow for a long time','loop-pause':'the program froze for a moment',crash:'the program crashed'},
+  histMore:(n,p)=>`${n}: ${p}% more current than usual — the mechanism may be wearing`,histBat:p=>`battery sags more than usual`,
+  first:'First session of this kind — nothing to compare with yet.',liveIdle:'No Black Box program is running now. Recordings are under "Sessions".'}};
+let L=(()=>{try{const s=localStorage.getItem('asa-lang');if(T[s])return s}catch(e){}return'en'})();   // English unless the viewer picked RO/RU
+const t=()=>T[L];
+function applyLang(){$('#t-sessions').textContent=t().sessions;$('#t-made').textContent=t().made;$('#t-fb').textContent='💬 '+t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openSession(current.f,current.d)}
+document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{L=b.dataset.l;try{localStorage.setItem('asa-lang',L)}catch(e){}applyLang()});
+
+let tab='sessions';
+document.querySelectorAll('header button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('header button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hide',s.id!==tab));if(tab!=='live')loadFiles();});
 const get=u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw r.status;return r.text()});
 const sev=s=>(s.match(/\b(WARNING|CRITICAL|INFO)\b/)||['','INFO'])[1];
 
 async function live(){
   if(tab==='live'){try{const j=JSON.parse(await get('/api/live'));$('#st').textContent='connected';
-    $('#lstatus').textContent=j.status||'no OpMode publishing';const t=$('#ltab');t.innerHTML='';
-    j.names.forEach((n,i)=>{const r=t.insertRow();r.insertCell().textContent=n;r.insertCell().textContent=j.values[i]==null?'-':(+j.values[i]).toFixed(3)});
-    const w=$('#lwarn');w.innerHTML='';if(!j.warnings.length)w.append(el('div','dim','no warnings'));j.warnings.forEach(x=>w.append(el('div',sev(x),x)));
+    $('#lstatus').textContent=j.status||(j.names.length?'':t().liveIdle);const tb=$('#ltab');tb.innerHTML='';
+    j.names.forEach((n,i)=>{const r=tb.insertRow();r.insertCell().textContent=n;r.insertCell().textContent=j.values[i]==null?'-':(+j.values[i]).toFixed(3)});
+    const w=$('#lwarn');w.innerHTML='';if(!j.warnings.length)w.append(el('div','dim',t().evNone));j.warnings.forEach(x=>w.append(el('div',sev(x),x)));
   }catch(e){$('#st').textContent='offline'}}
   setTimeout(live,500);
 }
 live();
 
-function csv(text){const L=text.trim().split('\n'),h=L[0].split(','),cols=h.map(()=>[]);
-  for(let i=1;i<L.length;i++){const p=L[i].split(',');for(let j=0;j<h.length;j++)cols[j].push(p[j]===''||p[j]==null?NaN:(isNaN(+p[j])?p[j]:+p[j]))}return{h,cols}}
+function csv(text){const Ls=text.trim().split('\n'),h=Ls[0].split(','),cols=h.map(()=>[]);
+  for(let i=1;i<Ls.length;i++){const p=Ls[i].split(',');for(let j=0;j<h.length;j++)cols[j].push(p[j]===''||p[j]==null?NaN:(isNaN(+p[j])?p[j]:+p[j]))}return{h,cols}}
 
 function plot(box,name,xs,ys,marks){
   const c=el('canvas');box.append(c);const W=c.width=c.clientWidth*devicePixelRatio,H=c.height=110*devicePixelRatio,g=c.getContext('2d');
@@ -53,23 +138,94 @@ function plot(box,name,xs,ys,marks){
   g.fillStyle='#8a91a0';g.font=11*devicePixelRatio+'px system-ui';g.fillText(name+'   '+lo.toFixed(3)+' .. '+hi.toFixed(3),4,11*devicePixelRatio);
 }
 
-let files=[];
-async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}
-  const s=$('#slist');s.innerHTML='';files.filter(f=>/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!f.startsWith('sysid/')).forEach(f=>{const d=el('div',null,f);d.onclick=()=>openSession(f,d);s.append(d)});
-  if(!s.children.length)s.append(el('div','dim','no sessions'));
+// "20261116_175029_drive.csv" -> "Drive · 16.11 17:50"
+function nice(f){const m=f.match(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(.+)\.csv$/);if(!m)return[f,''];
+  const kind=t()[m[6]]||m[6];return[kind,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`]}
+
+let files=[],current=null;
+async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}renderList();
   const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const d=el('div',null,f.slice(6));d.onclick=()=>openSysId(f,d);y.append(d)});
-  if(!y.children.length)y.append(el('div','dim','no results'));
-}
+  if(!y.children.length)y.append(el('div','dim','-'));}
+function renderList(){const s=$('#slist');s.innerHTML='';
+  files.filter(f=>/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!f.startsWith('sysid/')&&!/batteries\.csv$/.test(f)).sort().reverse().forEach(f=>{
+    const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openSession(f,d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
+  if(!s.children.length)s.append(el('div','dim',t().none));
+  if(!current)$('#summary').innerHTML='',$('#summary').append(el('div','card dim',files.length?t().pick:t().none));}
 const pick=(box,d)=>{box.querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))};
 
-async function openSession(f,d){pick($('#slist'),d);const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
+// ---------------------------------------------------------------- plain-language summary
+const f1=v=>(Math.round(v*10)/10).toString(), f2=v=>(Math.round(v*100)/100).toString();
+function analyze(data,events,report){
+  const col=n=>{const i=data.h.indexOf(n);return i<0?null:data.cols[i]}, tt=data.cols[0], out={motors:[],power:[],program:[],events:[],history:[]};
+  // motors: everything with .power and .amps
+  const motors=data.h.filter(n=>n.endsWith('.power')&&col(n.slice(0,-6)+'.amps')).map(n=>n.slice(0,-6));
+  const stat={};
+  motors.forEach(m=>{const p=col(m+'.power'),a=col(m+'.amps'),pos=col(m+'.pos');let n=0,sum=0,maxPos=0;
+    for(let i=0;i<p.length;i++){if(Math.abs(p[i])>0.25&&isFinite(a[i])){n++;sum+=a[i];if(pos&&isFinite(pos[i]))maxPos=Math.max(maxPos,Math.abs(pos[i]))}}
+    stat[m]={used:n>20,amps:n?sum/n:0,enc:maxPos>=5}});
+  const used=motors.filter(m=>stat[m].used), noEnc=used.filter(m=>stat[m].amps>=0.2&&!stat[m].enc);
+  used.forEach(m=>{const s=stat[m];let lv='g',txt=t().mOk(f1(s.amps)),todo='';
+    const others=used.filter(o=>o!==m&&stat[o].amps>=0.2).map(o=>stat[o].amps).sort((x,y)=>x-y),med=others.length?others[others.length>>1]:0;
+    if(s.amps<0.2){lv='r';txt=t().mNoCur;todo=t().mNoCurDo}
+    // friction: a reason to look, never an emergency; needs both +30% and +0.4 A so noise on small currents stays green
+    else if(med>0.3&&s.amps>=1.3*med&&s.amps-med>0.4&&others.length>=2){const pc=Math.round((s.amps/med-1)*100);lv='y';txt=t().mMore(pc,f1(s.amps));todo=t().mMoreDo}
+    else if(!s.enc&&noEnc.length<used.length){lv='y';txt=t().mEnc;todo=t().mEncDo}
+    out.motors.push({lv,name:m,txt,todo})});
+  motors.filter(m=>!stat[m].used).forEach(m=>out.motors.push({lv:'n',name:m,txt:t().mOff}));
+  if(used.length&&noEnc.length===used.filter(m=>stat[m].amps>=0.2).length&&noEnc.length>0)out.motors.push({lv:'y',name:'',txt:t().mEncAll,todo:t().mEncDo});
+  // battery
+  const bat=col('battery'),init=col('battery.init');let v0=init&&isFinite(init[0])?init[0]:NaN,vmin=Infinity;
+  if(bat)bat.forEach(v=>{if(isFinite(v)&&v>5){if(!isFinite(v0))v0=v;vmin=Math.min(vmin,v)}});
+  const rm=report.match(/ ([\d.]+) ohm/),R=rm?+rm[1]:NaN,rs=isFinite(R)?(L==='en'?`, resistance ${f2(R)} Ω`:L==='ro'?`, rezistență ${f2(R)} Ω`:`, сопротивление ${f2(R)} Ом`):'';
+  if(isFinite(v0)){
+    if(isFinite(vmin)&&vmin<8)out.power.push({lv:'r',txt:t().bDrop(f1(vmin)),todo:t().bDropDo});
+    if(v0<12.4)out.power.push({lv:'y',txt:t().bLow(f2(v0)),todo:t().bLowDo});
+    if(R>=0.25)out.power.push({lv:'r',txt:t().bWeak(f2(R)),todo:t().bWeakDo});else if(R>=0.15)out.power.push({lv:'y',txt:t().bWatch(f2(R)),todo:t().bWeakDo});
+    if(!out.power.length)out.power.push({lv:'g',txt:t().bOk(f2(v0),rs)});}
+  // hubs
+  data.h.filter(n=>n.endsWith('.ok')&&!n.startsWith('gamepad')).forEach(n=>{const ok=col(n),tc=col(n.slice(0,-3)+'.temp');let lost=false,tmax=-Infinity;
+    ok.forEach(v=>{if(v===0)lost=true});if(tc)tc.forEach(v=>{if(isFinite(v))tmax=Math.max(tmax,v)});
+    if(lost)out.power.push({lv:'r',txt:t().hubLost,todo:t().hubLostDo});else if(tmax>60)out.power.push({lv:'y',txt:t().hubHot(Math.round(tmax))});
+    else out.power.push({lv:'g',txt:t().hubOk(isFinite(tmax)?Math.round(tmax):'?')})});
+  // loop
+  const lp=col('loop_ms');if(lp){const v=lp.filter(x=>isFinite(x)&&x>0).sort((a,b)=>a-b);if(v.length){const med=v[v.length>>1];
+    out.program.push(med>50?{lv:'y',txt:t().loopSlow(f1(med)),todo:t().loopSlowDo}:{lv:'g',txt:t().loopOk(f1(med))})}}
+  // warnings during the session, in words
+  const et=events.cols[0]||[],ety=events.cols[1]||[],ed=events.cols[2]||[];
+  et.forEach((x,i)=>{const ty=ety[i];if(ty!=='WARNING'&&ty!=='CRITICAL'&&ty!=='CRASH')return;const d=String(ed[i]||'');const name=(d.split(' ')[0]||'');
+    const key=ty==='CRASH'?'crash':Object.keys(t().rule).sort((a,b)=>b.length-a.length).find(k=>name.endsWith(k));
+    const who=key&&key!=='crash'?name.slice(0,name.length-key.length).replace(/-$/,''):'';
+    const mm=Math.floor(x/60),ss=Math.floor(x%60);
+    out.events.push({lv:ty==='WARNING'?'y':'r',name:who,txt:(key?t().rule[key]:d)+`  (${t().at} ${mm}:${String(ss).padStart(2,'0')})`})});
+  if(!out.events.length)out.events.push({lv:'g',txt:t().evNone});
+  // compared with earlier sessions
+  if(/first session/.test(report))out.history.push({lv:'n',txt:t().first});
+  // a motor check spins different motors each time, so comparing it with earlier ones means nothing;
+  // over +500% the earlier sessions simply did not use that motor (old reports before 1.4.1)
+  if(!/healthcheck/.test(report))report.split('\n').forEach(l=>{const m=l.match(/^(\S+)\.amps peak .* \(\+(\d+)%\)/);
+    if(m&&m[1]!=='battery'&&+m[2]<=500)out.history.push({lv:+m[2]>=60?'r':'y',txt:t().histMore(m[1],m[2]),todo:t().mMoreDo})});
+  return out;
+}
+function renderSummary(o,dur){const box=$('#summary');box.innerHTML='';
+  const all=[].concat(o.motors,o.power,o.program,o.events,o.history),nr=all.filter(x=>x.lv==='r').length,ny=all.filter(x=>x.lv==='y').length;
+  const top=el('div','card');const v=el('div','verdict',nr?`🔴 ${t().urgent} (${nr})`:ny?`🟡 ${t().check} (${ny})`:`🟢 ${t().allOk}`);top.append(v);
+  if(dur)top.append(el('div','dim',dur));box.append(top);
+  [['motors',o.motors],['power',o.power],['program',o.program],['events',o.events],['history',o.history]].forEach(([k,rows])=>{if(!rows.length)return;
+    const c=el('div','card');c.append(el('h3',null,t()[k]));
+    rows.forEach(r=>{const row=el('div','row'),d=el('div','dot '+r.lv),body=el('div');const b=el('b');if(r.name)b.append(el('span',null,r.name+' — '));b.append(el('span',null,r.txt));body.append(b);
+      if(r.todo)body.append(el('div','todo',r.todo));row.append(d,body);c.append(row)});box.append(c)});}
+
+async function openSession(f,d){current={f,d};pick($('#slist'),d);const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
   try{ev=csv(await get('/file/'+f.replace(/\.csv$/,'.events.csv')))}catch(e){}try{rep=await get('/file/'+f.replace(/\.csv$/,'.report.txt'))}catch(e){}
-  const marks=(ev.cols[0]||[]).map((t,i)=>({t,c:ev.cols[1][i]==='CRITICAL'?'#ff4d5e':ev.cols[1][i]==='WARNING'?'#ffb020':'#3a4252'}));
-  const cols=$('#scols');cols.innerHTML='';const chosen=new Set(data.h.slice(1,5));
+  const T0=data.cols[0],secs=T0.length?T0[T0.length-1]:0,dur=secs>=60?Math.round(secs/60)+' '+t().min:Math.round(secs)+' '+t().sec;
+  renderSummary(analyze(data,ev,rep),nice(f).join(' · ')+' · '+dur);
+  const marks=(ev.cols[0]||[]).map((x,i)=>({t:x,c:ev.cols[1][i]==='CRITICAL'?'#ff4d5e':ev.cols[1][i]==='WARNING'?'#ffb020':'#3a4252'}));
+  const cols=$('#scols');cols.innerHTML='';const chosen=new Set(data.h.filter(n=>n==='battery'||n.endsWith('.amps')).slice(0,5));
   const draw=()=>{const p=$('#splots');p.innerHTML='';data.h.forEach((n,i)=>{if(chosen.has(n))plot(p,n,data.cols[0],data.cols[i],marks)})};
   data.h.slice(1).forEach(n=>{const l=el('label'),c=el('input');c.type='checkbox';c.checked=chosen.has(n);c.onchange=()=>{c.checked?chosen.add(n):chosen.delete(n);draw()};l.append(c,' '+n);cols.append(l)});
-  draw();const dl=el('a',null,'AdvantageScope .wpilog');dl.href='/wpilog/'+f;dl.style.cssText='display:inline-block;margin:8px 0 0;color:var(--acc)';cols.append(el('br'),dl);
-  $('#sinfo').textContent=(rep?rep+'\n':'')+(ev.cols[0]||[]).map((t,i)=>t.toFixed(2)+' s  '+ev.cols[1][i]+'  '+(ev.cols[2][i]||'')).join('\n');
+  $('#raw').ontoggle=()=>{if($('#raw').open)draw()};if($('#raw').open)draw();
+  const dl=el('a',null,'AdvantageScope .wpilog');dl.href='/wpilog/'+f;dl.style.cssText='display:inline-block;margin:8px 0 0;color:var(--acc)';cols.append(el('br'),dl);
+  $('#sinfo').textContent=(rep?rep+'\n':'')+(ev.cols[0]||[]).map((x,i)=>x.toFixed(2)+' s  '+ev.cols[1][i]+'  '+(ev.cols[2][i]||'')).join('\n');
 }
 
 async function openSysId(f,d){pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';
@@ -77,4 +233,5 @@ async function openSysId(f,d){pick($('#ylist'),d);const txt=await get('/file/'+f
   const p=$('#yplots');p.innerHTML='';try{const data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv'))),idx=data.cols[0].map((_,i)=>i);
     ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i])})}catch(e){}
 }
+applyLang();loadFiles();
 </script></body></html>

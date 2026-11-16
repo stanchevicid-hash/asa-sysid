@@ -27,6 +27,12 @@ Aveți nevoie de ambele biblioteci? Dezarhivați ambele arhive. Fișierele comun
 
 ### OnBot Java (din browser, fără Android Studio)
 
+**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 14 fișiere în
+folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build. Dacă prima compilare nu reușește
+(„bad source file”), apăsați Build încă o dată.
+
+**Sau cu foldere:**
+
 1. Conectați-vă la Wi-Fi-ul robotului și deschideți `http://192.168.43.1:8080` → **OnBot Java**.
 2. Creați folderele `org/asa/tools/core`, `org/asa/tools/ftc`, `org/asa/tools/blackbox` (și `org/asa/tools/sysid`
    pentru SysId).
@@ -180,8 +186,9 @@ bb.update();
 ### Unde vedeți rezultatele
 
 - **Driver Hub**: ultimele avertismente direct în telemetrie.
-- **Pagina web**: pe un laptop sau telefon conectat la Wi-Fi-ul robotului, deschideți `http://192.168.43.1:8099/`.
-  Acolo sunt valorile live, graficele fiecărei sesiuni cu evenimentele marcate și rapoartele.
+- **Pagina web**: pe un laptop sau telefon conectat la Wi-Fi-ul robotului, deschideți `http://192.168.43.1:8099/`
+  (Driver Hub arată singur adresa). Alegeți o înregistrare: pagina spune în cuvinte simple ce e în regulă,
+  ce trebuie verificat și cum. Graficele sunt dedesubt. Limba: EN, RO, RU.
 - **FTC Dashboard**: dacă îl aveți instalat, toate semnalele apar singure acolo ca grafice.
 - **AdvantageScope**: de pe pagina web, fiecare sesiune se descarcă ca `.wpilog` și se deschide în
   [AdvantageScope](https://github.com/Mechanical-Advantage/AdvantageScope).
@@ -362,3 +369,9 @@ arătat măcar o dată mișcare.
 `http://192.168.43.1:8099/`. Adresa apare și în telemetrie.
 
 Făcut de echipa **ASA, FTC 28284**. Licență MIT, gratuit pentru toate echipele.
+
+---
+
+**Urmăriți ASA:** [Instagram](https://www.instagram.com/asa.ftc_md/) · [TikTok](https://www.tiktok.com/@ftc.team.asa) · ⭐ dați o stea repository-ului dacă v-a ajutat.
+**Scrieți-ne** ([formularul de feedback](https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml)):
+ce a mers, ce nu, ce lipsește. Din fiecare mesaj facem următoarea versiune mai bună.

@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.4.1 (2026-11-16)
+
+First run on a real robot (ASA's drivebase, Control Hub, Robot Controller 11.1, OnBot Java). Found there and fixed:
+
+- **Results page in plain words.** Open a session and it says what is fine and what to check, with traffic lights and
+  what to do (a motor without current, a wheel drawing more current than the others, encoders not plugged in, battery,
+  hub, loop time, every warning explained). Graphs moved underneath. English by default, Romanian and Russian.
+- The Driver Hub now tells the driver where the results are (robot Wi-Fi + address).
+- **False alarm fixed:** pressing STOP released the gamepads a few ms before the OpMode ended, which was reported as
+  "gamepad1 disconnected". A disconnect now has to last 0.25 s.
+- ASA Health Check: **Y tests every motor by itself** and shows the report; B stops. It now puts motors in
+  RUN_WITHOUT_ENCODER first (a motor left in RUN_TO_POSITION by another OpMode held still and looked like a dead
+  encoder), says "NO CURRENT" for a motor that gets no power, and shows the buttons on screen.
+- Session comparison no longer reports "+27310%" for a motor that earlier sessions never used.
+- New `asa-blackbox-onbot.zip`: every file in one folder and package, for OnBot Java.
+
 ## 1.4.0 (2026-11-14)
 
 - **Full Russian guide** in both repos: [GUIDE.ru.md](GUIDE.ru.md) (install, every Driver Hub button, every warning
