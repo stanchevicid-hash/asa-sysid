@@ -140,6 +140,8 @@ public final class AsaWeb {
         if (path.equals("/")) send(out, 200, "text/html; charset=utf-8", bytes(AsaWebPage.html()));
         else if (path.equals("/api/live")) send(out, 200, "application/json", bytes(liveJson()));
         else if (path.equals("/api/files")) send(out, 200, "application/json", bytes(filesJson()));
+        else if (path.equals("/api/tools")) send(out, 200, "application/json",
+                bytes("{\"blackbox\":" + installed("BlackBox", "blackbox") + ",\"sysid\":" + installed("SysIdAnalyzer", "sysid") + "}"));
         else if (path.startsWith("/file/")) sendFile(out, path.substring(6));
         else if (path.startsWith("/wpilog/")) sendWpiLog(out, path.substring(8));
         else send(out, 404, "text/plain", bytes("not found"));
@@ -197,6 +199,14 @@ public final class AsaWeb {
         List<String> w = src == null ? new ArrayList<String>() : src.warnings();
         for (int i = 0; i < w.size(); i++) j.append(i > 0 ? "," : "").append(str(w.get(i)));
         return j.append("]}").toString();
+    }
+
+    /** Which ASA library is on the robot: the page then shows only that one ("ASA Black Box" or "ASA SysId"). */
+    private static boolean installed(String cls, String pkg) {
+        for (String n : new String[]{"org.asa.tools." + pkg + "." + cls, "org.firstinspires.ftc.teamcode." + cls}) {
+            try { Class.forName(n); return true; } catch (Throwable ignored) {}
+        }
+        return false;
     }
 
     private String filesJson() {

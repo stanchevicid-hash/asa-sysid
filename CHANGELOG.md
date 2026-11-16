@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.2 (2026-11-16)
+
+- **SysId results in plain words**: use these constants or not (traffic light), what kS / kG / kV / kA mean with their
+  precision, every problem explained with what to fix, and the verification as "X% more precise than PID alone".
+- The page shows only what is installed: **"ASA Black Box"** or **"ASA SysId"** on its own, **"ASA Tools"** with both.
+  Its GitHub and feedback links point to the right repository.
+
 ## 1.4.1 (2026-11-16)
 
 First run on a real robot (ASA's drivebase, Control Hub, Robot Controller 11.1, OnBot Java). Found there and fixed:

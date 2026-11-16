@@ -21,22 +21,43 @@ h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;c
 footer{max-width:1100px;margin:0 auto 24px;padding:0 16px;color:var(--dim);font-size:14px}footer a{color:var(--acc);margin-right:14px;text-decoration:none}footer b{color:var(--fg)}
 summary{cursor:pointer;color:var(--acc);padding:4px 0}#lang{margin-left:8px}#lang button{padding:4px 8px}
 </style></head><body>
-<header><b>ASA Black Box</b><button data-tab="sessions" class="on" id="t-sessions"></button><button data-tab="live" id="t-live"></button><button data-tab="sysid">SysId</button>
+<header><b id="title">ASA Tools</b><button data-tab="sessions" class="on" id="t-sessions"></button><button data-tab="live" id="t-live"></button><button data-tab="sysid" id="t-sysid">SysId</button>
 <span id="lang"><button data-l="ru">RU</button><button data-l="ro">RO</button><button data-l="en">EN</button></span><span id="st" class="dim" style="margin-left:auto"></span></header>
 <main>
 <section id="sessions"><div class="grid"><div class="card list" id="slist"></div><div><div id="summary"></div>
   <details class="card" id="raw"><summary id="t-raw"></summary><div id="scols" style="margin-top:8px"></div><div id="splots"></div><pre id="sinfo" class="dim"></pre></details></div></div></section>
 <section id="live" class="hide"><div class="card"><pre id="lstatus" class="dim"></pre></div><div class="grid"><div class="card"><table id="ltab"></table></div><div class="card" id="lwarn"></div></div></section>
-<section id="sysid" class="hide"><div class="grid"><div class="card list" id="ylist"></div><div><div class="card"><button id="copy">Copy Java</button> <span id="cst" class="dim"></span><pre id="yres" style="margin-top:8px"></pre></div><div class="card" id="yplots"></div></div></div></section>
+<section id="sysid" class="hide"><div class="grid"><div class="card list" id="ylist"></div><div><div id="ysum"></div><div class="card"><button id="copy">Copy Java</button> <span id="cst" class="dim"></span><details style="margin-top:8px"><summary id="t-yraw"></summary><pre id="yres" style="margin-top:8px"></pre><div id="yplots"></div></details></div></div></div></section>
 </main>
 <footer><div class="card"><b>ASA · FTC 28284 · Moldova</b> <span id="t-made"></span><br>
-<a href="https://www.instagram.com/asa.ftc_md/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@ftc.team.asa" target="_blank" rel="noopener">TikTok</a><a href="https://github.com/stanchevicid-hash/asa-blackbox" target="_blank" rel="noopener">⭐ GitHub</a><a id="t-fb" href="https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml" target="_blank" rel="noopener"></a>
+<a href="https://www.instagram.com/asa.ftc_md/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@ftc.team.asa" target="_blank" rel="noopener">TikTok</a><a id="gh" href="https://github.com/stanchevicid-hash/asa-blackbox" target="_blank" rel="noopener">⭐ GitHub</a><a id="t-fb" href="https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml" target="_blank" rel="noopener"></a>
 <div class="dim" id="t-net" style="font-size:12px;margin-top:4px"></div></div></footer>
 <script>
 const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.textContent=h;return e};
 // ---------------------------------------------------------------- words (RU / RO / EN)
 const T={
- ru:{made:'— бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
+ ru:{yraw:'Константы в Java и графики тестов',ynone:'Результатов SysId пока нет. Запустите SysId-программу и нажмите X.',
+  yGood:'Константы хорошие — можно пользоваться',yGoodDo:n=>`ваш код сам подхватит их через Feedforward.load("${n}", ...) после следующего INIT. Или нажмите Copy Java`,
+  yOk:'Пользоваться можно, но не всё точно',yOkDo:'смотрите пункты ниже; повторите тесты, если нужна точность',
+  yPoor:'Эти числа не используйте',yPoorDo:'исправьте то, что написано ниже, и повторите тесты (A)',
+  yMean:'Что значат числа',yUnc:'Точность',ySure:'точно',
+  kS:v=>`kS = ${v} В — сколько нужно, чтобы механизм вообще сдвинулся (трение)`,kG:v=>`kG = ${v} В — сколько нужно, чтобы держать его против силы тяжести`,
+  kV:v=>`kV = ${v} В на единицу скорости — сколько добавить, чтобы ехать быстрее`,kA:v=>`kA = ${v} В на единицу ускорения — сколько добавить для разгона`,
+  vOk:p=>`Проверка пройдена: с feedforward механизм на ${p}% точнее, чем только с PID`,vOkDo:'это готовое доказательство для Control Award',
+  vNo:'Проверка не показала улучшения',vNoDo:'повторите SysId (X), потом проверку (RB)',vNone:'Проверка не прошла ни одного движения',vNoneDo:'проверьте мягкие границы и направление мотора, запустите RB ещё раз',
+  verify:'Проверка (PID против FF + PID)',
+  notes:[[/did not move/,'механизм не сдвинулся: увеличьте maxPower, проверьте, не заклинило ли и подключён ли мотор'],
+   [/moved against the command/,'механизм поехал не в ту сторону: перепутано направление мотора или энкодера'],
+   [/velocity does not match position|position units per second/,'скорость в других единицах, чем позиция: нужны те же единицы, в секунду'],
+   [/velocity is always 0/,'скорость всегда 0: не подключён энкодер или неверный источник скорости'],
+   [/glitched samples/,'были сбои энкодера, они отброшены. Если часто — проверьте кабель энкодера'],
+   [/velocity lag/,'хаб усредняет скорость с задержкой — SysId её измерил и учёл (это нормально)'],
+   [/missing test|some tests were left out|gave no usable data/,'не хватает теста: пройдите все 4 (QF, QR, DF, DR)'],
+   [/too few moving windows|too short|more travel/,'тест был слишком коротким: дайте механизму больше хода или меньшую скорость'],
+   [/poor fit|kS < 0/,'данные не сходятся: люфт, проскальзывает ремень или слишком маленький ход'],
+   [/kA approximate/,'kA приблизительный: механизм очень быстрый для частоты измерений'],
+   [/kV <= 0|kA < 0/,'числа без смысла: проверьте единицы и направление мотора/энкодера']],
+  made:'— бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
   drive:'Езда',healthcheck:'Проверка моторов',session:'Запись',min:'мин',sec:'с',
   allOk:'Всё в порядке',check:'Есть что проверить',urgent:'Срочно',
   motors:'Моторы',power:'Питание и хаб',program:'Программа',events:'Что случилось во время езды',history:'По сравнению с прошлыми разами',
@@ -58,7 +79,28 @@ const T={
    'battery-low-at-start':'батарея была слабой уже на старте','slow-loop':'программа долго работала медленно','loop-pause':'программа «замерла» на мгновение',crash:'программа упала с ошибкой'},
   histMore:(n,p)=>`${n}: ток выше обычного на ${p}% — механизм может изнашиваться`,histBat:p=>`батарея проседает сильнее обычного`,
   first:'Это первая такая запись — сравнивать пока не с чем.',liveIdle:'Сейчас программа с Black Box не запущена. Записи — во вкладке «Записи».'},
- ro:{made:'— gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
+ ro:{yraw:'Constantele în Java și graficele testelor',ynone:'Încă nu sunt rezultate SysId. Porniți programul SysId și apăsați X.',
+  yGood:'Constantele sunt bune — le puteți folosi',yGoodDo:n=>`codul vostru le preia singur cu Feedforward.load("${n}", ...) de la următorul INIT. Sau apăsați Copy Java`,
+  yOk:'Se pot folosi, dar nu totul e sigur',yOkDo:'vedeți punctele de mai jos; repetați testele dacă aveți nevoie de precizie',
+  yPoor:'Nu folosiți aceste numere',yPoorDo:'reparați ce scrie mai jos și repetați testele (A)',
+  yMean:'Ce înseamnă numerele',yUnc:'Precizie',ySure:'sigur',
+  kS:v=>`kS = ${v} V — cât trebuie ca mecanismul să pornească (frecarea)`,kG:v=>`kG = ${v} V — cât trebuie ca să-l țină împotriva gravitației`,
+  kV:v=>`kV = ${v} V pe unitate de viteză — cât să adaugi ca să meargă mai repede`,kA:v=>`kA = ${v} V pe unitate de accelerație — cât să adaugi la accelerare`,
+  vOk:p=>`Verificare reușită: cu feedforward mecanismul e cu ${p}% mai precis decât doar cu PID`,vOkDo:'e o dovadă gata făcută pentru Control Award',
+  vNo:'Verificarea nu a arătat o îmbunătățire',vNoDo:'repetați SysId (X), apoi verificarea (RB)',vNone:'Verificarea nu a făcut nicio mișcare',vNoneDo:'verificați limitele soft și direcția motorului, porniți RB din nou',
+  verify:'Verificare (PID față de FF + PID)',
+  notes:[[/did not move/,'mecanismul nu s-a mișcat: măriți maxPower, verificați dacă e blocat și dacă motorul e conectat'],
+   [/moved against the command/,'mecanismul a mers în sens invers: direcția motorului sau a encoderului e inversată'],
+   [/velocity does not match position|position units per second/,'viteza e în alte unități decât poziția: trebuie aceleași unități, pe secundă'],
+   [/velocity is always 0/,'viteza e mereu 0: encoderul nu e conectat sau sursa vitezei e greșită'],
+   [/glitched samples/,'au fost erori de encoder, au fost aruncate. Dacă e des — verificați cablul encoderului'],
+   [/velocity lag/,'hub-ul mediază viteza cu întârziere — SysId a măsurat-o și a compensat-o (e normal)'],
+   [/missing test|some tests were left out|gave no usable data/,'lipsește un test: faceți toate 4 (QF, QR, DF, DR)'],
+   [/too few moving windows|too short|more travel/,'testul a fost prea scurt: dați mecanismului mai mult drum sau o viteză mai mică'],
+   [/poor fit|kS < 0/,'datele nu se potrivesc: joc mecanic, cureaua alunecă sau cursă prea mică'],
+   [/kA approximate/,'kA e aproximativ: mecanismul e foarte rapid față de frecvența măsurătorilor'],
+   [/kV <= 0|kA < 0/,'numere fără sens: verificați unitățile și direcția motorului/encoderului']],
+  made:'— gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
   drive:'Condus',healthcheck:'Verificare motoare',session:'Înregistrare',min:'min',sec:'s',
   allOk:'Totul e în regulă',check:'De verificat',urgent:'Urgent',
   motors:'Motoare',power:'Alimentare și hub',program:'Program',events:'Ce s-a întâmplat în timpul mersului',history:'Față de data trecută',
@@ -80,7 +122,28 @@ const T={
    'battery-low-at-start':'bateria era slabă de la start','slow-loop':'programul a mers lent mult timp','loop-pause':'programul a „înghețat” o clipă',crash:'programul a căzut cu o eroare'},
   histMore:(n,p)=>`${n}: curent mai mare decât de obicei cu ${p}% — mecanismul se poate uza`,histBat:p=>`bateria scade mai mult decât de obicei`,
   first:'E prima înregistrare de acest fel — încă nu e cu ce compara.',liveIdle:'Acum nu rulează niciun program cu Black Box. Înregistrările sunt în „Înregistrări”.'},
- en:{made:'— free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
+ en:{yraw:'Java constants and test graphs',ynone:'No SysId results yet. Run your SysId OpMode and press X.',
+  yGood:'The constants are good — use them',yGoodDo:n=>`your code picks them up by itself with Feedforward.load("${n}", ...) at the next INIT. Or press Copy Java`,
+  yOk:'Usable, but not everything is sure',yOkDo:'see the points below; repeat the tests if you need precision',
+  yPoor:'Do not use these numbers',yPoorDo:'fix what is written below and run the tests again (A)',
+  yMean:'What the numbers mean',yUnc:'Precision',ySure:'sure',
+  kS:v=>`kS = ${v} V — what it takes just to start moving (friction)`,kG:v=>`kG = ${v} V — what it takes to hold it against gravity`,
+  kV:v=>`kV = ${v} V per unit of speed — how much more to go faster`,kA:v=>`kA = ${v} V per unit of acceleration — how much more to speed up`,
+  vOk:p=>`Verified: with feedforward the mechanism is ${p}% more precise than with PID alone`,vOkDo:'ready-made evidence for the Control Award',
+  vNo:'The verification showed no improvement',vNoDo:'run SysId again (X), then the verification (RB)',vNone:'The verification made no moves',vNoneDo:'check the soft limits and the motor direction, run RB again',
+  verify:'Verification (PID vs FF + PID)',
+  notes:[[/did not move/,'the mechanism did not move: raise maxPower, check for a jam and that the motor is plugged in'],
+   [/moved against the command/,'the mechanism moved the wrong way: motor or encoder direction is reversed'],
+   [/velocity does not match position|position units per second/,'velocity is in different units than position: use the same units, per second'],
+   [/velocity is always 0/,'velocity is always 0: encoder not plugged in or wrong velocity source'],
+   [/glitched samples/,'encoder glitches were removed. If this happens often, check the encoder cable'],
+   [/velocity lag/,'the hub averages velocity with a delay; SysId measured and compensated it (normal)'],
+   [/missing test|some tests were left out|gave no usable data/,'a test is missing: run all 4 (QF, QR, DF, DR)'],
+   [/too few moving windows|too short|more travel/,'the test was too short: give the mechanism more travel or a lower speed'],
+   [/poor fit|kS < 0/,'the data does not fit: backlash, a slipping belt or too little travel'],
+   [/kA approximate/,'kA is approximate: the mechanism is very fast for the sampling rate'],
+   [/kV <= 0|kA < 0/,'meaningless numbers: check units and motor/encoder direction']],
+  made:'— free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
   drive:'Drive',healthcheck:'Motor check',session:'Session',min:'min',sec:'s',
   allOk:'All good',check:'Worth checking',urgent:'Urgent',
   motors:'Motors',power:'Power and hub',program:'Program',events:'What happened while driving',history:'Compared with earlier sessions',
@@ -104,11 +167,18 @@ const T={
   first:'First session of this kind — nothing to compare with yet.',liveIdle:'No Black Box program is running now. Recordings are under "Sessions".'}};
 let L=(()=>{try{const s=localStorage.getItem('asa-lang');if(T[s])return s}catch(e){}return'en'})();   // English unless the viewer picked RO/RU
 const t=()=>T[L];
-function applyLang(){$('#t-sessions').textContent=t().sessions;$('#t-made').textContent=t().made;$('#t-fb').textContent='💬 '+t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;
-  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openSession(current.f,current.d)}
+function applyLang(){$('#t-sessions').textContent=(tools.blackbox&&tools.sysid?'Black Box · ':'')+t().sessions;$('#t-yraw').textContent=t().yraw;$('#t-made').textContent=t().made;$('#t-fb').textContent='💬 '+t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openSession(current.f,current.d);loadFiles().then(()=>{if(ycur)openSysId(ycur.f,ycur.d)})}
 document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{L=b.dataset.l;try{localStorage.setItem('asa-lang',L)}catch(e){}applyLang()});
 
-let tab='sessions';
+let tab='sessions',tools={blackbox:true,sysid:true};
+async function detectTools(){try{tools=JSON.parse(await get('/api/tools'))}catch(e){}   // older robots: show both
+  const bb=tools.blackbox,sy=tools.sysid,name=bb&&sy?'ASA Tools':sy?'ASA SysId':'ASA Black Box';
+  $('#title').textContent=name;document.title=name;
+  $('#t-sessions').classList.toggle('hide',!bb);$('#t-live').classList.toggle('hide',!bb);$('#t-sysid').classList.toggle('hide',!sy);
+  const repo=!bb&&sy?'asa-sysid':'asa-blackbox';$('#gh').href='https://github.com/stanchevicid-hash/'+repo;
+  $('#t-fb').href='https://github.com/stanchevicid-hash/'+repo+'/issues/new?template=robot-result.yml';
+  applyLang();if(!bb&&sy)document.querySelector('#t-sysid').click();}
 document.querySelectorAll('header button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('header button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hide',s.id!==tab));if(tab!=='live')loadFiles();});
 const get=u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw r.status;return r.text()});
@@ -144,8 +214,8 @@ function nice(f){const m=f.match(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(.+)\.cs
 
 let files=[],current=null;
 async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}renderList();
-  const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const d=el('div',null,f.slice(6));d.onclick=()=>openSysId(f,d);y.append(d)});
-  if(!y.children.length)y.append(el('div','dim','-'));}
+  const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const m=f.match(/(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(sysid|verify)_(.+)\.result\.txt$/);const d=el('div',null,m?(m[6]==='verify'?t().verify.split(' (')[0]+': ':'')+m[7]:f.slice(6));if(m)d.append(el('small',null,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`));d.onclick=()=>openSysId(f,d);y.append(d)});
+  if(!y.children.length){y.append(el('div','dim','-'));$('#ysum').innerHTML='';$('#ysum').append(el('div','card dim',t().ynone))}}
 function renderList(){const s=$('#slist');s.innerHTML='';
   files.filter(f=>/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!f.startsWith('sysid/')&&!/batteries\.csv$/.test(f)).sort().reverse().forEach(f=>{
     const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openSession(f,d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
@@ -228,10 +298,31 @@ async function openSession(f,d){current={f,d};pick($('#slist'),d);const data=csv
   $('#sinfo').textContent=(rep?rep+'\n':'')+(ev.cols[0]||[]).map((x,i)=>x.toFixed(2)+' s  '+ev.cols[1][i]+'  '+(ev.cols[2][i]||'')).join('\n');
 }
 
-async function openSysId(f,d){pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';
+function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.innerHTML='';const card=el('div','card');
+  const head=L1[0]||'',isVerify=/VERIFY/.test(head);let verdict,lv;
+  const note=line=>{for(const [re,txt2] of t().notes)if(re.test(line))return txt2;return line};
+  if(isVerify){const m=head.match(/RMS -([\d.]+|NaN)%/),pct=m?m[1]:'NaN';
+    if(/MODEL VALIDATED/.test(head)){lv='g';verdict=t().vOk(Math.round(+pct));o.push({lv:'g',txt:t().vOkDo})}
+    else if(pct==='NaN'||/moves 0 \+ 0/.test(txt)){lv='r';verdict=t().vNone;o.push({lv:'r',txt:t().vNoneDo})}
+    else{lv='y';verdict=t().vNo;o.push({lv:'y',txt:t().vNoDo})}}
+  else{const q=(head.match(/\b(GOOD|OK|POOR)\b/)||[])[1]||'POOR',name=head.split(' ')[0];
+    lv=q==='GOOD'?'g':q==='OK'?'y':'r';verdict=q==='GOOD'?t().yGood:q==='OK'?t().yOk:t().yPoor;
+    o.push({lv,txt:q==='GOOD'?t().yGoodDo(name):q==='OK'?t().yOkDo:t().yPoorDo});
+    const k={};(L1[1]||'').replace(/(k[SGVA])=([-\d.eE+]+)/g,(_,a,b)=>{k[a]=b});
+    const unc={};(L1[2]||'').replace(/(k[SGVA]) (\d+)%/g,(_,a,b)=>{unc[a]=+b});
+    let i=3;while(i<L1.length&&!/^windows/.test(L1[i]))i++;
+    for(i++;i<L1.length&&L1[i].trim()&&!L1[i].startsWith('//');i++)o.push({lv:q==='GOOD'?'n':lv,txt:note(L1[i])});
+    o.mean=['kS','kG','kV','kA'].filter(x=>k[x]!=null).map(x=>({lv:unc[x]==null?'n':unc[x]<=10?'g':unc[x]<=25?'y':'r',
+      txt:t()[x](+(+k[x]).toPrecision(3))+(unc[x]!=null?`  (${t().yUnc} ±${unc[x]}%${unc[x]<=10?' — '+t().ySure:''})`:'')}));}
+  card.append(el('div','verdict',(lv==='g'?'🟢 ':lv==='y'?'🟡 ':'🔴 ')+verdict));
+  o.forEach(r=>{const row=el('div','row');row.append(el('div','dot '+r.lv),el('div',null,r.txt));card.append(row)});box.append(card);
+  if(o.mean&&o.mean.length){const c=el('div','card');c.append(el('h3',null,t().yMean));
+    o.mean.forEach(r=>{const row=el('div','row');row.append(el('div','dot '+r.lv),el('div',null,r.txt));c.append(row)});box.append(c)}}
+let ycur=null;
+async function openSysId(f,d){ycur={f,d};pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';sysidSummary(txt);
   $('#copy').onclick=()=>{const j=txt.slice(txt.indexOf('// ASA SysId'));(navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>$('#cst').textContent='copied',()=>$('#cst').textContent='select the text and copy')};
   const p=$('#yplots');p.innerHTML='';try{const data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv'))),idx=data.cols[0].map((_,i)=>i);
     ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i])})}catch(e){}
 }
-applyLang();loadFiles();
+applyLang();detectTools().then(loadFiles);
 </script></body></html>

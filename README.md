@@ -89,6 +89,15 @@ Select **ASA SysId Lift** and press INIT. The robot does not move during INIT. P
 Telemetry shows the live position, velocity, voltage and battery, a checklist of the tests, the result, and where
 it was saved (`/sdcard/FIRST/asa/sysid/`).
 
+## Where to see the results
+
+Connect a phone or laptop to the robot Wi-Fi and open `http://192.168.43.1:8099/`. Each result says in plain words
+whether to use the constants, what each number means, and what to fix when it is not good. The verification (RB)
+says how much more precise the mechanism is with feedforward. English by default, Romanian and Russian one click away.
+With only SysId installed the page is "ASA SysId"; with Black Box too, both are on the same page.
+
+![SysId results page](docs/sysid-page.jpg)
+
 ## Use the result
 
 X with a GOOD or OK result also saves the constants as `/sdcard/FIRST/asa/sysid/<name>.ff`. `Feedforward.load`
