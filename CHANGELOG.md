@@ -13,6 +13,10 @@
 - Without the team's code, "all encoders of a hub went to 0" may be the program resetting them: reported as a
   WARNING with both explanations instead of a CRITICAL hub reset.
 - Two recordings of the same OpMode in the same second no longer share a file.
+- **Match safety.** Nothing at INIT waits for ASA: the recording attaches, opens its files and reads the hardware on
+  its own thread, so a slow disk or hub can never delay the team's init(). While a program drives, the page sends no
+  recording over 256 KB and no WPILOG, so the Driver Station keeps the Wi-Fi. In the OnBot bundle, every class with
+  an ordinary name gets an "Asa" prefix (AsaRecorder, AsaRule, ...): uploading never replaces a team's own file.
 - **Remove ASA with one button** (fourth mode, hold A + B for 3 s): stops the recording and the page at once, deletes
   the folder FIRST/asa and the library's own files in OnBot Java. Only files whose first line is the ASA mark are
   deleted (never a team's own Recorder.java), ASA SysId's shared files stay, and if the team's code still uses Black

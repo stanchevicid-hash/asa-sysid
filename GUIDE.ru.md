@@ -31,6 +31,10 @@
 папку `teamcode` в OnBot Java, без подпапок. Нажмите Build. Если первая сборка не прошла («bad source file»),
 нажмите Build ещё раз.
 
+Имена всех файлов, кроме `BlackBox` и `FtcBlackBox`, начинаются с `Asa`, поэтому загрузка никогда не заменит
+ваши собственные файлы. **Стояла версия 1.4?** Сначала удалите её старые файлы `Rule`, `Live`, `Recorder`, `Ftc`,
+`Dashboard`, `WpiLog`, `BatteryHealth`, `CenterOfGravity` (если это не ваши собственные файлы с такими именами).
+
 **Потом один раз: Restart Robot** (меню ⋮ на Driver Hub → Restart Robot). Это включает автоматическую запись
 матчей (раздел 3). До перезапуска она включится при первом запуске программы «ASA Black Box».
 
@@ -151,6 +155,10 @@ Java, Autonomous, даже программа на Blocks), Black Box сам з�
 
 Выключить или включить: программа **ASA Black Box**, кнопка **Y** на INIT. Без вашего кода запись не видит время
 цикла, ваши собственные величины (цели, состояния) и события. Для них добавьте 4 строки из раздела 4.
+
+**На соревнованиях:** запись работает сама, телефон для неё не нужен. Во время матча не подключайте телефоны и
+ноутбуки к Wi-Fi робота: по нему Driver Station управляет роботом (и правила FTC это запрещают). Смотрите записи в
+боксе, после матча. Пока программа едет, страница сама не отдаёт большие файлы, чтобы не занимать Wi-Fi.
 
 ---
 
@@ -450,7 +458,7 @@ ASA ничего не меняет в коде вашей команды, в к�
 - если стоит ASA SysId, общие с ним файлы остаются, SysId продолжает работать;
 - файлы старой версии без метки не удаляет, а называет, чтобы вы проверили их сами.
 
-**Вручную** (например, если ставили через Android Studio): удалите 17 файлов `AsaAutoRecorder` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaHealthCheck` `AsaRemover` `AsaWeb` `AsaWebPage` `BatteryHealth` `BlackBox` `CenterOfGravity` `Dashboard` `Ftc` `FtcBlackBox` `Live` `Recorder` `Rule` `WpiLog` (`.java`) или папку
+**Вручную** (например, если ставили через Android Studio): удалите 17 файлов `AsaAutoRecorder` `AsaBatteryHealth` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaCenterOfGravityMath` `AsaDashboard` `AsaFtc` `AsaHealthCheck` `AsaLive` `AsaRecorder` `AsaRemover` `AsaRule` `AsaWeb` `AsaWebPage` `AsaWpiLog` `BlackBox` `FtcBlackBox` (`.java`) или папку
 `TeamCode/src/main/java/org/asa`, нажмите Build / установите приложение заново, потом **Restart Robot**.
 
 Хотите только выключить, а не удалять? ASA Black Box → **Y** → «Автозапись выключена». Тогда при включении робота

@@ -31,6 +31,10 @@ Aveți nevoie de ambele biblioteci? Dezarhivați ambele arhive. Fișierele comun
 folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build. Dacă prima compilare nu reușește
 („bad source file”), apăsați Build încă o dată.
 
+Numele tuturor fișierelor, în afară de `BlackBox` și `FtcBlackBox`, încep cu `Asa`, așa că încărcarea nu înlocuiește
+niciodată fișierele voastre. **Aveați versiunea 1.4?** Mai întâi ștergeți fișierele ei vechi `Rule`, `Live`,
+`Recorder`, `Ftc`, `Dashboard`, `WpiLog`, `BatteryHealth`, `CenterOfGravity` (dacă nu sunt fișierele voastre cu aceleași nume).
+
 **Apoi, o singură dată: Restart Robot** (meniul ⋮ de pe Driver Hub → Restart Robot). Asta pornește înregistrarea
 automată a meciurilor (secțiunea 3). Până atunci pornește prima dată când rulați programul „ASA Black Box”.
 
@@ -151,6 +155,10 @@ Cum nu vă încurcă în meci:
 
 Oprire sau pornire: programul **ASA Black Box**, butonul **Y** la INIT. Fără codul vostru înregistrarea nu vede timpul
 ciclului, valorile voastre (ținte, stări) și evenimentele. Pentru ele adăugați cele 4 rânduri din secțiunea 4.
+
+**La competiții:** înregistrarea merge singură, nu are nevoie de telefon. În timpul meciului nu conectați telefoane sau
+laptopuri la Wi-Fi-ul robotului: pe el Driver Station comandă robotul (și regulile FTC o interzic). Uitați-vă la
+înregistrări în boxe, după meci. Cât timp programul merge, pagina nu trimite fișiere mari, ca să nu ocupe Wi-Fi-ul.
 
 ---
 
@@ -453,7 +461,7 @@ Ce nu face butonul:
 - dacă e instalat ASA SysId, fișierele comune rămân și SysId merge în continuare;
 - fișierele dintr-o versiune veche, fără marcaj, nu le șterge, ci le numește ca să le verificați voi.
 
-**Manual** (de exemplu, dacă ați instalat cu Android Studio): ștergeți cele 17 fișiere `AsaAutoRecorder` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaHealthCheck` `AsaRemover` `AsaWeb` `AsaWebPage` `BatteryHealth` `BlackBox` `CenterOfGravity` `Dashboard` `Ftc` `FtcBlackBox` `Live` `Recorder` `Rule` `WpiLog` (`.java`) sau
+**Manual** (de exemplu, dacă ați instalat cu Android Studio): ștergeți cele 17 fișiere `AsaAutoRecorder` `AsaBatteryHealth` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaCenterOfGravityMath` `AsaDashboard` `AsaFtc` `AsaHealthCheck` `AsaLive` `AsaRecorder` `AsaRemover` `AsaRule` `AsaWeb` `AsaWebPage` `AsaWpiLog` `BlackBox` `FtcBlackBox` (`.java`) sau
 folderul `TeamCode/src/main/java/org/asa`, apăsați Build / instalați din nou aplicația, apoi **Restart Robot**.
 
 Vreți doar s-o opriți, nu s-o scoateți? ASA Black Box → **Y** → „Înregistrarea automată e oprită”. Atunci la

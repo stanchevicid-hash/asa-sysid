@@ -175,11 +175,23 @@ public final class AsaWeb {
         else send(out, 404, "text/plain", bytes("not found"));
     }
 
+    /**
+     * The Driver Station controls the robot over the same Wi-Fi: while a program drives, the page gets only small
+     * answers (live values, the page, the file list) and no recording over this size, nor any WPILOG.
+     */
+    static final long MAX_BYTES_WHILE_DRIVING = 256 * 1024;
+
+    private static boolean driving() {
+        Live src = live;
+        try { return src != null && !src.names().isEmpty(); } catch (Throwable e) { return false; }
+    }
+
     /** Only "name" or "sysid/name" with safe characters: no "..", no absolute paths. */
     private void sendFile(OutputStream out, String rel) throws Exception {
         if (!rel.matches("(sysid/)?[\\p{L}\\p{N}_.-]+") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
+        if (driving() && f.length() > MAX_BYTES_WHILE_DRIVING) { send(out, 503, "text/plain", bytes("driving")); return; }
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: " + f.length()
                 + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
         InputStream in = new FileInputStream(f);
@@ -193,6 +205,7 @@ public final class AsaWeb {
     /** A Black Box session converted to WPILOG on the fly for AdvantageScope (streamed, never fully in memory). */
     private void sendWpiLog(OutputStream out, String rel) throws Exception {
         if (!rel.matches("[\\p{L}\\p{N}_.-]+\\.csv") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
+        if (driving()) { send(out, 503, "text/plain", bytes("driving")); return; }
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Disposition: attachment; filename=\""
