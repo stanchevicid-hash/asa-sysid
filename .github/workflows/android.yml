@@ -3,15 +3,20 @@ on: [push, pull_request]
 jobs:
   control-hub-compat:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: ['9.2.0', '10.3.0', '11.1.0', '12.0.0']   # every FTC SDK the guides promise
+    name: FTC SDK ${{ matrix.sdk }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
-      - name: Android 7.1 platform (Control Hub) + official FTC SDK 12.0.0
+      - name: Android 7.1 platform (Control Hub) + official FTC SDK ${{ matrix.sdk }}
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-25" "build-tools;34.0.0" > /dev/null
           for a in RobotCore Hardware FtcCommon; do
-            curl -sfL -o $a.aar https://repo1.maven.org/maven2/org/firstinspires/ftc/$a/12.0.0/$a-12.0.0.aar
+            curl -sfL -o $a.aar https://repo1.maven.org/maven2/org/firstinspires/ftc/$a/${{ matrix.sdk }}/$a-${{ matrix.sdk }}.aar
             unzip -p $a.aar classes.jar > $a.jar
           done
       - name: Library uses only Java APIs that exist on Android 7.1
