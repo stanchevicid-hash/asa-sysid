@@ -90,9 +90,19 @@ public class Recorder {
     public Recorder start(File dir, String tag) {
         if (started) return this;
         this.dir = dir;
-        String base = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) + "_" + safe(tag);
-        this.session = base;
-        for (int k = 2; dir != null && new File(dir, session + ".csv").exists(); k++) session = base + "_" + k;   // same tag twice in one second
+        // "yyyyMMdd_HHmmss_<tag>" (baseline matching and the page rely on it). Two recordings of one tag in the same
+        // second: the later one takes the next second. createNewFile() claims the name atomically, so two recorders
+        // starting together can never share (or later delete) one file.
+        long when = System.currentTimeMillis();
+        SimpleDateFormat stamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+        this.session = stamp.format(new Date(when)) + "_" + safe(tag);
+        if (dir != null) {
+            dir.mkdirs();
+            for (int k = 0; k < 60; k++) {
+                session = stamp.format(new Date(when + 1000L * k)) + "_" + safe(tag);
+                try { if (new File(dir, session + ".csv").createNewFile()) break; } catch (Exception e) { break; }
+            }
+        }
         int n = names.size();
         values = new double[n];
         lastReadNs = new long[n];

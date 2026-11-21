@@ -2,7 +2,27 @@
 
 ## 1.5.0 beta (2026-11-21): not yet run on a real robot
 
-- **One program on the Driver Hub: "ASA Black Box".** LB / RB picks the mode (Health check, Center of gravity),
+- **Code review (12 parallel reviewers) and the fixes it led to:**
+  - automatic recording: motors on an Expansion Hub were matched to the Control Hub (same USB serial): now by module;
+    position / velocity sign now as getCurrentPosition() gives it (CCW motor types: goBILDA, REV HD Hex...); hubs the
+    team caches (AUTO / MANUAL) are read through their cache, bulk reads only for hubs left OFF; a hub that drops out
+    no longer reads as "all encoders at 0"; no IMU or I2C sensor at all (HardwareMap.getAll() initializes them under
+    its lock, which would hold up the team's INIT); steps aside for any team Black Box (also create + start without
+    attachAll) and leaves the Live tab to it;
+  - page server: request read with a hard 8 KB limit (a 200 MB line no longer exhausts memory), whole-connection
+    deadlines enforced by a reaper (no slot held by a byte every 3 s or by a client that never reads), a download
+    started before INIT stops when the robot drives, the Wi-Fi rule applies to any OpMode, recorded or not;
+  - health check: B stopping the automatic test no longer turns that motor backward; Y without motors no longer
+    crashes; center of gravity: a step must tip the robot at least 3° (two presses on the flat gave a division by 0);
+  - Remove ASA: keeps ASA SysId's constants (sysid/); strings and comments can no longer hide the team's use of
+    Black Box ("http://" in a string); the renamed public types (AsaRule...) count as use; files with ASA names but
+    no mark block removal until the team checks them;
+  - recordings of one OpMode in the same second take the next second (the "_2" suffix broke the baseline), the file
+    name is claimed atomically;
+  - results page: an older slow answer no longer draws over a newer click; SysId graphs and the "worse than PID"
+    verdict; Copy Java hidden on verifications; hubs shown by name; friction compared between drive wheels only;
+    odometry pods on drive ports not reported as a code fault; keyboard access; leftovers of the first design removed.
+- **One program on the Driver Hub: "ASA Black Box".** LB / RB picks the mode (Health check, Center of gravity, Recording test, Remove ASA),
   X the language (English, Russian, Romanian) for everything on the Driver Hub. Replaces "ASA Health Check" and
   "ASA Center of Gravity": uploading the new files over the old ones removes those two from the list.
 - **Every match recorded with no code.** Install, restart the robot once, and every OpMode (Java or Blocks) is
@@ -20,7 +40,7 @@
 - **Remove ASA with one button** (fourth mode, hold A + B for 3 s): stops the recording and the page at once, deletes
   the folder FIRST/asa and the library's own files in OnBot Java. Only files whose first line is the ASA mark are
   deleted (never a team's own Recorder.java), ASA SysId's shared files stay, and if the team's code still uses Black
-  Box nothing is deleted and the files to change are listed. Tested on the real 17-file bundle (test/RemoverTest). With the automatic recording switched off (Y), nothing of
+  Box nothing is deleted and the files to change are listed. Tested in test/RemoverTest and on a copy of the real 17-file bundle. With the automatic recording switched off (Y), nothing of
   ASA starts at power-on, not even the page. The page server runs below the OpMode's priority.
 - **Recording test** (third mode of ASA Black Box): loop time with and without the automatic recording, samples
   recorded, encoders read, as green / yellow / red. The INIT screen shows whether every match is recorded, the

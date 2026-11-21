@@ -1,9 +1,8 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ASA Black Box</title>
-<meta name="theme-color" content="#22262E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='28' height='20' rx='5' fill='%23FF5A1F'/%3E%3Ccircle cx='22' cy='16' r='4' fill='%2322262E'/%3E%3C/svg%3E">
-<meta name="theme-color" content="#07070A">
+<meta name="theme-color" content="#07070A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F1EFF4" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/webp;base64,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">
 <style>
 /* ASA Black Box in ASA's colors: magenta on carbon black, silver text (the team logo). Magenta marks the team and
@@ -39,7 +38,7 @@ header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var
 @media(max-width:520px){header{padding:10px 14px;gap:10px}#st span{display:none}.logo{font-size:18px}}
 
 /* tabs */
-nav{display:flex;gap:4px;max-width:1120px;margin:18px auto 0;padding:0 20px}
+nav{display:flex;flex-wrap:wrap;gap:4px;max-width:1120px;margin:18px auto 0;padding:0 20px}
 nav button{background:none;border:1px solid transparent;border-radius:999px;padding:7px 16px;color:var(--dim);display:flex;align-items:center;gap:8px;font-weight:600}
 nav button:hover{color:var(--fg)}
 nav button.on{background:var(--surf);border-color:var(--line);color:var(--fg)}
@@ -167,7 +166,7 @@ const T={
   kS:v=>`kS = ${v} В — сколько нужно, чтобы механизм вообще сдвинулся (трение)`,kG:v=>`kG = ${v} В — сколько нужно, чтобы держать его против силы тяжести`,
   kV:v=>`kV = ${v} В на единицу скорости — сколько добавить, чтобы ехать быстрее`,kA:v=>`kA = ${v} В на единицу ускорения — сколько добавить для разгона`,
   vOk:p=>`Проверка пройдена: с feedforward механизм на ${p}% точнее, чем только с PID`,vOkDo:'это готовое доказательство для Control Award',
-  vNo:'Проверка не показала улучшения',vNoDo:'повторите SysId (X), потом проверку (RB)',vNone:'Проверка не прошла ни одного движения',vNoneDo:'проверьте мягкие границы и направление мотора, запустите RB ещё раз',
+  vNo:'Проверка не показала улучшения',vNoDo:'повторите SysId (X), потом проверку (RB)',vNone:'Проверка не сделала ни одного движения',vNoneDo:'проверьте мягкие границы и направление мотора, запустите RB ещё раз',
   verify:'Проверка (PID против FF + PID)',
   notes:[[/did not move/,'механизм не сдвинулся: увеличьте maxPower, проверьте, не заклинило ли и подключён ли мотор'],
    [/moved against the command/,'механизм поехал не в ту сторону: перепутано направление мотора или энкодера'],
@@ -181,11 +180,11 @@ const T={
    [/kA approximate/,'kA приблизительный: механизм очень быстрый для частоты измерений'],
    [/kV <= 0|kA < 0/,'числа без смысла: проверьте единицы и направление мотора/энкодера']],
   made:'Бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
-  drive:'Езда',healthcheck:'Проверка моторов',online:'на связи',ntBusy:'Робот едет: большие записи откроются после остановки (Wi-Fi нужен Driver Station).',mLow:'работал на малой мощности (держал положение): ток не оценить',srcCode:'в коде',srcRobot:'в роботе',cStick:s=>`Пилот двигал стик ${s} с, а программа не дала мощность ни одному мотору шасси`,cStickDo:'проверьте в коде, что стики gamepad1 связаны с моторами и программа не застряла в другом режиме или состоянии',cOsc:(m,n)=>`мощность прыгает между + и − (до ${n} раз в секунду)`,cOscDo:'в коде: уменьшите kP / kD регулятора или проверьте, что этим мотором не управляют два куска кода сразу',cDir:p=>`энкодер считает против мощности (${p}% времени)`,cDirDo:'в коде: setDirection у этого мотора, или кабель энкодера вставлен в порт другого мотора',ntLive:'Робот поехал: идёт запись',ntDone:'Запись готова',open:'Открыть',ntOff:'Нет связи с роботом. Телефон в Wi-Fi робота?',hubOf:'хаб с',showAll:'Показать все',autoRec:'Записано автоматически, без вашего кода. Время цикла видно только с 4 строками в коде.',offline:'нет связи',idleT:'Сейчас ничего не запущено',idleP:'Запустите программу на Driver Hub, и графики появятся здесь сами.',nUrg:'срочно',nChk:'проверить',nOk:'в порядке',
+  drive:'Езда',healthcheck:'Проверка моторов',online:'на связи',copyJava:'Скопировать Java',copied:'скопировано',copyManual:'выделите текст и скопируйте',close:'закрыть',ntBusy:'Робот едет: большие записи откроются после остановки (Wi-Fi нужен Driver Station).',mLow:'работал на малой мощности (держал положение): ток не оценить',srcCode:'в коде',srcRobot:'в роботе',cStick:s=>`Пилот двигал стик ${s} с, а программа не дала мощность ни одному мотору шасси`,cStickDo:'проверьте в коде, что стики gamepad1 связаны с моторами и программа не застряла в другом режиме или состоянии',cOsc:(m,n)=>`мощность прыгает между + и − (до ${n} раз в секунду)`,cOscDo:'в коде: уменьшите kP / kD регулятора или проверьте, что этим мотором не управляют два куска кода сразу',cDir:p=>`энкодер считает против мощности (${p}% времени)`,cDirDo:'в коде: setDirection у этого мотора, или кабель энкодера вставлен в порт другого мотора',ntLive:'Робот поехал: идёт запись',ntDone:'Запись готова',open:'Открыть',ntOff:'Нет связи с роботом. Телефон в Wi-Fi робота?',hubOf:'хаб с',showAll:'Показать все',autoRec:'Записано автоматически, без вашего кода. Время цикла видно только с 4 строками в коде.',offline:'нет связи',idleT:'Сейчас ничего не запущено',idleP:'Запустите программу на Driver Hub, и графики появятся здесь сами.',nUrg:'срочно',nChk:'проверить',nOk:'в порядке',
   cog:'Центр тяжести',cogTop:'Вид сверху',cogSide:'Вид справа',cogFront:'ПЕРЕД',cogL:'Л',cogR:'П',cogDraw:'Где центр тяжести',cogLimits:'Когда робот опрокинется',
   cogWhere:(h,r,s)=>`Высота ${h} см. По длине: ${r}% от задних колёс к передним. По ширине: ${s}% от правых колёс к левым.`,
   tipBrake:v=>`Резкое торможение: опрокинется вперёд при замедлении больше ${v} м/с²`,tipAccel:v=>`Резкий разгон: встанет на дыбы при ускорении больше ${v} м/с²`,
-  tipSide:v=>`Вбок (остановка стрейфа, удар): опрокинется больше ${v} м/с²`,tipRamp:v=>`Устоит на склоне до ${v}°`,
+  tipSide:v=>`Вбок (остановка стрейфа, удар): опрокинется при ускорении больше ${v} м/с²`,tipRamp:v=>`Устоит на склоне до ${v}°`,
   tipSafe:'безопасно: колёса проскользнут раньше, чем робот опрокинется',tipMaybe:'может опрокинуться при резкой остановке или ударе: опустите тяжёлые детали ниже или тормозите плавнее',
   tipBad:'опрокидывается легко: опустите центр тяжести (тяжёлое вниз) или сделайте базу шире',cogDiff:'две высоты сильно отличаются: повторите шаги с балансом аккуратнее',
   cogSvg:'Скачать рисунок (SVG)',cogOld:'Старый формат файла, рисунка нет. Измерьте ещё раз.',
@@ -194,12 +193,12 @@ const T={
   motors:'Моторы',power:'Питание и хаб',program:'Программа',events:'Что случилось во время езды',history:'По сравнению с прошлыми разами',
   mOk:a=>`работает нормально (${a} А)`,mOff:'не включался',mNoCur:'не получает ток',mNoCurDo:'проверьте провод питания мотора и номер порта MOTOR',
   mEnc:'энкодер не считает',mEncDo:'вставьте тонкий провод энкодера в порт ENCODER с тем же номером, что и MOTOR. Без него не работает точная автономка',
-  mEncAll:'энкодеры не подключены ни на одном колесе',
+  mEncAll:'энкодеры не подключены ни у одного мотора',
   mMore:(p,a)=>`берёт на ${p}% больше тока, чем остальные (${a} А)`,mMoreDo:'покрутите колесо рукой: не туже ли оно, не трётся ли, не погнута ли ось',
   bOk:(v,r)=>`батарея хорошая: ${v} В на старте${r}`,bLow:v=>`батарея была слабой на старте: ${v} В`,bLowDo:'зарядите или поставьте другую перед матчем',
   bWeak:r=>`батарея устала: сопротивление ${r} Ом`,bWeakDo:'используйте её для тренировок, на матч ставьте другую',bWatch:r=>`батарея начинает уставать: ${r} Ом`,
   bDrop:v=>`напряжение падало до ${v} В — хабы могли перезагрузиться`,bDropDo:'замените батарею, проверьте разъёмы и выключатель',
-  hubOk:t=>`Control Hub работал без сбоев, ${t} °C`,hubLost:'хаб переставал отвечать',hubLostDo:'проверьте провода между хабами и питание',
+  hubOk:t=>`работал без сбоев, ${t} °C`,hubLost:'хаб переставал отвечать',hubLostDo:'проверьте провода между хабами и питание',
   hubHot:t=>`хаб нагрелся до ${t} °C`,
   loopOk:m=>`программа быстрая: цикл ${m} мс`,loopSlow:m=>`программа медленная: цикл ${m} мс`,loopSlowDo:'уберите sleep() и лишние чтения датчиков из цикла',
   evNone:'ничего тревожного',at:'на',
@@ -232,10 +231,10 @@ const T={
    [/kA approximate/,'kA e aproximativ: mecanismul e foarte rapid față de frecvența măsurătorilor'],
    [/kV <= 0|kA < 0/,'numere fără sens: verificați unitățile și direcția motorului/encoderului']],
   made:'Gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
-  drive:'Condus',healthcheck:'Verificare motoare',online:'conectat',ntBusy:'Robotul merge: înregistrările mari se deschid după oprire (Wi-Fi-ul e pentru Driver Station).',mLow:'a lucrat cu putere mică (a ținut poziția): curentul nu se poate evalua',srcCode:'în cod',srcRobot:'în robot',cStick:s=>`Pilotul a mișcat stick-ul ${s} s, dar programul nu a dat putere niciunui motor al șasiului`,cStickDo:'verificați în cod că stick-urile gamepad1 sunt legate de motoare și că programul nu a rămas blocat în alt mod sau stare',cOsc:(m,n)=>`puterea sare între + și − (până la ${n} ori pe secundă)`,cOscDo:'în cod: micșorați kP / kD ale regulatorului sau verificați că motorul nu e comandat de două bucăți de cod deodată',cDir:p=>`encoderul numără invers față de putere (${p}% din timp)`,cDirDo:'în cod: setDirection la acest motor, sau cablul encoderului e în portul altui motor',ntLive:'Robotul a pornit: se înregistrează',ntDone:'Înregistrarea e gata',open:'Deschide',ntOff:'Fără conexiune cu robotul. Telefonul e pe Wi-Fi-ul robotului?',hubOf:'hub-ul cu',showAll:'Arată toate',autoRec:'Înregistrat automat, fără codul vostru. Timpul ciclului se vede doar cu cele 4 rânduri în cod.',offline:'fără conexiune',idleT:'Acum nu rulează nimic',idleP:'Porniți un program pe Driver Hub și graficele apar aici singure.',nUrg:'urgent',nChk:'de verificat',nOk:'în regulă',
+  drive:'Condus',healthcheck:'Verificare motoare',online:'conectat',copyJava:'Copiază Java',copied:'copiat',copyManual:'selectați textul și copiați-l',close:'închide',ntBusy:'Robotul merge: înregistrările mari se deschid după oprire (Wi-Fi-ul e pentru Driver Station).',mLow:'a lucrat cu putere mică (a ținut poziția): curentul nu se poate evalua',srcCode:'în cod',srcRobot:'în robot',cStick:s=>`Pilotul a mișcat stick-ul ${s} s, dar programul nu a dat putere niciunui motor al șasiului`,cStickDo:'verificați în cod că stick-urile gamepad1 sunt legate de motoare și că programul nu a rămas blocat în alt mod sau stare',cOsc:(m,n)=>`puterea sare între + și − (până la ${n} ori pe secundă)`,cOscDo:'în cod: micșorați kP / kD ale regulatorului sau verificați că motorul nu e comandat de două bucăți de cod deodată',cDir:p=>`encoderul numără invers față de putere (${p}% din timp)`,cDirDo:'în cod: setDirection la acest motor, sau cablul encoderului e în portul altui motor',ntLive:'Robotul a pornit: se înregistrează',ntDone:'Înregistrarea e gata',open:'Deschide',ntOff:'Fără conexiune cu robotul. Telefonul e pe Wi-Fi-ul robotului?',hubOf:'hub-ul cu',showAll:'Arată toate',autoRec:'Înregistrat automat, fără codul vostru. Timpul ciclului se vede doar cu cele 4 rânduri în cod.',offline:'fără conexiune',idleT:'Acum nu rulează nimic',idleP:'Porniți un program pe Driver Hub și graficele apar aici singure.',nUrg:'urgent',nChk:'de verificat',nOk:'în regulă',
   cog:'Centrul de greutate',cogTop:'Văzut de sus',cogSide:'Văzut din dreapta',cogFront:'FAȚĂ',cogL:'S',cogR:'D',cogDraw:'Unde e centrul de greutate',cogLimits:'Când se răstoarnă robotul',
   cogWhere:(h,r,s)=>`Înălțime ${h} cm. Pe lungime: ${r}% de la roțile din spate spre cele din față. Pe lățime: ${s}% de la roțile din dreapta spre cele din stânga.`,
-  tipBrake:v=>`Frânare bruscă: se răstoarnă în față la o decelerare peste ${v} m/s²`,tipAccel:v=>`Accelerare bruscă: se ridică în spate peste ${v} m/s²`,
+  tipBrake:v=>`Frânare bruscă: se răstoarnă în față la o decelerare peste ${v} m/s²`,tipAccel:v=>`Accelerare bruscă: se ridică în față (cabrează) peste ${v} m/s²`,
   tipSide:v=>`Lateral (oprire din strafe, lovitură): se răstoarnă peste ${v} m/s²`,tipRamp:v=>`Stă pe o pantă de până la ${v}°`,
   tipSafe:'sigur: roțile alunecă înainte ca robotul să se răstoarne',tipMaybe:'se poate răsturna la o oprire bruscă sau o lovitură: coborâți piesele grele sau frânați mai lin',
   tipBad:'se răstoarnă ușor: coborâți centrul de greutate (piesele grele jos) sau lărgiți baza',cogDiff:'cele două înălțimi diferă mult: refaceți mai atent pașii de echilibrare',
@@ -245,12 +244,12 @@ const T={
   motors:'Motoare',power:'Alimentare și hub',program:'Program',events:'Ce s-a întâmplat în timpul mersului',history:'Față de data trecută',
   mOk:a=>`funcționează normal (${a} A)`,mOff:'nu a pornit',mNoCur:'nu primește curent',mNoCurDo:'verificați cablul de alimentare al motorului și numărul portului MOTOR',
   mEnc:'encoderul nu numără',mEncDo:'conectați cablul subțire al encoderului în portul ENCODER cu același număr ca MOTOR. Fără el nu merge autonomia precisă',
-  mEncAll:'encoderele nu sunt conectate la nicio roată',
+  mEncAll:'encoderele nu sunt conectate la niciun motor',
   mMore:(p,a)=>`ia cu ${p}% mai mult curent decât celelalte (${a} A)`,mMoreDo:'învârtiți roata cu mâna: e mai strânsă, freacă, axul e îndoit?',
   bOk:(v,r)=>`bateria e bună: ${v} V la start${r}`,bLow:v=>`bateria era slabă la start: ${v} V`,bLowDo:'încărcați-o sau puneți alta înainte de meci',
   bWeak:r=>`bateria e obosită: rezistență ${r} Ω`,bWeakDo:'folosiți-o la antrenamente, la meci puneți alta',bWatch:r=>`bateria începe să obosească: ${r} Ω`,
   bDrop:v=>`tensiunea a scăzut până la ${v} V — hub-urile puteau reporni`,bDropDo:'schimbați bateria, verificați conectorii și întrerupătorul',
-  hubOk:t=>`Control Hub a mers fără probleme, ${t} °C`,hubLost:'hub-ul nu a mai răspuns',hubLostDo:'verificați cablurile dintre hub-uri și alimentarea',
+  hubOk:t=>`a mers fără probleme, ${t} °C`,hubLost:'hub-ul nu a mai răspuns',hubLostDo:'verificați cablurile dintre hub-uri și alimentarea',
   hubHot:t=>`hub-ul s-a încălzit până la ${t} °C`,
   loopOk:m=>`programul e rapid: ciclu ${m} ms`,loopSlow:m=>`programul e lent: ciclu ${m} ms`,loopSlowDo:'scoateți sleep() și citirile inutile de senzori din ciclu',
   evNone:'nimic îngrijorător',at:'la',
@@ -283,7 +282,7 @@ const T={
    [/kA approximate/,'kA is approximate: the mechanism is very fast for the sampling rate'],
    [/kV <= 0|kA < 0/,'meaningless numbers: check units and motor/encoder direction']],
   made:'Free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
-  drive:'Drive',healthcheck:'Motor check',online:'robot online',ntBusy:'The robot is driving: big recordings open after it stops (the Driver Station needs the Wi-Fi).',mLow:'ran at low power only (holding a position): current not judged',srcCode:'in the code',srcRobot:'in the robot',cStick:s=>`The driver moved a stick for ${s} s, but the program gave no power to any drive motor`,cStickDo:'check in your code that the gamepad1 sticks are wired to the motors and the program is not stuck in another mode or state',cOsc:(m,n)=>`power jumps between + and − (up to ${n} times a second)`,cOscDo:'in your code: lower the controller kP / kD, or check that two parts of the code do not both drive this motor',cDir:p=>`the encoder counts against the power (${p}% of the time)`,cDirDo:'in your code: setDirection of this motor, or the encoder cable is in another motor port',ntLive:'The robot started: recording',ntDone:'The recording is ready',open:'Open',ntOff:'No connection to the robot. Is the phone on the robot Wi-Fi?',hubOf:'hub with',showAll:'Show all',autoRec:'Recorded automatically, without your code. Loop time shows only with the 4 lines in your code.',offline:'offline',idleT:'Nothing is running',idleP:'Start a program on the Driver Hub and the graphs appear here by themselves.',nUrg:'urgent',nChk:'to check',nOk:'fine',
+  drive:'Drive',healthcheck:'Motor check',online:'robot online',copyJava:'Copy Java',copied:'copied',copyManual:'select the text and copy',close:'close',ntBusy:'The robot is driving: big recordings open after it stops (the Driver Station needs the Wi-Fi).',mLow:'ran at low power only (holding a position): current not judged',srcCode:'in the code',srcRobot:'in the robot',cStick:s=>`The driver moved a stick for ${s} s, but the program gave no power to any drive motor`,cStickDo:'check in your code that the gamepad1 sticks are wired to the motors and the program is not stuck in another mode or state',cOsc:(m,n)=>`power jumps between + and − (up to ${n} times a second)`,cOscDo:'in your code: lower the controller kP / kD, or check that two parts of the code do not both drive this motor',cDir:p=>`the encoder counts against the power (${p}% of the time)`,cDirDo:'in your code: setDirection of this motor, or the encoder cable is in another motor port',ntLive:'The robot started: recording',ntDone:'The recording is ready',open:'Open',ntOff:'No connection to the robot. Is the phone on the robot Wi-Fi?',hubOf:'hub with',showAll:'Show all',autoRec:'Recorded automatically, without your code. Loop time shows only with the 4 lines in your code.',offline:'offline',idleT:'Nothing is running',idleP:'Start a program on the Driver Hub and the graphs appear here by themselves.',nUrg:'urgent',nChk:'to check',nOk:'fine',
   cog:'Center of gravity',cogTop:'Top view',cogSide:'Seen from the right',cogFront:'FRONT',cogL:'L',cogR:'R',cogDraw:'Where the center of gravity is',cogLimits:'When the robot tips over',
   cogWhere:(h,r,s)=>`Height ${h} cm. Along the robot: ${r}% of the way from the rear wheels to the front. Across: ${s}% from the right wheels to the left.`,
   tipBrake:v=>`Hard braking: tips forward above ${v} m/s² of deceleration`,tipAccel:v=>`Hard acceleration: wheelie above ${v} m/s²`,
@@ -296,12 +295,12 @@ const T={
   motors:'Motors',power:'Power and hub',program:'Program',events:'What happened while driving',history:'Compared with earlier sessions',
   mOk:a=>`works normally (${a} A)`,mOff:'was not used',mNoCur:'gets no current',mNoCurDo:'check the motor power cable and the MOTOR port number',
   mEnc:'encoder does not count',mEncDo:'plug the thin encoder cable into the ENCODER port with the same number as MOTOR. Precise autonomous needs it',
-  mEncAll:'no wheel has its encoder connected',
+  mEncAll:'no motor has its encoder connected',
   mMore:(p,a)=>`draws ${p}% more current than the others (${a} A)`,mMoreDo:'turn the wheel by hand: is it tighter, rubbing, a bent axle?',
   bOk:(v,r)=>`battery is good: ${v} V at start${r}`,bLow:v=>`battery was low at start: ${v} V`,bLowDo:'charge it or swap it before a match',
   bWeak:r=>`battery is worn: ${r} Ω resistance`,bWeakDo:'use it for practice, put another one in for matches',bWatch:r=>`battery is starting to wear: ${r} Ω`,
   bDrop:v=>`voltage dropped to ${v} V — hubs may have rebooted`,bDropDo:'swap the battery, check the connectors and the switch',
-  hubOk:t=>`Control Hub ran without problems, ${t} °C`,hubLost:'a hub stopped answering',hubLostDo:'check the cables between hubs and their power',
+  hubOk:t=>`ran without problems, ${t} °C`,hubLost:'a hub stopped answering',hubLostDo:'check the cables between hubs and their power',
   hubHot:t=>`hub got hot: ${t} °C`,
   loopOk:m=>`program is fast: ${m} ms loop`,loopSlow:m=>`program is slow: ${m} ms loop`,loopSlowDo:'remove sleep() and extra sensor reads from the loop',
   evNone:'nothing alarming',at:'at',
@@ -314,7 +313,7 @@ const T={
   first:'First session of this kind — nothing to compare with yet.',liveIdle:'No Black Box program is running now. Recordings are under "Sessions".'}};
 let picked=false,L=(()=>{try{const s=localStorage.getItem('asa-lang');if(T[s]){picked=true;return s}}catch(e){}return'en'})();   // the viewer's pick, else the robot's language, else English
 const t=()=>T[L];
-function applyLang(){$('#t-sessions').textContent=(tools.blackbox&&tools.sysid?'Black Box · ':'')+t().sessions;$('#t-yraw').textContent=t().yraw;$('#t-made').textContent=t().made;$('#t-fb').textContent=t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;$('#t-lrate').textContent=t().liveRate;setSt($('#st').classList.contains('on'));
+function applyLang(){$('#t-sessions').textContent=(tools.blackbox&&tools.sysid?'Black Box · ':'')+t().sessions;$('#t-yraw').textContent=t().yraw;$('#t-made').textContent=t().made;$('#t-fb').textContent=t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;$('#t-lrate').textContent=t().liveRate;$('#copy').textContent=t().copyJava;setSt($('#st').classList.contains('on'));
   document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openAny(current.f,current.d);loadFiles().then(()=>{if(ycur)openSysId(ycur.f,ycur.d)})}
 document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{L=b.dataset.l;try{localStorage.setItem('asa-lang',L)}catch(e){}applyLang()});
 
@@ -329,7 +328,8 @@ async function detectTools(){try{tools=JSON.parse(await get('/api/tools'))}catch
   applyLang();if(!bb&&sy)document.querySelector('#t-sysid').click();}
 document.querySelectorAll('nav button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('nav button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hide',s.id!==tab));if(tab!=='live')loadFiles();});
-const get=u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw r.status;return r.text()});
+const get=u=>{const c=new AbortController(),tm=setTimeout(()=>c.abort(),4000);   // Wi-Fi gone: give up, keep polling
+  return fetch(u,{cache:'no-store',signal:c.signal}).then(r=>{if(!r.ok)throw r.status;return r.text()}).finally(()=>clearTimeout(tm))};
 const sev=s=>(s.match(/\b(WARNING|CRITICAL|INFO)\b/)||['','INFO'])[1];
 
 // ---------------------------------------------------------------- live: polled ~5x/s while a program runs
@@ -340,7 +340,7 @@ let wasOn=null,hist={},hT0=null,liveSel=null,liveNames='',touched=0,failSince=0;
 const busy=()=>Date.now()-touched<20000;
 function notice(text,btn,go,cls){const n=$('#notice');n.innerHTML='';n.className=cls||'';n.append(el('span',null,text));
   if(btn){const b=el('button','btn',btn);b.onclick=()=>{n.classList.add('hide');go()};n.append(b)}
-  const x=el('button','x','×');x.setAttribute('aria-label','close');x.onclick=()=>n.classList.add('hide');n.append(x)}
+  const x=el('button','x','×');x.setAttribute('aria-label',t().close);x.onclick=()=>n.classList.add('hide');n.append(x)}
 const hideNotice=cls=>{const n=$('#notice');if(!cls||n.classList.contains(cls))n.className='hide'};
 const showTab=n=>{const b=$('#t-'+n);if(b&&!b.classList.contains('hide')&&tab!==n)b.click()};
 async function live(){
@@ -363,7 +363,7 @@ function renderLive(j){
   if(idle){box.innerHTML='';box.append(el('b',null,t().idleT),el('div','dim',t().idleP))}
   $('#lstatus').textContent=j.status||'';
   if(j.names.join()!==liveNames){liveNames=j.names.join();   // rebuild the checkboxes only when the signals change
-    if(!liveSel)liveSel=new Set(j.names.filter(n=>n==='battery'||n==='loop_ms'||n.endsWith('.amps')).slice(0,6));
+    if(!liveSel||!j.names.some(n=>liveSel.has(n)))liveSel=new Set(j.names.filter(n=>n==='battery'||n==='loop_ms'||n.endsWith('.amps')).slice(0,6));
     const c=$('#lcols');c.innerHTML='';j.names.forEach(n=>{const l=el('label'),b=el('input');b.type='checkbox';b.checked=liveSel.has(n);
       b.onchange=()=>{b.checked?liveSel.add(n):liveSel.delete(n)};l.append(b,n);c.append(l)})}
   const p=$('#lplots');p.innerHTML='';j.names.forEach(n=>{const h=hist[n];if(liveSel&&liveSel.has(n)&&h&&h.t.length>1)plot(p,n,h.t,h.v)});
@@ -384,7 +384,7 @@ const fmtT=s=>s>=60?`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'
 // One signal over time. xs = seconds (index=true: sample number). Every pixel column draws the min and the max of the
 // samples that fall in it, so a one-loop spike (a stall, a brownout) stays visible however long the session is.
 function plot(box,name,xs,ys,marks,index){
-  const c=el('canvas');box.append(c);const dpr=devicePixelRatio||1,W=c.width=Math.max(1,c.clientWidth*dpr),H=c.height=140*dpr,g=c.getContext('2d'),u=unit(name),C=css;
+  const c=el('canvas');box.append(c);const dpr=devicePixelRatio||1,W=c.width=Math.max(1,(c.clientWidth||720)*dpr),H=c.height=140*dpr,g=c.getContext('2d'),u=unit(name),C=css;
   let lo=Infinity,hi=-Infinity;ys.forEach(v=>{if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}});const vmin=lo,vmax=hi;
   if(!isFinite(lo)){lo=0;hi=1}if(hi===lo){hi+=1;lo-=1}const pad=(hi-lo)*0.08;lo-=pad;hi+=pad;
   const top=22*dpr,bot=18*dpr,x0=xs[0],x1=xs[xs.length-1],X=x=>(x-x0)/((x1-x0)||1)*(W-2)+1,Y=y=>H-bot-(y-lo)/(hi-lo)*(H-top-bot);
@@ -417,19 +417,20 @@ function plot(box,name,xs,ys,marks,index){
 
 // "20261116_175029_drive.csv" -> "Drive · 16.11 17:50"
 function nice(f){const m=f.match(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(.+)\.(csv|txt)$/);if(!m)return[f,''];
-  const kind=t()[m[6]]||m[6].replace(/_/g,' ');return[kind,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`]}
+  const kind=['drive','healthcheck','cog'].includes(m[6])?t()[m[6]]:m[6].replace(/_/g,' ');return[kind,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`]}
 
 let files=[],current=null,showAll=false;   // the automatic recorder adds a session per run: the newest 40 first
 async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}renderList();
-  const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const m=f.match(/(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(sysid|verify)_(.+)\.result\.txt$/);const d=el('div',null,m?(m[6]==='verify'?t().verify.split(' (')[0]+': ':'')+m[7]:f.slice(6));if(m)d.append(el('small',null,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`));d.onclick=()=>openSysId(f,d);y.append(d)});
+  const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const m=f.match(/(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(sysid|verify)_(.+)\.result\.txt$/);const d=el('div',null,m?(m[6]==='verify'?t().verify.split(' (')[0]+': ':'')+m[7]:f.slice(6));if(m)d.append(el('small',null,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`));d.onclick=()=>openSysId(f,d);keys(d);y.append(d)});
   if(!y.children.length){y.append(el('div','dim','-'));$('#ysum').innerHTML='';$('#ysum').append(el('div','panel dim',t().ynone))}}
 function renderList(){const s=$('#slist');s.innerHTML='';
   const rec=files.filter(f=>(/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!/batteries\.csv$/.test(f)||/_cog\.txt$/.test(f))&&!f.startsWith('sysid/')).sort().reverse();
   rec.slice(0,showAll?rec.length:40).forEach(f=>{
-    const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openAny(f,d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
+    const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openAny(f,d);keys(d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
   if(rec.length>40&&!showAll){const m=el('div','more',t().showAll+' ('+rec.length+')');m.onclick=()=>{showAll=true;renderList()};s.append(m)}
   if(!s.children.length)s.append(el('div','dim',t().none));
   if(!current)$('#summary').innerHTML='',$('#summary').append(el('div','panel dim',files.length?t().pick:t().none));}
+const keys=d=>{d.tabIndex=0;d.setAttribute('role','button');d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.onclick()}}};
 const pick=(box,d)=>{box.querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))};
 // while the robot drives, big recordings wait (the Driver Station needs the Wi-Fi): say so instead of failing silently
 const openAny=async(f,d)=>{try{await(/_cog\.txt$/.test(f)?openCog(f,d):openSession(f,d))}catch(e){if(e===503)notice(t().ntBusy,null,null)}};
@@ -437,7 +438,8 @@ function openNewest(){const d=$('#slist div');if(d&&d.onclick)d.onclick()}
 
 // ---------------------------------------------------------------- center of gravity: drawing + tipping limits
 // Line 1 of "<date>_cog.txt" (written by AsaCenterOfGravity): "ASA COG wheelbase=.. track=.. fromRear=.. ..." in cm, m/s², degrees.
-async function openCog(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.add('hide');const txt=await get('/file/'+f);
+let seq=0;   // the newest open request; older answers that arrive late are dropped
+async function openCog(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.add('hide');const my=++seq;const txt=await get('/file/'+f);if(my!==seq)return;
   const k={};(txt.split('\n')[0]||'').replace(/(\w+)=([-\d.eE+]+|NaN)/g,(_,a,b)=>{k[a]=+b});
   const box=$('#summary');box.innerHTML='';
   if(!isFinite(k.height)){const c=el('div','panel');c.append(el('div','dim',t().cogOld),el('pre',null,txt));box.append(c);return}
@@ -488,6 +490,9 @@ function cogSvg(k){
 
 // ---------------------------------------------------------------- plain-language summary
 const f1=v=>(Math.round(v*10)/10).toString(), f2=v=>(Math.round(v*100)/100).toString();
+// "frontLeft", "left_front_drive", "lf"...: a drivetrain wheel by its name (as FtcBlackBox.isDriveMotor)
+const isDriveName=n=>{const s=n.toLowerCase().replace(/motor|drive|wheel|[^a-z]/g,'');
+  return /left|right/.test(s)&&/front|back|rear/.test(s)||/^([lr][fbr]|[fbr][lr]|left|right)$/.test(s)};
 function analyze(data,events,report){
   const col=n=>{const i=data.h.indexOf(n);return i<0?null:data.cols[i]}, tt=data.cols[0], out={motors:[],power:[],program:[],events:[],history:[]};
   // motors: everything with .power and .amps
@@ -500,7 +505,7 @@ function analyze(data,events,report){
     stat[m]={used:use>20,strong:n>20,amps:n?sum/n:NaN,enc:maxPos>=5}});
   const used=motors.filter(m=>stat[m].used), noEnc=used.filter(m=>!(stat[m].amps<0.2)&&!stat[m].enc);
   used.forEach(m=>{const s=stat[m];let lv='g',txt=t().mOk(f1(s.amps)),todo='';
-    const others=used.filter(o=>o!==m&&stat[o].amps>=0.2).map(o=>stat[o].amps).sort((x,y)=>x-y),med=others.length?others[others.length>>1]:0;
+    const others=isDriveName(m)?used.filter(o=>o!==m&&isDriveName(o)&&stat[o].amps>=0.2).map(o=>stat[o].amps).sort((x,y)=>x-y):[],med=others.length?others[others.length>>1]:0;
     let src='robot';   // no current, friction, no encoder: wiring and mechanics
     if(!s.strong){txt=t().mLow}
     else if(s.amps<0.2){lv='r';txt=t().mNoCur;todo=t().mNoCurDo}
@@ -522,8 +527,9 @@ function analyze(data,events,report){
   // hubs
   data.h.filter(n=>n.endsWith('.ok')&&!n.startsWith('gamepad')).forEach(n=>{const ok=col(n),tc=col(n.slice(0,-3)+'.temp');let lost=false,tmax=-Infinity;
     ok.forEach(v=>{if(v===0)lost=true});if(tc)tc.forEach(v=>{if(isFinite(v))tmax=Math.max(tmax,v)});
-    if(lost)out.power.push({lv:'r',txt:t().hubLost,todo:t().hubLostDo,src:'robot'});else if(tmax>60)out.power.push({lv:'y',txt:t().hubHot(Math.round(tmax))});
-    else out.power.push({lv:'g',txt:t().hubOk(isFinite(tmax)?Math.round(tmax):'?')})});
+    const hub=n.slice(0,-3).replace(/_/g,' ');
+    if(lost)out.power.push({lv:'r',name:hub,txt:t().hubLost,todo:t().hubLostDo,src:'robot'});else if(tmax>60)out.power.push({lv:'y',name:hub,txt:t().hubHot(Math.round(tmax)),src:'robot'});
+    else out.power.push({lv:'g',name:hub,txt:t().hubOk(isFinite(tmax)?Math.round(tmax):'?')})});
   // loop
   const auto=(events.cols[1]||[]).includes('AUTO_RECORD'),lp=auto?null:col('loop_ms');   // automatic recording: its own clock, not the team's loop
   if(auto)out.program.push({lv:'n',txt:t().autoRec});
@@ -546,7 +552,8 @@ function analyze(data,events,report){
     let worst=0,bad=0;for(let a=0,b=0;b<flips.length;b++){while(flips[b]-flips[a]>1)a++;const n=b-a+1;worst=Math.max(worst,n);if(n>=6)bad++}
     if(bad>=6)out.program.push({lv:'y',name:m,txt:t().cOsc(m,worst),todo:t().cOscDo,src:'code'});
     // 3. the encoder turns against the commanded power: direction in code, or the encoder plugged into another port
-    if(v){let n=0,opp=0;for(let i=0;i<p.length;i++){if(tt[i]<T0||!(Math.abs(p[i])>0.3)||!(Math.abs(v[i])>50))continue;n++;if(Math.sign(p[i])!==Math.sign(v[i]))opp++}
+    const fast=v?v.filter(x=>isFinite(x)&&x!==0).map(Math.abs).sort((a,b)=>a-b):[],odo=fast.length&&fast[fast.length>>1]>5000;   // a motor encoder stays under ~3000 ticks/s
+    if(v&&!odo){let n=0,opp=0;for(let i=0;i<p.length;i++){if(tt[i]<T0||!(Math.abs(p[i])>0.3)||!(Math.abs(v[i])>50))continue;n++;if(Math.sign(p[i])!==Math.sign(v[i]))opp++}
       if(n>=20&&opp/n>0.8)out.program.push({lv:'y',name:m,txt:t().cDir(Math.round(100*opp/n)),todo:t().cDirDo,src:'code'})}});
   // warnings during the session, in words
   const et=events.cols[0]||[],ety=events.cols[1]||[],ed=events.cols[2]||[];
@@ -580,8 +587,9 @@ function renderSummary(o,meta){const box=$('#summary');box.innerHTML='';
   box.append(hero(n.r?'r':n.y?'y':'g',n.r?t().urgent:n.y?t().check:t().allOk,meta,null,n));
   [['motors',o.motors],['power',o.power],['program',o.program],['events',o.events],['history',o.history]].forEach(([k,rows])=>{if(rows.length)box.append(group(t()[k],rows))})}
 
-async function openSession(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.remove('hide');const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
+async function openSession(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.remove('hide');const my=++seq;const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
   try{ev=csv(await get('/file/'+f.replace(/\.csv$/,'.events.csv')))}catch(e){}try{rep=await get('/file/'+f.replace(/\.csv$/,'.report.txt'))}catch(e){}
+  if(my!==seq)return;
   const T0=data.cols[0],secs=T0.length?T0[T0.length-1]:0,dur=secs>=60?Math.round(secs/60)+' '+t().min:Math.round(secs)+' '+t().sec;
   renderSummary(analyze(data,ev,rep),nice(f).concat(dur).filter(Boolean).join(', '));
   const marks=(ev.cols[0]||[]).map((x,i)=>({t:x,c:ev.cols[1][i]==='CRITICAL'?'crit':ev.cols[1][i]==='WARNING'?'warn':'line'}));
@@ -596,7 +604,7 @@ async function openSession(f,d){current={f,d};pick($('#slist'),d);$('#raw').clas
 function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.innerHTML='';
   const head=L1[0]||'',isVerify=/VERIFY/.test(head);let verdict,lv;
   const note=line=>{for(const [re,txt2] of t().notes)if(re.test(line))return txt2;return line};
-  if(isVerify){const m=head.match(/RMS -([\d.]+|NaN)%/),pct=m?m[1]:'NaN';
+  if(isVerify){const m=head.match(/RMS -(-?[\d.]+|NaN)%/),pct=m?m[1]:'NaN';   // "RMS --12%": feedforward made it worse
     if(/MODEL VALIDATED/.test(head)){lv='g';verdict=t().vOk(Math.round(+pct));o.push({lv:'g',txt:t().vOkDo})}
     else if(pct==='NaN'||/moves 0 \+ 0/.test(txt)){lv='r';verdict=t().vNone;o.push({lv:'r',txt:t().vNoneDo})}
     else{lv='y';verdict=t().vNo;o.push({lv:'y',txt:t().vNoDo})}}
@@ -612,10 +620,16 @@ function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.inne
   box.append(hero(lv,verdict));box.append(group(null,o));
   if(o.mean&&o.mean.length)box.append(group(t().yMean,o.mean));}
 let ycur=null;
-async function openSysId(f,d){ycur={f,d};pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';sysidSummary(txt);
-  $('#copy').onclick=()=>{const j=txt.slice(txt.indexOf('// ASA SysId'));(navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>$('#cst').textContent='copied',()=>$('#cst').textContent='select the text and copy')};
-  const p=$('#yplots');p.innerHTML='';try{const data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv'))),idx=data.cols[0].map((_,i)=>i);
-    ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i],null,true)})}catch(e){}
+let yseq=0;
+async function openSysId(f,d){ycur={f,d};pick($('#ylist'),d);const my=++yseq;const txt=await get('/file/'+f);if(my!==yseq)return;
+  $('#yres').textContent=txt;$('#cst').textContent='';sysidSummary(txt);
+  const at=txt.indexOf('// ASA SysId');$('#copy').classList.toggle('hide',at<0);   // a verification has no constants to copy
+  $('#copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(txt.slice(at)):Promise.reject()).then(()=>$('#cst').textContent=t().copied,()=>$('#cst').textContent=t().copyManual)};
+  const p=$('#yplots'),det=p.closest('details');p.innerHTML='';let data=null;
+  try{data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv')))}catch(e){}
+  if(my!==yseq||!data)return;
+  const idx=data.cols[0].map((_,i)=>i),draw=()=>{p.innerHTML='';['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i],null,true)})};
+  det.ontoggle=()=>{if(det.open)draw()};if(det.open)draw();   // drawn when visible: a closed panel has no width
 }
 applyLang();detectTools().then(loadFiles).then(()=>{if(!current&&!wasOn&&tools.blackbox)openNewest();live()});
 </script></body></html>

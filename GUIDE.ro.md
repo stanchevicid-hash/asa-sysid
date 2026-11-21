@@ -88,7 +88,7 @@ vechi.
 | **Y** | înregistrarea automată a meciurilor: PORNIT / OPRIT (secțiunea 3) |
 | dpad | setările modului ales (vezi mai jos) |
 
-Programul ține minte modul și limba până data viitoare. Jos pe ecran e adresa paginii cu rezultate.
+Programul ține minte modul și limba până data viitoare. Pe ecranul INIT se vede dacă fiecare meci se înregistrează, ultima înregistrare și adresa paginii cu rezultate.
 
 ### Modul „Verificare robot”: înainte de meci
 
@@ -139,8 +139,9 @@ liftul centrul de greutate. Rezultatul se salvează în `/sdcard/FIRST/asa/<data
 
 Instalați biblioteca, reporniți robotul o dată și gata. Când rulează **orice** program (TeleOp-ul vostru în Java,
 Autonomous, chiar și un program în Blocks), Black Box îl înregistrează singur în fundal, fără nimic adăugat în cod:
-motoarele (putere, poziție, viteză, curent), servo-urile, bateria, hub-urile, senzorii și ambele gamepad-uri, cu toate
-avertismentele. Înregistrarea poartă numele programului, așa că „TeleOp Main” se compară cu rulările anterioare.
+motoarele (putere, poziție, viteză, curent), servo-urile, bateria, hub-urile și ambele gamepad-uri (în Autonomous fără
+gamepad-uri), cu toate avertismentele. IMU-ul și ceilalți senzori nu sunt citiți automat: la INIT asta le-ar încurca
+inițializarea. Îi înregistrează cele 4 rânduri din secțiunea 4. Înregistrarea poartă numele programului, așa că „TeleOp Main” se compară cu rulările anterioare.
 
 Cum nu vă încurcă în meci:
 
@@ -265,7 +266,7 @@ bb.update();
 - **Pagina web** pornește singură în orice program cu Black Box. Conectați un telefon sau un laptop la Wi-Fi-ul
   robotului și deschideți `http://192.168.43.1:8099/` (Driver Hub scrie adresa pe rândul „REZULTATE”). Deschideți-o o
   dată și lăsați-o deschisă: pagina urmărește singură robotul:
-  - **programul a pornit** → fila **Live**: grafice live din ultimele 60 s (baterie, curenții motoarelor, timpul
+  - **programul a pornit** → fila **„Acum”**: grafice live din ultimele 60 s (baterie, curenții motoarelor, timpul
     ciclului; bifați orice semnal) și avertismentele imediat ce apar;
   - **programul s-a oprit** → se deschide înregistrarea lui: în cuvinte simple, ce e în regulă, ce trebuie verificat și
     cum. Graficele sunt dedesubt;
@@ -451,8 +452,9 @@ Java apăsați **Build**. Programul ASA Black Box dispare din listă.
 
 Ce șterge butonul, și doar asta:
 - înregistrările, rezultatele și setările (folderul `FIRST/asa`);
-- fișierele bibliotecii din OnBot Java. Doar cele care încep cu rândul `// ASA Black Box library file`: chiar dacă
-  aveți propriul `Recorder.java` sau `Rule.java`, nu e atins;
+- fișierele bibliotecii din OnBot Java: în folderul `teamcode` doar cele care încep cu rândul `// ASA Black Box library file`
+  (chiar dacă aveți propriul `Recorder.java` sau `Rule.java`, nu e atins), și fișierele Black Box din folderele `org/asa/tools`;
+- dacă un fișier are nume ASA, dar nu are marcajul și pare ASA, butonul nu șterge nimic și îl arată: verificați-l voi;
 - înregistrarea și pagina de rezultate se opresc imediat, încă înainte de Build.
 
 Ce nu face butonul:
@@ -461,8 +463,9 @@ Ce nu face butonul:
 - dacă e instalat ASA SysId, fișierele comune rămân și SysId merge în continuare;
 - fișierele dintr-o versiune veche, fără marcaj, nu le șterge, ci le numește ca să le verificați voi.
 
-**Manual** (de exemplu, dacă ați instalat cu Android Studio): ștergeți cele 17 fișiere `AsaAutoRecorder` `AsaBatteryHealth` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaCenterOfGravityMath` `AsaDashboard` `AsaFtc` `AsaHealthCheck` `AsaLive` `AsaRecorder` `AsaRemover` `AsaRule` `AsaWeb` `AsaWebPage` `AsaWpiLog` `BlackBox` `FtcBlackBox` (`.java`) sau
-folderul `TeamCode/src/main/java/org/asa`, apăsați Build / instalați din nou aplicația, apoi **Restart Robot**.
+**Manual.** OnBot Java: ștergeți cele 17 fișiere `AsaAutoRecorder` `AsaBatteryHealth` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaCenterOfGravityMath` `AsaDashboard` `AsaFtc` `AsaHealthCheck` `AsaLive` `AsaRecorder` `AsaRemover` `AsaRule` `AsaWeb` `AsaWebPage` `AsaWpiLog` `BlackBox` `FtcBlackBox` (`.java`), apăsați Build. Android Studio: ștergeți folderul
+`TeamCode/src/main/java/org/asa` (dacă acolo e și ASA SysId, lăsați `core`, `ftc/AsaWeb*`, `ftc/Ftc.java`, `sysid`),
+instalați din nou aplicația. Apoi **Restart Robot**.
 
 Vreți doar s-o opriți, nu s-o scoateți? ASA Black Box → **Y** → „Înregistrarea automată e oprită”. Atunci la
 pornirea robotului ASA nu pornește nimic: nici înregistrare, nici pagină.
@@ -479,7 +482,7 @@ pornirea robotului ASA nu pornește nimic: nici înregistrare, nici pagină.
 
 **Meciul nu s-a înregistrat?** Înregistrările apar doar dacă programul a ajuns la START. Dacă după instalare robotul
 nu a fost repornit, rulați o dată „ASA Black Box” sau apăsați Restart Robot. Verificați că în „ASA Black Box” la INIT
-scrie „Înregistrează automat fiecare meci: PORNIT”.
+scrie „Înregistrare meciuri (Y): ● PORNIT”.
 
 **Înregistrarea în fundal încurcă robotul?** N-ar trebui (vezi secțiunea 3), dar verificați pe robotul vostru: dacă
 ciclul devine mai lent cu ea, opriți-o cu Y în „ASA Black Box” și scrieți-ne: e important pentru toate echipele.
@@ -498,7 +501,7 @@ arătat măcar o dată mișcare.
 robotul să pornească browserul pe alt dispozitiv. Dar ajunge s-o deschideți o dată: apoi trece singură între graficele
 live și înregistrări. E comod s-o puneți la marcaje sau pe ecranul principal al telefonului.
 
-**Pagina scrie „offline”?** Telefonul s-a deconectat de la Wi-Fi-ul robotului (des trece singur pe o rețea cu
+**Pagina scrie „fără conexiune”?** Telefonul s-a deconectat de la Wi-Fi-ul robotului (des trece singur pe o rețea cu
 internet). Reconectați-l și pagina continuă singură.
 
 Făcut de echipa **ASA, FTC 28284**. Licență MIT, gratuit pentru toate echipele.

@@ -80,6 +80,13 @@ public final class AsaWeb {
     /** Show this on the Live tab, e.g. a BlackBox (null to clear). */
     public static void publish(Live source) { live = source; }
 
+    /** Clears the Live tab only if it still shows this source (a team's own Black Box may have replaced it). */
+    public static synchronized void unpublish(Live source) { if (live == source) live = null; }
+
+    /** Set by the automatic recorder's hook: an OpMode is INITed or running, whether or not anything records it. */
+    private static volatile boolean opModeActive;
+    static void opModeActive(boolean on) { opModeActive = on; }
+
     /** Free text shown on the Live tab (e.g. SysId progress). */
     public static void status(String text) { status = text == null ? "" : text; }
 
@@ -119,49 +126,88 @@ public final class AsaWeb {
     static final int MAX_REQUESTS = 8;
     private final java.util.concurrent.Semaphore slots = new java.util.concurrent.Semaphore(MAX_REQUESTS);
 
-    private void serve(ServerSocket server) {
+    /** The request line and all headers together: anything longer is not a browser asking for a page. */
+    static final int MAX_REQUEST_BYTES = 8192;
+    /** Whole-connection deadlines, enforced by the reaper (a read timeout alone lets a byte every 3 s keep a slot). */
+    static final long REQUEST_MS = 5000, RESPONSE_MS = 120000;
+
+    /** Open connections and when each must be finished; the reaper closes late ones, even a thread stuck writing. */
+    private final java.util.Map<Socket, Long> deadlines = new java.util.concurrent.ConcurrentHashMap<Socket, Long>();
+
+    private void serve(final ServerSocket server) {
+        Thread reaper = new Thread(new Runnable() { public void run() {
+            while (!server.isClosed()) {
+                long now = System.nanoTime();
+                for (java.util.Map.Entry<Socket, Long> e : deadlines.entrySet())
+                    if (now - e.getValue() > 0) { try { e.getKey().close(); } catch (Exception ignored) {} deadlines.remove(e.getKey()); }
+                try { Thread.sleep(500); } catch (InterruptedException e) { return; }
+            }
+        }}, "asa-web-reaper");
+        reaper.setDaemon(true);
+        reaper.setPriority(Thread.MIN_PRIORITY);
+        reaper.start();
         while (!server.isClosed()) {
             try {
                 final Socket s = server.accept();
-                s.setSoTimeout(5000);   // the request line and headers must arrive within 5 s
+                s.setSoTimeout((int) REQUEST_MS);
                 if (!slots.tryAcquire()) {
                     try { send(s.getOutputStream(), 503, "text/plain", bytes("busy")); } catch (Throwable ignored) {}
                     try { s.close(); } catch (Exception ignored) {}
                     continue;
                 }
+                deadlines.put(s, System.nanoTime() + REQUEST_MS * 1000000L);
                 // one thread per request (bounded): a phone downloading a long WPILOG must not freeze the Live tab for the others
                 Thread t = new Thread(new Runnable() { public void run() {
                     try { handle(s); } catch (Throwable ignored) {}   // one bad request must not stop the server
-                    finally { try { s.close(); } catch (Exception ignored) {} slots.release(); }
+                    finally { deadlines.remove(s); try { s.close(); } catch (Exception ignored) {} slots.release(); }
                 }}, "asa-web-req");
                 t.setDaemon(true);
                 t.setPriority(Thread.MIN_PRIORITY);   // a download during a match must not slow the OpMode
-                try { t.start(); } catch (Throwable e) { slots.release(); try { s.close(); } catch (Exception ignored) {} }
-            } catch (Throwable ignored) {}
+                try { t.start(); } catch (Throwable e) { deadlines.remove(s); slots.release(); try { s.close(); } catch (Exception ignored) {} }
+            } catch (Throwable e) {
+                if (!server.isClosed()) try { Thread.sleep(100); } catch (InterruptedException ie) { return; }   // e.g. no file descriptors: do not spin
+            }
         }
     }
 
-    private void handle(Socket s) throws Exception {
-        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
-        String line = in.readLine();
-        if (line == null || line.length() > 2048) return;
-        for (int n = 0; ; n++) {   // headers are not used: skip them, but not forever
-            String h = in.readLine();
-            if (h == null || h.isEmpty()) break;
-            if (n > 64 || h.length() > 4096) return;
+    /** The request line, after reading at most MAX_REQUEST_BYTES up to the blank line; null when too long or cut off. */
+    private static String readRequestLine(InputStream in) throws Exception {
+        java.io.ByteArrayOutputStream buf = new java.io.ByteArrayOutputStream();
+        int lineStart = 0;
+        for (int b; (b = in.read()) != -1; ) {
+            if (buf.size() >= MAX_REQUEST_BYTES) return null;
+            buf.write(b);
+            if (b == '\n') {
+                byte[] all = buf.toByteArray();
+                int len = all.length - lineStart;                       // this line, with its \n (and \r)
+                if (len <= 2 && lineStart > 0) {                       // blank line: end of the headers
+                    String req = new String(all, 0, all.length, "UTF-8");
+                    int end = req.indexOf('\n');
+                    return req.substring(0, end).trim();
+                }
+                lineStart = all.length;
+            }
         }
-        s.setSoTimeout(30000);   // sending: a long session's WPILOG download takes a while
+        return null;
+    }
+
+    private void handle(Socket s) throws Exception {
+        String line = readRequestLine(s.getInputStream());
+        if (line == null) return;
+        deadlines.put(s, System.nanoTime() + RESPONSE_MS * 1000000L);   // sending: a long session's WPILOG takes a while
+        s.setSoTimeout((int) RESPONSE_MS);
         String[] parts = line.split(" ");
         OutputStream out = s.getOutputStream();
         if (parts.length < 2 || !parts[0].equals("GET")) { send(out, 405, "text/plain", bytes("GET only")); return; }
         String path = parts[1];
         int q = path.indexOf('?');
         if (q >= 0) path = path.substring(0, q);
-        path = URLDecoder.decode(path, "UTF-8");
+        try { path = URLDecoder.decode(path, "UTF-8"); } catch (IllegalArgumentException bad) { send(out, 400, "text/plain", bytes("bad request")); return; }
 
         if (path.equals("/api/quit")) {
             if (!s.getInetAddress().isLoopbackAddress()) { send(out, 400, "text/plain", bytes("local only")); return; }
             send(out, 200, "text/plain", bytes("bye"));
+            synchronized (AsaWeb.class) { if (instance == this) instance = null; }   // a later start() binds a fresh server
             socket.close();
             return;
         }
@@ -182,6 +228,7 @@ public final class AsaWeb {
     static final long MAX_BYTES_WHILE_DRIVING = 256 * 1024;
 
     private static boolean driving() {
+        if (opModeActive) return true;
         Live src = live;
         try { return src != null && !src.names().isEmpty(); } catch (Throwable e) { return false; }
     }
@@ -192,28 +239,47 @@ public final class AsaWeb {
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
         if (driving() && f.length() > MAX_BYTES_WHILE_DRIVING) { send(out, 503, "text/plain", bytes("driving")); return; }
+        boolean big = f.length() > MAX_BYTES_WHILE_DRIVING;
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: " + f.length()
                 + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
+        OutputStream o = big ? stopWhenDriving(out) : out;   // a download started before INIT stops when the robot drives
         InputStream in = new FileInputStream(f);
         try {
             byte[] buf = new byte[16384];
-            for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
+            for (int n; (n = in.read(buf)) > 0; ) o.write(buf, 0, n);
         } finally { in.close(); }
-        out.flush();
+        o.flush();
     }
 
     /** A Black Box session converted to WPILOG on the fly for AdvantageScope (streamed, never fully in memory). */
     private void sendWpiLog(OutputStream out, String rel) throws Exception {
-        if (!rel.matches("[\\p{L}\\p{N}_.-]+\\.csv") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
+        if (!rel.matches("[\\p{L}\\p{N}_.-]+\\.csv") || rel.contains("..") || rel.endsWith(".events.csv") || rel.endsWith(".summary.csv")) {
+            send(out, 400, "text/plain", bytes("bad name")); return;
+        }
         if (driving()) { send(out, 503, "text/plain", bytes("driving")); return; }
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
+        String name = rel.substring(0, rel.length() - 4) + ".wpilog";
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Disposition: attachment; filename=\""
-                + rel.replace(".csv", ".wpilog").replaceAll("[^\\x20-\\x7E]", "_") + "\"; filename*=UTF-8''"   // real name ("Маршрут") for browsers that read it
-                + java.net.URLEncoder.encode(rel.replace(".csv", ".wpilog"), "UTF-8").replace("+", "%20") + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
-        OutputStream buffered = new java.io.BufferedOutputStream(out, 65536);
+                + name.replaceAll("[^\\x20-\\x7E]", "_") + "\"; filename*=UTF-8''"   // real name ("Маршрут") for browsers that read it
+                + java.net.URLEncoder.encode(name, "UTF-8").replace("+", "%20") + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
+        OutputStream buffered = new java.io.BufferedOutputStream(stopWhenDriving(out), 65536);
         WpiLog.convert(f, buffered);
         buffered.flush();
+    }
+
+    /** Passes bytes on until a program starts driving, then fails the write: the Wi-Fi is the Driver Station's. */
+    private static OutputStream stopWhenDriving(final OutputStream out) {
+        return new java.io.FilterOutputStream(out) {
+            @Override public void write(byte[] b, int off, int len) throws java.io.IOException {
+                if (driving()) throw new java.io.IOException("robot driving");
+                out.write(b, off, len);
+            }
+            @Override public void write(int b) throws java.io.IOException {
+                if (driving()) throw new java.io.IOException("robot driving");
+                out.write(b);
+            }
+        };
     }
 
     private static void send(OutputStream out, int code, String type, byte[] body) throws Exception {
