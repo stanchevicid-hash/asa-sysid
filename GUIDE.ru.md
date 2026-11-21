@@ -27,7 +27,8 @@
 
 ### OnBot Java (через браузер, без Android Studio)
 
-**Проще всего:** скачайте из релиза `asa-blackbox-onbot.zip`, распакуйте и загрузите все 17 файлов в вашу обычную
+**Проще всего:** скачайте из релиза `asa-blackbox-onbot.zip` (или возьмите папку [`onbot/`](https://github.com/stanchevicid-hash/asa-blackbox/tree/main/onbot) репозитория),
+распакуйте и загрузите все 17 файлов в вашу обычную
 папку `teamcode` в OnBot Java, без подпапок. Нажмите Build. Если первая сборка не прошла («bad source file»),
 нажмите Build ещё раз.
 
@@ -69,6 +70,8 @@
 
 **Пришлите нам** ([форма](https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml)) фото
 результата шага 3 и всё красное, что увидели. Так мы узнаем, что библиотека работает не только на нашем роботе.
+
+**Тестируете для нас?** Полная проверка на роботе (около часа, заодно проверяет все исправления 1.5.0): [TESTING.ru.md](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.ru.md) · [EN](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.md) · [RO](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.ro.md).
 
 ---
 

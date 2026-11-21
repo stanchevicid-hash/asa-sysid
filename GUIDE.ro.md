@@ -27,7 +27,8 @@ Aveți nevoie de ambele biblioteci? Dezarhivați ambele arhive. Fișierele comun
 
 ### OnBot Java (din browser, fără Android Studio)
 
-**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 17 fișiere în
+**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip` (sau luați folderul [`onbot/`](https://github.com/stanchevicid-hash/asa-blackbox/tree/main/onbot) din repository),
+dezarhivați și încărcați toate cele 17 fișiere în
 folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build. Dacă prima compilare nu reușește
 („bad source file”), apăsați Build încă o dată.
 
@@ -70,6 +71,8 @@ lent” — opriți înregistrarea automată (**Y**), restul funcționează și 
 
 **Trimiteți-ne** ([formular](https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml)) o
 poză cu rezultatul pasului 3 și tot ce a ieșit roșu. Așa aflăm că biblioteca merge nu doar pe robotul nostru.
+
+**Testați pentru noi?** Testul complet pe robot (cam 1 oră, verifică și toate reparațiile din 1.5.0): [TESTING.md](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.md) · [RU](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.ru.md) · [RO](https://github.com/stanchevicid-hash/asa-blackbox/blob/main/TESTING.ro.md).
 
 ---
 
