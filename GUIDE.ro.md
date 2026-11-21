@@ -79,7 +79,7 @@ vechi.
 
 | Buton | Ce face |
 |---|---|
-| **LB / RB** | alegeți modul: **Verificare robot**, **Centrul de greutate** sau **Test înregistrare** (secțiunea 1) |
+| **LB / RB** | alegeți modul: **Verificare robot**, **Centrul de greutate**, **Test înregistrare** (secțiunea 1) sau **Șterge datele ASA** (secțiunea 8) |
 | **X** | limba: EN → RU → RO. Pagina web va fi în aceeași limbă |
 | **Y** | înregistrarea automată a meciurilor: PORNIT / OPRIT (secțiunea 3) |
 | dpad | setările modului ales (vezi mai jos) |
@@ -433,7 +433,27 @@ sau rău.
 
 ---
 
-## 8. Întrebări frecvente
+## 8. Cum scoateți complet ASA
+
+ASA nu schimbă nimic în codul echipei, în configurația robotului sau în SDK. Tot ce creează stă într-un singur
+folder pe Control Hub: `FIRST/asa`. De aceea scoaterea are trei pași.
+
+1. **Datele (opțional).** ASA Black Box → modul „Șterge datele ASA” → START → țineți **A + B** 3 secunde.
+   Se șterge doar folderul `FIRST/asa`: înregistrări, rezultate, setări.
+2. **Fișierele bibliotecii.** În OnBot Java ștergeți cele 16 fișiere: `AsaAutoRecorder` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaHealthCheck` `AsaWeb` `AsaWebPage` `BatteryHealth` `BlackBox` `CenterOfGravity` `Dashboard` `Ftc` `FtcBlackBox` `Live` `Recorder` `Rule` `WpiLog` (`.java`).
+   În Android Studio — folderul `TeamCode/src/main/java/org/asa`. Apăsați **Build**.
+3. **Restart Robot.** Până la repornire, biblioteca deja încărcată rămâne în memorie. După repornire nu mai e:
+   nici înregistrare, nici pagină, nici programul ASA în listă.
+
+Dacă ați adăugat Black Box în propriul cod (cele 4 rânduri din secțiunea 4), scoateți și rândurile acelea, altfel
+proiectul nu se compilează.
+
+Vreți doar s-o opriți, nu s-o scoateți? ASA Black Box → **Y** → „Înregistrarea automată e oprită”. Atunci la
+pornirea robotului ASA nu pornește nimic: nici înregistrare, nici pagină.
+
+---
+
+## 9. Întrebări frecvente
 
 **Unde găsesc programul pe Driver Hub?** În lista TeleOp, grupul ASA, „ASA Black Box”. Dacă nu e acolo, codul nu s-a
 încărcat: compilați proiectul din nou (în OnBot uneori trebuie apăsat Build de 2–3 ori).

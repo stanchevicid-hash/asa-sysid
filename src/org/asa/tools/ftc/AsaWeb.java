@@ -62,6 +62,7 @@ public final class AsaWeb {
         w.socket = server;
         Thread t = new Thread(new Runnable() { public void run() { w.serve(server); } }, "asa-web");
         t.setDaemon(true);
+        t.setPriority(Thread.MIN_PRIORITY);
         t.start();
         w.url = "http://" + ip() + ":" + port + "/";
         instance = w;
@@ -126,6 +127,7 @@ public final class AsaWeb {
                     finally { try { s.close(); } catch (Exception ignored) {} slots.release(); }
                 }}, "asa-web-req");
                 t.setDaemon(true);
+                t.setPriority(Thread.MIN_PRIORITY);   // a download during a match must not slow the OpMode
                 try { t.start(); } catch (Throwable e) { slots.release(); try { s.close(); } catch (Exception ignored) {} }
             } catch (Throwable ignored) {}
         }

@@ -13,6 +13,9 @@
 - Without the team's code, "all encoders of a hub went to 0" may be the program resetting them: reported as a
   WARNING with both explanations instead of a CRITICAL hub reset.
 - Two recordings of the same OpMode in the same second no longer share a file.
+- **Easy to remove.** "Delete ASA data" (fourth mode, hold A + B for 3 s) deletes only the folder FIRST/asa; the
+  guides list the three steps to remove ASA completely. With the automatic recording switched off (Y), nothing of
+  ASA starts at power-on, not even the page. The page server runs below the OpMode's priority.
 - **Recording test** (third mode of ASA Black Box): loop time with and without the automatic recording, samples
   recorded, encoders read, as green / yellow / red. The INIT screen shows whether every match is recorded, the
   newest recording and the page address. A 7-step check after installing is in the guides.
