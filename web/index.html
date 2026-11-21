@@ -1,37 +1,160 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ASA Black Box</title>
+<meta name="theme-color" content="#22262E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='28' height='20' rx='5' fill='%23FF5A1F'/%3E%3Ccircle cx='22' cy='16' r='4' fill='%2322262E'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#07070A">
+<link rel="icon" href="data:image/webp;base64,UklGRpoMAABXRUJQVlA4WAoAAAAQAAAAQwAAQwAAQUxQSF0CAAABDknWtqd1Izt2O2yyCbwwTMdJtlCmdXA7Y1gA47y5o3LHTAtgZubW9rlsS1rAJ3+SHBEM3Ehqs0vdQ5CeO56AXByJAMS1tftat599S1DZ2y2zthYLwDtIoguBsZWnHmRDWVZmCRA6Wa2lh99mHSb/kZouDODBDl8fsjIaQQTMXeixpcML02O6MCsQBcVUoNYi+Z+56UmiJlBEjAV2/O1cMRYiDP9agTg3Ikxc7xwcCxOkmRA+5xwOy7535pFCz28WLsiTDTYOUKWIRgQmT97f25LXKHMkh4P8R6m0PAA3dLYt3Sw7eURDVl3VmV86PVciHmid/JFmCmjKyQHGALiXJSoAWgHTP2hXr6ZCKhH1afV/CRUR1vRKDuepDrQ9cJjvZnVpvptCXFUL31EcZrKUCmlYwkU4yv8q4VkhwthHKmZlgZVM1AI0Ame6fbXd01j0mKlaGFZlkxqwsaHbV911+3SAWWCiGmB1Swf4p0xVw7D8Tg1ooAOgB/To6DFEj4n0eLb36/COlXq863p8c7T49sXitA7fYKzS4V+gwT/pwyj0+Dfq8Y9GiCsqzaAVoQY+y5xwuvhOcKip9OFqvUCEnaom8US/ex0A99VIoB/g08Jh6qca39pOwan38Vch1iLWUB/zeLgcsdcBuROANmcAt4nyGiDLTs4Zi36THIuqjomvjQuvc2wOOGBqIWORaTzJygKu8F7F7LliexVl8b0KACGBmcNvsh5Tv0fTv2fy9nDZc2QS6AiMLj/1aHjxsFpZAuEIJNFFABY31+4+e+vln9T8eemdRZMCiPK1AABWUDggFgoAAJArAJ0BKkQARAA+MRaIQqIhIRXLjrwgAwS0AF/x7Ul/1Hld+GfDOrJ8ybkT/R/cr2rfMA/ULpieYD9df9j/jvaU9QHoAfy7/I9ZD/TPUA/YD0r/2Q+Cf9l/129l//wXpX+A8JfA95b9fP2793D+M2in22+xflx+Rvsm+NPp69QL8Z/mf98/Jj8w+UEAB9UP8t+WHiq+gHzEe4B/Hv5f/d/y3/svPM91+wB/Lv6L/kf6r+3H+G+Ij/G/zP5Le0r51/2X99/Ij7Bv5R/Qf85/dv3L/yX/z+pv1tftD7GH6uJKdcbXaYOSyAi+Cx0HgxklQjVXwAA58IRndch9x1A57J6sWPzmTmNp866x0OeFS1OsUi5XB/9WD8jXP0ZkVvn8ottPXMYhZy1ucdJgMMsJyfw8vE51dUJriVS9udjb/CbJX1FKUhqOgkL2kuegJDyD5HhHaf9zugsujmRDkIBxNw3f1SOoAAD+//6DtP7Dvgd16jpQnQQaFFC3eCGdDZXFaT69L9UZPAqsyCpj5g6xXjpKiPhTB7ca/pmHFAHF1JeFMWJKb/wJ3gEDB3G4mDRvGo6xf3VcyVtmWXcktHWUE6CPDtXYDOt9kciTmqjjXKSzKDT5CNVGmm9iBqTd0gDYbYAbnDgJORp//pqHVKadPEHccwlzUAhHf6uI8L6/gQPRRZe1QAuNPadptWPE20Tj71QgNIu45RTzSHcXgAnOs5Z1+f7RVwlLnMkUaklbwikBf+qhEWBQm14cPKHpI/oBKc1wX+t4owPE/Dhjru4cggh/DMzWuR5yZMWLhJwMIbiM/G6tPNQa3UA3HrL85tlfiYAggl2BBRTxe4AJY/Ya6NtZu4mj7N4ji8OlnCfFGJlg9fXsWEAQGh26foBVCC6BMKOKaprvPK2Hu+EyZJM5fgmP8uY8xVg+5L67wGM75X/qIvjhHWL23BTo05Phcbn5WpOLcmS6fS86sCwrN6uM/Jyn6lRYsi3063ZIfU0owb8DgCJu/4caGt+zgknExbw2MSjM/A6Vi6eZ7d0fhBOdZ4Mx8JxQ1VZaghg6jzAfnHYKCZqogHrXXmHpEq0CXzBPHMgRbBD6JdDgleUu/clnVAXb08nZ6Z4YhjJBZbvldQwGo34lfajXZ1DvS0OYffU4oUtOFqxgXVTir4umC0N3o4NSFznz6K1PjV8z9GBCn0hMCJWk2STxsBN0FWyT3dr0ya4FDI1cObvJITxjJiWM3UMiKO9jGlhTzoT5wZVHnCXdnlAbzILFRbq+kKpllONpkb+hKxaLS1fHODLldP1nKlB+PtkQOA6g7zaOzGruwfmDI7LzCKn+oB9Dv0fj+oQam6jAGdPSJajh83vF4654e8xTYgzNXgBMAks4BHxJQ+RCtRlpNY0Ub/A8eIAa1y8j/IRKA102p1/z9OLQzhv1pgAUDRwpMMjQHN0p/JJ+VulWpbgywe+osZovio7vSJxNX9CC3+s1794tV1+yJAXNk0/mkNABmbHqra/pyok9mnKB8v8WTiIXjiXIcQZWP+qbr55XGS0CbjxdPU/DkhlZs+u37vMi+Zb9Aw0tiofyx/x512BRTqL6NIzf8p8oqkPXG/NucdMtcy/pVyKApPTqPeaEG83yStwH/hnx2hhAo4MBJZI/9K0Cb1rK4y91b7/p7Asi6gA86aB0buaMOoH2BB3kTYq3TWC26TQ60NWxteVtOEn3nXtx8/tPl6n6i5pKqOtJeh/foHeaH9pi6CGLGjWnQTUEWiDf/BUSAewsEHUyHtTala6ksq6imRuJhLBnoHCxtjJip0gw5XXy0GjrChNchIdoF4tESySIHMwRG/aALkv9tcXHRYgt6VsaB6erEDe4kzeVHxfn40Wbgwh17JAtj+UVTZw0M5M2x2a9FjoCPdi9yxK6nb1ID9z4Rl1fPgSK1+ZFShmb13/eEg+IRs8BlI3D8Ir/j915RYWBdt/4/K7RnaGu+SaW4zjjHAiJ1gcRsaG3x+JelQLiLRMQjO0U9/KdStnXMBuZaa61j/jVe2pUdtrO7SCF6ddGNTGxjlweemivh7CxXXbmknagQeC6UJb8AAi57W1vW/1pj4kIzmsLhUif4KI8ZqLR3dSanXX/A5j//wpAEY8wFNtPcM2I+hHRn48XButFiIz4HSJgH3gNk8xXQZlxkPnUEViCZg71Cgu3c0/p7Dg+uxAkufA9pA+aAzBuvbvrlpWWF8ryXZmK+/goN0Z8SLcViljHsyvlR4tFHvN7VXixprtbF1f3nXHhvstmtUr4cfdZtCrx3DDo/jgycDNceIEk66JZuQ8Qyr+wzVc2/UI9/FHHHnymT9xVIj8hbnqn4YucwCM7KfylzcnjicLDArlS2xvwfAjTHsuzhCO/5JKPYnYIRQ0zvz80KNQTcq7VX9oh9zShtOCq5NE7yKoofVUUwUXlc3IMjyYXTIdoYCuu9qJ8drJgPqdW/1nQJal5FWT/aOdqnP4iXvfYIooGLv2GLUK9hNw8412UF+YGId84D4qXEMe7Y5F4gCLuLZUe+yDdLIobxLK3+qmpkuTLjNXkhFwBumJOnHKSUbG0xl6EaxrumcPg6uO+q2+1+UCObpXJn3EeSKziKnQRKSnoheH/vU/EACReCGfQdfP5erWsWgQBgmzK0bnS/917oBNQx2JT2ZzlXQzysSbHXe/PnbwcPVlX8f/HK9FWgf0v2AlKsEKhkNY1w08nHEA39RYECYtYJ++VrcKR7PnZxFCF2vo31fdt/TSB7FpMfb07oIzRER2GIKqeVIat61A9DGbyx/wUiMQdA/V8O/d47QqgMA9Dt+Arv78Fd2RiHRon5Uasaf/0e/qIOyCofqbwfTVrgI/VZKWLZcJnaqLjMrRvexY5/NDlVfuBHowWlYFC9tnZ2ctiWPyqhGjJQHPqSIQfFRB4zbUZJ2DGdBdXUCdbu4FqK3ifiXNZ0P9e806gSzZqzWvXrlzChL/YlPmFgwyVYFD8Oz++sbrjIE5U2EY8jCE4f5CPc3T5wI5FxY+S1lifr32MwA/8ze8c0G9awgt8+Q/YcrPtR1lI2F2Hu8FgJqmet2QxlAxGATh5/Es6tVb23V1LMAOmraHjuBEKKUYEPXieRQVOo0Vnby5NPmbSRKEhpskM+HpM8hUehbqtY6y5gCQlX/xhsXLtQK9iGATnx45ltz9rUTpptSoh6I96ZGdtmg02pYmDy0n5XhFPbekeAx3dTj4G/WsMBlcv5gPw0WH92oOtJGDI07kVwOy7A5dXl1VrCsoE5fhSZRlPaQ599koV+goyx4T+7IFkuZfYA6BV+l/+2Um0OLc9k7YJY0mPCMbdpg+NqSipzoHxIM8ywGop+ewEaTMDup2IPbqzRCBsy6+B+FceiT1pVBVz5XXNPFcVkelrMnRuJvBEJsu5bQscoECT4UtckuP/QLDalPFzDfZuaOAAAAAA">
 <style>
-:root{--bg:#0f1115;--card:#181b22;--line:#2a2f3a;--fg:#e6e8ee;--dim:#8a91a0;--acc:#4da3ff;--warn:#ffb020;--crit:#ff4d5e;--ok:#3ccf7a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}
-header{display:flex;gap:4px;padding:10px 16px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
-header b{margin-right:12px}button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
-button.on{border-color:var(--acc);color:var(--acc)}main{padding:16px;max-width:1100px;margin:auto}
-.grid{display:grid;grid-template-columns:250px 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;overflow:auto}
-.list div{padding:7px 9px;border-radius:6px;cursor:pointer}.list div:hover,.list div.on{background:#232835}.list small{display:block;color:var(--dim)}
-table{border-collapse:collapse;width:100%}td{padding:3px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}td:last-child{text-align:right}
-.WARNING{color:var(--warn)}.CRITICAL{color:var(--crit)}.INFO{color:var(--dim)}.dim{color:var(--dim)}
-canvas{width:100%;height:110px;display:block;margin-bottom:6px}label{display:inline-block;margin:2px 10px 2px 0;white-space:nowrap}
-pre{margin:0;white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace}.hide{display:none}
-.verdict{font-size:22px;font-weight:700;margin:0 0 4px}.row{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.row:first-of-type{border-top:0}
-.dot{flex:0 0 14px;height:14px;border-radius:50%;margin-top:4px}.g{background:var(--ok)}.y{background:var(--warn)}.r{background:var(--crit)}.n{background:#4a5060}
-.row b{display:block}.todo{color:var(--dim);font-size:14px;margin-top:2px}.todo:before{content:"→ "}
-h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
-footer{max-width:1100px;margin:0 auto 24px;padding:0 16px;color:var(--dim);font-size:14px}footer a{color:var(--acc);margin-right:14px;text-decoration:none}footer b{color:var(--fg)}
-summary{cursor:pointer;color:var(--acc);padding:4px 0}#lang{margin-left:8px}#lang button{padding:4px 8px}
+/* ASA Black Box in ASA's colors: magenta on carbon black, silver text (the team logo). Magenta marks the team and
+   the data (logo, tape, REC, graph lines, the center of gravity); the rest is a quiet instrument panel, so the
+   traffic lights are what the eye finds. "Urgent" is orange-red so it never reads as the team pink. */
+:root{color-scheme:dark;
+ --bg:#09090D;--surf:#15151C;--surf2:#1F1F28;--line:#2B2B36;--fg:#F1EFF4;--dim:#A4A1AE;
+ --brand:#FF2D8A;--data:#FF2D8A;--ok:#3DDC97;--warn:#FFD23F;--crit:#FF6A3D;--none:#55535F;
+ --num:"Bahnschrift","DIN Alternate","DIN Condensed","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+ --txt:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media(prefers-color-scheme:light){:root{color-scheme:light;
+ --bg:#F1EFF4;--surf:#FFFFFF;--surf2:#F6F4F8;--line:#DEDAE4;--fg:#14131A;--dim:#5E5A68;
+ --brand:#D8156F;--data:#D8156F;--ok:#138A55;--warn:#9A7200;--crit:#D9480F;--none:#A09CA9}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--txt);-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--data);outline-offset:2px;border-radius:6px}
+a{color:var(--data)}
+.hide{display:none!important}.dim{color:var(--dim)}
+
+/* header: the recorder's own colors */
+header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--surf);
+ background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--fg) 3%,transparent) 0 2px,transparent 2px 4px),repeating-linear-gradient(-45deg,color-mix(in srgb,var(--fg) 3%,transparent) 0 2px,transparent 2px 4px)}   /* carbon weave */
+.logo{display:flex;align-items:center;gap:11px;margin-right:auto;font:600 20px/1 var(--num);letter-spacing:.01em;white-space:nowrap}
+.logo img{width:34px;height:34px;border-radius:50%;flex:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 35%,transparent)}
+.logo em{font-style:normal;color:var(--brand)}
+.tape{height:6px;background:repeating-linear-gradient(-55deg,var(--brand) 0 8px,transparent 8px 13px,color-mix(in srgb,var(--fg) 55%,transparent) 13px 15px,transparent 15px 22px),var(--surf)}
+#st{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:7px;white-space:nowrap}
+#st:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--crit)}#st.on:before{background:var(--ok)}
+#lang{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px}
+#lang button{background:none;border:0;border-radius:999px;padding:3px 9px;font:600 12px/1.4 var(--num);letter-spacing:.04em;color:var(--dim)}
+#lang button.on{background:var(--surf2);color:var(--fg)}
+@media(max-width:520px){header{padding:10px 14px;gap:10px}#st span{display:none}.logo{font-size:18px}}
+
+/* tabs */
+nav{display:flex;gap:4px;max-width:1120px;margin:18px auto 0;padding:0 20px}
+nav button{background:none;border:1px solid transparent;border-radius:999px;padding:7px 16px;color:var(--dim);display:flex;align-items:center;gap:8px;font-weight:600}
+nav button:hover{color:var(--fg)}
+nav button.on{background:var(--surf);border-color:var(--line);color:var(--fg)}
+#t-live.rec:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--brand);animation:rec 1.2s ease-in-out infinite}
+@keyframes rec{50%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){#t-live.rec:before{animation:none}}
+
+main{max-width:1120px;margin:0 auto;padding:16px 20px}
+.grid{display:grid;grid-template-columns:236px minmax(0,1fr);gap:24px;align-items:start}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:16px}
+
+/* recordings: a column on a laptop, a swipeable strip on a phone */
+.list{display:flex;flex-direction:column;gap:2px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.list div{padding:9px 12px 9px 13px;border-radius:10px;cursor:pointer;font-weight:600;border-left:3px solid transparent}
+.list div:hover{background:color-mix(in srgb,var(--surf) 60%,transparent)}
+.list div.on{background:var(--surf);border-left-color:var(--brand)}
+.list .more{color:var(--brand);font-weight:600}
+.list small{display:block;font:400 13px/1.4 var(--num);color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:.03em;margin-top:1px}
+@media(max-width:760px){.grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .list{flex-direction:row;gap:8px;position:static;overflow-x:auto;max-height:none;padding-bottom:4px;scroll-snap-type:x proximity;scrollbar-width:none}
+ .list div{flex:0 0 auto;background:var(--surf);border:1px solid var(--line);scroll-snap-align:start;padding:8px 14px}
+ .list div.on{border-color:var(--brand);box-shadow:inset 0 -3px 0 var(--brand)}
+ nav{margin-top:12px;padding:0 14px}main{padding:12px 14px}.panel{padding:14px 16px}}
+
+/* the verdict: the first thing anyone reads */
+.hero{position:relative;padding:20px 22px 20px 30px;border-radius:16px;background:var(--surf);border:1px solid var(--line);margin-bottom:16px;overflow:hidden}
+.hero:before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--lv)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,color-mix(in srgb,var(--lv) 14%,transparent),transparent 55%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero h1{margin:0;font:600 32px/1.12 var(--num);letter-spacing:.004em;color:var(--lv);text-wrap:balance}
+.hero .meta{font:400 14px/1.4 var(--num);color:var(--dim);letter-spacing:.03em;margin-top:6px;font-variant-numeric:tabular-nums}
+.hero p{margin:10px 0 0;max-width:66ch}
+.counts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.counts span{display:flex;align-items:center;gap:7px;padding:4px 11px 4px 9px;border-radius:999px;background:var(--surf2);font:600 14px/1.3 var(--num);font-variant-numeric:tabular-nums}
+.counts span:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--lv)}
+@media(max-width:520px){.hero{padding:16px 16px 16px 24px}.hero h1{font-size:26px}}
+.lv-g{--lv:var(--ok)}.lv-y{--lv:var(--warn)}.lv-r{--lv:var(--crit)}.lv-n{--lv:var(--none)}
+.hero.enter{animation:enter .35s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){.hero.enter{animation:none}}
+
+/* findings */
+.panel h2{margin:0 0 2px;font:600 15px/1.3 var(--num);letter-spacing:.02em;color:var(--dim)}
+.row{display:flex;gap:13px;padding:12px 0;border-top:1px solid var(--line)}.panel h2+.row{border-top:0}
+.dot{flex:0 0 12px;height:12px;border-radius:50%;margin-top:5px;background:var(--lv);box-shadow:0 0 0 4px color-mix(in srgb,var(--lv) 20%,transparent)}
+.row b{display:block;font-weight:600}.row b .who{color:var(--dim);font-weight:500;margin-right:6px}
+.todo{color:var(--dim);font-size:14px;margin-top:3px;max-width:70ch}
+.src{display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;font:600 12px/18px var(--num);letter-spacing:.03em;vertical-align:1px;border:1px solid var(--line);color:var(--dim)}
+.src.code{border-color:var(--brand);color:var(--brand)}
+.counts span.src{margin:0;border:0;padding:4px 11px;font-size:14px;line-height:1.3;background:var(--surf2)}.counts span.src:before{display:none}
+.counts span.src.code{color:var(--brand)}
+
+/* graphs */
+details.panel>summary{cursor:pointer;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary:before{content:"";width:7px;height:7px;border:solid var(--dim);border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .15s}
+details.panel[open]>summary:before{transform:rotate(45deg)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chips label{display:flex;align-items:center;gap:6px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--dim)}
+.chips label:has(input:checked){border-color:var(--data);color:var(--fg);background:color-mix(in srgb,var(--data) 12%,transparent)}
+.chips input{accent-color:var(--data);margin:0}
+.chips br{display:none}
+canvas{width:100%;height:140px;display:block;margin-bottom:12px;border-radius:8px}
+.dl{display:inline-flex;margin:2px 0 10px;font-weight:600;text-decoration:none;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surf2)}
+.dl:hover{border-color:var(--data)}
+pre{margin:0;white-space:pre-wrap;font:12px/1.6 ui-monospace,Consolas,monospace;color:var(--dim)}
+#tip{position:fixed;display:none;pointer-events:none;background:var(--fg);color:var(--bg);box-shadow:0 4px 14px #0006;border-radius:6px;padding:3px 9px;font:600 13px/1.4 var(--num);z-index:9;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* live */
+.livegrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}@media(max-width:760px){.livegrid{grid-template-columns:minmax(0,1fr)}}
+table{border-collapse:collapse;width:100%}
+td{padding:7px 0;border-top:1px solid var(--line);font-size:14px;color:var(--dim)}tr:first-child td{border-top:0}
+td:last-child{text-align:right;color:var(--fg);font:600 16px/1.3 var(--num);font-variant-numeric:tabular-nums}
+.WARNING{color:var(--warn)}.CRITICAL{color:var(--crit)}.INFO{color:var(--dim)}
+#lwarn div{padding:7px 0;border-top:1px solid var(--line)}#lwarn div:first-child{border-top:0}
+#lstatus{font:600 16px/1.4 var(--num);color:var(--fg);margin-bottom:4px}#lstatus:empty{display:none}
+.idle{text-align:center;padding:42px 16px}
+.idle b{display:block;font:600 22px/1.2 var(--num);margin-bottom:6px}
+
+/* a notice instead of moving the page under someone who is reading it */
+#notice{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:12px;max-width:calc(100% - 28px);
+ padding:10px 10px 10px 18px;border-radius:999px;background:var(--surf);border:1px solid var(--brand);box-shadow:0 10px 30px #0008;font-weight:600}
+#notice.hide{display:none}
+#notice .x{background:none;border:0;color:var(--dim);font-size:20px;line-height:1;padding:2px 8px}
+#notice.off{border-color:var(--crit)}
+@media(prefers-reduced-motion:no-preference){#notice{animation:up .25s ease-out}}
+@keyframes up{from{opacity:0;transform:translate(-50%,10px)}}
+
+/* center of gravity */
+.cog svg{width:100%;height:auto;max-height:500px;display:block;margin-top:8px}
+.btn{background:var(--surf2);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-weight:600}
+.btn:hover{border-color:var(--data)}
+
+footer{max-width:1120px;margin:12px auto 32px;padding:18px 20px 0;color:var(--dim);font-size:14px;border-top:1px solid var(--line)}
+footer .links{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px}footer a{text-decoration:none;font-weight:600}
+footer small{display:block;margin-top:8px;font-size:12px}
+@media(max-width:760px){footer{margin:8px 14px 28px;padding:16px 0 0}}
 </style></head><body>
-<header><b id="title">ASA Tools</b><button data-tab="sessions" class="on" id="t-sessions"></button><button data-tab="live" id="t-live"></button><button data-tab="sysid" id="t-sysid">SysId</button>
-<span id="lang"><button data-l="ru">RU</button><button data-l="ro">RO</button><button data-l="en">EN</button></span><span id="st" class="dim" style="margin-left:auto"></span></header>
+<header><div class="logo"><img src="data:image/webp;base64,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" alt="ASA"><span id="title">ASA Black Box</span></div>
+<span id="st"><span></span></span>
+<span id="lang"><button data-l="ru">RU</button><button data-l="ro">RO</button><button data-l="en">EN</button></span></header>
+<div class="tape" aria-hidden="true"></div>
+<nav><button data-tab="sessions" class="on" id="t-sessions"></button><button data-tab="live" id="t-live"></button><button data-tab="sysid" id="t-sysid" class="hide">SysId</button></nav>
+<div id="tip"></div>
+<div id="notice" class="hide" role="status" aria-live="polite"></div>
 <main>
-<section id="sessions"><div class="grid"><div class="card list" id="slist"></div><div><div id="summary"></div>
-  <details class="card" id="raw"><summary id="t-raw"></summary><div id="scols" style="margin-top:8px"></div><div id="splots"></div><pre id="sinfo" class="dim"></pre></details></div></div></section>
-<section id="live" class="hide"><div class="card"><pre id="lstatus" class="dim"></pre></div><div class="grid"><div class="card"><table id="ltab"></table></div><div class="card" id="lwarn"></div></div></section>
-<section id="sysid" class="hide"><div class="grid"><div class="card list" id="ylist"></div><div><div id="ysum"></div><div class="card"><button id="copy">Copy Java</button> <span id="cst" class="dim"></span><details style="margin-top:8px"><summary id="t-yraw"></summary><pre id="yres" style="margin-top:8px"></pre><div id="yplots"></div></details></div></div></div></section>
+<section id="sessions"><div class="grid"><div class="list" id="slist"></div><div><div id="summary"></div>
+  <details class="panel" id="raw"><summary id="t-raw"></summary><div id="scols" class="chips"></div><div id="splots"></div><pre id="sinfo"></pre></details></div></div></section>
+<section id="live" class="hide"><div class="panel"><pre id="lstatus"></pre><div id="lidle" class="idle hide"></div><div id="lbody"><div id="lcols" class="chips"></div><div id="lplots"></div><div class="dim" id="t-lrate" style="font-size:12px"></div></div></div>
+  <div class="livegrid" id="lgrid"><div class="panel"><table id="ltab"></table></div><div class="panel" id="lwarn"></div></div></section>
+<section id="sysid" class="hide"><div class="grid"><div class="list" id="ylist"></div><div><div id="ysum"></div><div class="panel"><button id="copy" class="btn">Copy Java</button> <span id="cst" class="dim"></span><details style="margin-top:10px"><summary id="t-yraw" style="cursor:pointer;color:var(--data);font-weight:600"></summary><pre id="yres" style="margin-top:8px"></pre><div id="yplots"></div></details></div></div></div></section>
 </main>
-<footer><div class="card"><b>ASA · FTC 28284 · Moldova</b> <span id="t-made"></span><br>
-<a href="https://www.instagram.com/asa.ftc_md/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@ftc.team.asa" target="_blank" rel="noopener">TikTok</a><a id="gh" href="https://github.com/stanchevicid-hash/asa-blackbox" target="_blank" rel="noopener">⭐ GitHub</a><a id="t-fb" href="https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml" target="_blank" rel="noopener"></a>
-<div class="dim" id="t-net" style="font-size:12px;margin-top:4px"></div></div></footer>
+<footer><div><b style="color:var(--fg)">ASA</b>, FTC 28284, Moldova. <span id="t-made"></span></div>
+<div class="links"><a href="https://www.instagram.com/asa.ftc_md/" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@ftc.team.asa" target="_blank" rel="noopener">TikTok</a><a id="gh" href="https://github.com/stanchevicid-hash/asa-blackbox" target="_blank" rel="noopener">GitHub</a><a id="t-fb" href="https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml" target="_blank" rel="noopener"></a></div>
+<small id="t-net"></small></footer>
 <script>
 const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.textContent=h;return e};
 // ---------------------------------------------------------------- words (RU / RO / EN)
@@ -57,8 +180,16 @@ const T={
    [/poor fit|kS < 0/,'данные не сходятся: люфт, проскальзывает ремень или слишком маленький ход'],
    [/kA approximate/,'kA приблизительный: механизм очень быстрый для частоты измерений'],
    [/kV <= 0|kA < 0/,'числа без смысла: проверьте единицы и направление мотора/энкодера']],
-  made:'— бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
-  drive:'Езда',healthcheck:'Проверка моторов',session:'Запись',min:'мин',sec:'с',
+  made:'Бесплатно для всех команд. Помогло? Подпишитесь и напишите нам, что улучшить.',fb:'Оставить отзыв',net:'Ссылки откроются, когда у телефона снова будет интернет (у Wi-Fi робота его нет).',sessions:'Записи',live:'Сейчас',raw:'Графики для подробного разбора',none:'Записей пока нет. Запустите программу с Black Box.',pick:'Выберите запись слева.',
+  drive:'Езда',healthcheck:'Проверка моторов',online:'на связи',mLow:'работал на малой мощности (держал положение): ток не оценить',srcCode:'в коде',srcRobot:'в роботе',cStick:s=>`Пилот двигал стик ${s} с, а программа не дала мощность ни одному мотору шасси`,cStickDo:'проверьте в коде, что стики gamepad1 связаны с моторами и программа не застряла в другом режиме или состоянии',cOsc:(m,n)=>`мощность прыгает между + и − (до ${n} раз в секунду)`,cOscDo:'в коде: уменьшите kP / kD регулятора или проверьте, что этим мотором не управляют два куска кода сразу',cDir:p=>`энкодер считает против мощности (${p}% времени)`,cDirDo:'в коде: setDirection у этого мотора, или кабель энкодера вставлен в порт другого мотора',ntLive:'Робот поехал: идёт запись',ntDone:'Запись готова',open:'Открыть',ntOff:'Нет связи с роботом. Телефон в Wi-Fi робота?',hubOf:'хаб с',showAll:'Показать все',autoRec:'Записано автоматически, без вашего кода. Время цикла видно только с 4 строками в коде.',offline:'нет связи',idleT:'Сейчас ничего не запущено',idleP:'Запустите программу на Driver Hub, и графики появятся здесь сами.',nUrg:'срочно',nChk:'проверить',nOk:'в порядке',
+  cog:'Центр тяжести',cogTop:'Вид сверху',cogSide:'Вид справа',cogFront:'ПЕРЕД',cogL:'Л',cogR:'П',cogDraw:'Где центр тяжести',cogLimits:'Когда робот опрокинется',
+  cogWhere:(h,r,s)=>`Высота ${h} см. По длине: ${r}% от задних колёс к передним. По ширине: ${s}% от правых колёс к левым.`,
+  tipBrake:v=>`Резкое торможение: опрокинется вперёд при замедлении больше ${v} м/с²`,tipAccel:v=>`Резкий разгон: встанет на дыбы при ускорении больше ${v} м/с²`,
+  tipSide:v=>`Вбок (остановка стрейфа, удар): опрокинется больше ${v} м/с²`,tipRamp:v=>`Устоит на склоне до ${v}°`,
+  tipSafe:'безопасно: колёса проскользнут раньше, чем робот опрокинется',tipMaybe:'может опрокинуться при резкой остановке или ударе: опустите тяжёлые детали ниже или тормозите плавнее',
+  tipBad:'опрокидывается легко: опустите центр тяжести (тяжёлое вниз) или сделайте базу шире',cogDiff:'две высоты сильно отличаются: повторите шаги с балансом аккуратнее',
+  cogSvg:'Скачать рисунок (SVG)',cogOld:'Старый формат файла, рисунка нет. Измерьте ещё раз.',
+  liveRate:'Живой просмотр: примерно 5 значений в секунду. В записи (вкладка «Записи») — каждый цикл.',session:'Запись',min:'мин',sec:'с',
   allOk:'Всё в порядке',check:'Есть что проверить',urgent:'Срочно',
   motors:'Моторы',power:'Питание и хаб',program:'Программа',events:'Что случилось во время езды',history:'По сравнению с прошлыми разами',
   mOk:a=>`работает нормально (${a} А)`,mOff:'не включался',mNoCur:'не получает ток',mNoCurDo:'проверьте провод питания мотора и номер порта MOTOR',
@@ -72,7 +203,7 @@ const T={
   hubHot:t=>`хаб нагрелся до ${t} °C`,
   loopOk:m=>`программа быстрая: цикл ${m} мс`,loopSlow:m=>`программа медленная: цикл ${m} мс`,loopSlowDo:'уберите sleep() и лишние чтения датчиков из цикла',
   evNone:'ничего тревожного',at:'на',
-  rule:{stall:'мотор заклинило: большой ток, а колесо стоит',
+  rule:{zeroed:'все энкодеры этого хаба разом стали 0: или программа сама их обнулила (тогда всё в порядке), или хаб перезагрузился (статика, плохой контакт питания)',stall:'мотор заклинило: большой ток, а колесо стоит',
    'encoder-lost':'энкодер перестал считать, хотя мотор крутится',hot:'мотор перегревается',drags:'колесо тормозит: берёт намного больше тока, чем другие',
    reset:'хаб перезагрузился (все энкодеры сбросились в 0) — статика или плохой контакт питания','not-responding':'хаб перестал отвечать',
    disconnected:'геймпад отключился',frozen:'IMU завис: показания не меняются',brownout:'батарея просела ниже 8 В',
@@ -100,8 +231,16 @@ const T={
    [/poor fit|kS < 0/,'datele nu se potrivesc: joc mecanic, cureaua alunecă sau cursă prea mică'],
    [/kA approximate/,'kA e aproximativ: mecanismul e foarte rapid față de frecvența măsurătorilor'],
    [/kV <= 0|kA < 0/,'numere fără sens: verificați unitățile și direcția motorului/encoderului']],
-  made:'— gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
-  drive:'Condus',healthcheck:'Verificare motoare',session:'Înregistrare',min:'min',sec:'s',
+  made:'Gratuit pentru toate echipele. V-a ajutat? Urmăriți-ne și spuneți-ne ce să îmbunătățim.',fb:'Lăsați un feedback',net:'Linkurile se deschid când telefonul are din nou internet (Wi-Fi-ul robotului nu are).',sessions:'Înregistrări',live:'Acum',raw:'Grafice pentru analiză detaliată',none:'Încă nu sunt înregistrări. Porniți un program cu Black Box.',pick:'Alegeți o înregistrare din stânga.',
+  drive:'Condus',healthcheck:'Verificare motoare',online:'conectat',mLow:'a lucrat cu putere mică (a ținut poziția): curentul nu se poate evalua',srcCode:'în cod',srcRobot:'în robot',cStick:s=>`Pilotul a mișcat stick-ul ${s} s, dar programul nu a dat putere niciunui motor al șasiului`,cStickDo:'verificați în cod că stick-urile gamepad1 sunt legate de motoare și că programul nu a rămas blocat în alt mod sau stare',cOsc:(m,n)=>`puterea sare între + și − (până la ${n} ori pe secundă)`,cOscDo:'în cod: micșorați kP / kD ale regulatorului sau verificați că motorul nu e comandat de două bucăți de cod deodată',cDir:p=>`encoderul numără invers față de putere (${p}% din timp)`,cDirDo:'în cod: setDirection la acest motor, sau cablul encoderului e în portul altui motor',ntLive:'Robotul a pornit: se înregistrează',ntDone:'Înregistrarea e gata',open:'Deschide',ntOff:'Fără conexiune cu robotul. Telefonul e pe Wi-Fi-ul robotului?',hubOf:'hub-ul cu',showAll:'Arată toate',autoRec:'Înregistrat automat, fără codul vostru. Timpul ciclului se vede doar cu cele 4 rânduri în cod.',offline:'fără conexiune',idleT:'Acum nu rulează nimic',idleP:'Porniți un program pe Driver Hub și graficele apar aici singure.',nUrg:'urgent',nChk:'de verificat',nOk:'în regulă',
+  cog:'Centrul de greutate',cogTop:'Văzut de sus',cogSide:'Văzut din dreapta',cogFront:'FAȚĂ',cogL:'S',cogR:'D',cogDraw:'Unde e centrul de greutate',cogLimits:'Când se răstoarnă robotul',
+  cogWhere:(h,r,s)=>`Înălțime ${h} cm. Pe lungime: ${r}% de la roțile din spate spre cele din față. Pe lățime: ${s}% de la roțile din dreapta spre cele din stânga.`,
+  tipBrake:v=>`Frânare bruscă: se răstoarnă în față la o decelerare peste ${v} m/s²`,tipAccel:v=>`Accelerare bruscă: se ridică în spate peste ${v} m/s²`,
+  tipSide:v=>`Lateral (oprire din strafe, lovitură): se răstoarnă peste ${v} m/s²`,tipRamp:v=>`Stă pe o pantă de până la ${v}°`,
+  tipSafe:'sigur: roțile alunecă înainte ca robotul să se răstoarne',tipMaybe:'se poate răsturna la o oprire bruscă sau o lovitură: coborâți piesele grele sau frânați mai lin',
+  tipBad:'se răstoarnă ușor: coborâți centrul de greutate (piesele grele jos) sau lărgiți baza',cogDiff:'cele două înălțimi diferă mult: refaceți mai atent pașii de echilibrare',
+  cogSvg:'Descarcă desenul (SVG)',cogOld:'Fișier în format vechi, fără desen. Măsurați din nou.',
+  liveRate:'Vizualizare live: cam 5 valori pe secundă. Înregistrarea (fila „Înregistrări”) păstrează fiecare ciclu.',session:'Înregistrare',min:'min',sec:'s',
   allOk:'Totul e în regulă',check:'De verificat',urgent:'Urgent',
   motors:'Motoare',power:'Alimentare și hub',program:'Program',events:'Ce s-a întâmplat în timpul mersului',history:'Față de data trecută',
   mOk:a=>`funcționează normal (${a} A)`,mOff:'nu a pornit',mNoCur:'nu primește curent',mNoCurDo:'verificați cablul de alimentare al motorului și numărul portului MOTOR',
@@ -115,7 +254,7 @@ const T={
   hubHot:t=>`hub-ul s-a încălzit până la ${t} °C`,
   loopOk:m=>`programul e rapid: ciclu ${m} ms`,loopSlow:m=>`programul e lent: ciclu ${m} ms`,loopSlowDo:'scoateți sleep() și citirile inutile de senzori din ciclu',
   evNone:'nimic îngrijorător',at:'la',
-  rule:{stall:'motor blocat: curent mare, roata stă',
+  rule:{zeroed:'toate encoderele acestui hub au devenit 0 deodată: fie programul le-a resetat (atunci e în regulă), fie hub-ul s-a repornit (static, contact slab la alimentare)',stall:'motor blocat: curent mare, roata stă',
    'encoder-lost':'encoderul a încetat să numere, deși motorul se învârte',hot:'motorul se supraîncălzește',drags:'roata frânează: ia mult mai mult curent decât celelalte',
    reset:'hub-ul a repornit (toate encoderele la 0) — electricitate statică sau contact slab','not-responding':'hub-ul nu a mai răspuns',
    disconnected:'gamepad-ul s-a deconectat',frozen:'IMU s-a blocat: valorile nu se schimbă',brownout:'bateria a scăzut sub 8 V',
@@ -143,8 +282,16 @@ const T={
    [/poor fit|kS < 0/,'the data does not fit: backlash, a slipping belt or too little travel'],
    [/kA approximate/,'kA is approximate: the mechanism is very fast for the sampling rate'],
    [/kV <= 0|kA < 0/,'meaningless numbers: check units and motor/encoder direction']],
-  made:'— free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
-  drive:'Drive',healthcheck:'Motor check',session:'Session',min:'min',sec:'s',
+  made:'Free for every team. Did it help? Follow us and tell us what to improve.',fb:'Send feedback',net:'Links open once your phone is back on the internet (the robot Wi-Fi has none).',sessions:'Sessions',live:'Live',raw:'Graphs for a detailed look',none:'No sessions yet. Run an OpMode with Black Box.',pick:'Pick a session on the left.',
+  drive:'Drive',healthcheck:'Motor check',online:'robot online',mLow:'ran at low power only (holding a position): current not judged',srcCode:'in the code',srcRobot:'in the robot',cStick:s=>`The driver moved a stick for ${s} s, but the program gave no power to any drive motor`,cStickDo:'check in your code that the gamepad1 sticks are wired to the motors and the program is not stuck in another mode or state',cOsc:(m,n)=>`power jumps between + and − (up to ${n} times a second)`,cOscDo:'in your code: lower the controller kP / kD, or check that two parts of the code do not both drive this motor',cDir:p=>`the encoder counts against the power (${p}% of the time)`,cDirDo:'in your code: setDirection of this motor, or the encoder cable is in another motor port',ntLive:'The robot started: recording',ntDone:'The recording is ready',open:'Open',ntOff:'No connection to the robot. Is the phone on the robot Wi-Fi?',hubOf:'hub with',showAll:'Show all',autoRec:'Recorded automatically, without your code. Loop time shows only with the 4 lines in your code.',offline:'offline',idleT:'Nothing is running',idleP:'Start a program on the Driver Hub and the graphs appear here by themselves.',nUrg:'urgent',nChk:'to check',nOk:'fine',
+  cog:'Center of gravity',cogTop:'Top view',cogSide:'Seen from the right',cogFront:'FRONT',cogL:'L',cogR:'R',cogDraw:'Where the center of gravity is',cogLimits:'When the robot tips over',
+  cogWhere:(h,r,s)=>`Height ${h} cm. Along the robot: ${r}% of the way from the rear wheels to the front. Across: ${s}% from the right wheels to the left.`,
+  tipBrake:v=>`Hard braking: tips forward above ${v} m/s² of deceleration`,tipAccel:v=>`Hard acceleration: wheelie above ${v} m/s²`,
+  tipSide:v=>`Sideways (strafe stop, a hit): tips above ${v} m/s²`,tipRamp:v=>`Stands on a slope up to ${v}°`,
+  tipSafe:'safe: the wheels slip before the robot tips',tipMaybe:'can tip on a hard stop or a hit: move heavy parts lower or brake more gently',
+  tipBad:'tips easily: lower the center of gravity (heavy parts down) or widen the base',cogDiff:'the two heights differ a lot: redo the balance steps more carefully',
+  cogSvg:'Download the drawing (SVG)',cogOld:'Old file format, no drawing. Measure again.',
+  liveRate:'Live view: about 5 values per second. The recording (Sessions) keeps every loop.',session:'Session',min:'min',sec:'s',
   allOk:'All good',check:'Worth checking',urgent:'Urgent',
   motors:'Motors',power:'Power and hub',program:'Program',events:'What happened while driving',history:'Compared with earlier sessions',
   mOk:a=>`works normally (${a} A)`,mOff:'was not used',mNoCur:'gets no current',mNoCurDo:'check the motor power cable and the MOTOR port number',
@@ -158,70 +305,185 @@ const T={
   hubHot:t=>`hub got hot: ${t} °C`,
   loopOk:m=>`program is fast: ${m} ms loop`,loopSlow:m=>`program is slow: ${m} ms loop`,loopSlowDo:'remove sleep() and extra sensor reads from the loop',
   evNone:'nothing alarming',at:'at',
-  rule:{stall:'motor stalled: high current, the wheel does not move',
+  rule:{zeroed:'every encoder of this hub went to 0 at once: either your program reset them (then all is fine) or the hub rebooted (static, a loose power plug)',stall:'motor stalled: high current, the wheel does not move',
    'encoder-lost':'encoder stopped counting while the motor turns',hot:'motor is overheating',drags:'a wheel drags: much more current than the others',
    reset:'a hub rebooted (every encoder back to 0) — static or a loose power contact','not-responding':'a hub stopped answering',
    disconnected:'gamepad disconnected',frozen:'IMU froze: readings do not change',brownout:'battery dropped below 8 V',
    'battery-low-at-start':'battery was low already at start','slow-loop':'the program was slow for a long time','loop-pause':'the program froze for a moment',crash:'the program crashed'},
   histMore:(n,p)=>`${n}: ${p}% more current than usual — the mechanism may be wearing`,histBat:p=>`battery sags more than usual`,
   first:'First session of this kind — nothing to compare with yet.',liveIdle:'No Black Box program is running now. Recordings are under "Sessions".'}};
-let L=(()=>{try{const s=localStorage.getItem('asa-lang');if(T[s])return s}catch(e){}return'en'})();   // English unless the viewer picked RO/RU
+let picked=false,L=(()=>{try{const s=localStorage.getItem('asa-lang');if(T[s]){picked=true;return s}}catch(e){}return'en'})();   // the viewer's pick, else the robot's language, else English
 const t=()=>T[L];
-function applyLang(){$('#t-sessions').textContent=(tools.blackbox&&tools.sysid?'Black Box · ':'')+t().sessions;$('#t-yraw').textContent=t().yraw;$('#t-made').textContent=t().made;$('#t-fb').textContent='💬 '+t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;
-  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openSession(current.f,current.d);loadFiles().then(()=>{if(ycur)openSysId(ycur.f,ycur.d)})}
+function applyLang(){$('#t-sessions').textContent=(tools.blackbox&&tools.sysid?'Black Box · ':'')+t().sessions;$('#t-yraw').textContent=t().yraw;$('#t-made').textContent=t().made;$('#t-fb').textContent=t().fb;$('#t-net').textContent=t().net;$('#t-live').textContent=t().live;$('#t-raw').textContent=t().raw;$('#t-lrate').textContent=t().liveRate;setSt($('#st').classList.contains('on'));
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===L));renderList();if(current)openAny(current.f,current.d);loadFiles().then(()=>{if(ycur)openSysId(ycur.f,ycur.d)})}
 document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{L=b.dataset.l;try{localStorage.setItem('asa-lang',L)}catch(e){}applyLang()});
 
 let tab='sessions',tools={blackbox:true,sysid:true};
 async function detectTools(){try{tools=JSON.parse(await get('/api/tools'))}catch(e){}   // older robots: show both
+  if(!picked)try{const r=(await get('/file/lang.txt')).trim();if(T[r])L=r}catch(e){}   // language chosen on the Driver Hub (X)
   const bb=tools.blackbox,sy=tools.sysid,name=bb&&sy?'ASA Tools':sy?'ASA SysId':'ASA Black Box';
   $('#title').textContent=name;document.title=name;
   $('#t-sessions').classList.toggle('hide',!bb);$('#t-live').classList.toggle('hide',!bb);$('#t-sysid').classList.toggle('hide',!sy);
   const repo=!bb&&sy?'asa-sysid':'asa-blackbox';$('#gh').href='https://github.com/stanchevicid-hash/'+repo;
   $('#t-fb').href='https://github.com/stanchevicid-hash/'+repo+'/issues/new?template=robot-result.yml';
   applyLang();if(!bb&&sy)document.querySelector('#t-sysid').click();}
-document.querySelectorAll('header button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('header button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
+document.querySelectorAll('nav button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('nav button[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hide',s.id!==tab));if(tab!=='live')loadFiles();});
 const get=u=>fetch(u,{cache:'no-store'}).then(r=>{if(!r.ok)throw r.status;return r.text()});
 const sev=s=>(s.match(/\b(WARNING|CRITICAL|INFO)\b/)||['','INFO'])[1];
 
+// ---------------------------------------------------------------- live: polled ~5x/s while a program runs
+// The page follows the robot: a program starts -> Live tab; it stops -> its recording opens by itself.
+let wasOn=null,hist={},hT0=null,liveSel=null,liveNames='',touched=0,failSince=0;
+// someone reading or tapping in the last 20 s is not moved to another tab: they get a notice with a button instead
+['pointerdown','keydown','wheel','touchstart'].forEach(e=>addEventListener(e,()=>{touched=Date.now()},{passive:true}));
+const busy=()=>Date.now()-touched<20000;
+function notice(text,btn,go,cls){const n=$('#notice');n.innerHTML='';n.className=cls||'';n.append(el('span',null,text));
+  if(btn){const b=el('button','btn',btn);b.onclick=()=>{n.classList.add('hide');go()};n.append(b)}
+  const x=el('button','x','×');x.setAttribute('aria-label','close');x.onclick=()=>n.classList.add('hide');n.append(x)}
+const hideNotice=cls=>{const n=$('#notice');if(!cls||n.classList.contains(cls))n.className='hide'};
+const showTab=n=>{const b=$('#t-'+n);if(b&&!b.classList.contains('hide')&&tab!==n)b.click()};
 async function live(){
-  if(tab==='live'){try{const j=JSON.parse(await get('/api/live'));$('#st').textContent='connected';
-    $('#lstatus').textContent=j.status||(j.names.length?'':t().liveIdle);const tb=$('#ltab');tb.innerHTML='';
-    j.names.forEach((n,i)=>{const r=tb.insertRow();r.insertCell().textContent=n;r.insertCell().textContent=j.values[i]==null?'-':(+j.values[i]).toFixed(3)});
-    const w=$('#lwarn');w.innerHTML='';if(!j.warnings.length)w.append(el('div','dim',t().evNone));j.warnings.forEach(x=>w.append(el('div',sev(x),x)));
-  }catch(e){$('#st').textContent='offline'}}
-  setTimeout(live,500);
+  try{const j=JSON.parse(await get('/api/live'));setSt(true);
+    const on=j.names.length>0||!!j.status,now=performance.now()/1000;
+    failSince=0;hideNotice('off');
+    const toLive=()=>showTab('live'),toRec=()=>{openNewest();showTab('sessions')};
+    if(on&&!wasOn){hist={};hT0=now;if(tools.blackbox&&tab!=='sysid'){if(busy()&&tab!=='live')notice(t().ntLive,t().open,toLive);else{hideNotice();toLive()}}}   // never pull the viewer off SysId
+    else if(wasOn&&!on){await loadFiles();if(tab!=='sysid'){if(busy()&&tab!=='live')notice(t().ntDone,t().open,toRec);else{hideNotice();toRec()}}}
+    wasOn=on;$('#t-live').classList.toggle('rec',on);
+    if(on)j.names.forEach((n,i)=>{const h=hist[n]||(hist[n]={t:[],v:[]});h.t.push(now-hT0);h.v.push(j.values[i]==null?NaN:+j.values[i]);
+      while(h.t.length&&h.t[0]<now-hT0-60){h.t.shift();h.v.shift()}});   // last 60 s
+    if(tab==='live')renderLive(j);
+  }catch(e){setSt(false);if(!failSince)failSince=Date.now();else if(Date.now()-failSince>4000&&$('#notice').className==='hide')notice(t().ntOff,null,null,'off')}
+  setTimeout(live,document.hidden?3000:tab==='live'?200:1000);   // hidden: save the phone's battery
 }
-live();
+const setSt=ok=>{const s=$('#st');s.classList.toggle('on',ok);s.firstChild.textContent=ok?t().online:t().offline};
+function renderLive(j){
+  const idle=!j.names.length&&!j.status,box=$('#lidle');$('#lbody').classList.toggle('hide',idle||!j.names.length);$('#lgrid').classList.toggle('hide',idle);box.classList.toggle('hide',!idle);
+  if(idle){box.innerHTML='';box.append(el('b',null,t().idleT),el('div','dim',t().idleP))}
+  $('#lstatus').textContent=j.status||'';
+  if(j.names.join()!==liveNames){liveNames=j.names.join();   // rebuild the checkboxes only when the signals change
+    if(!liveSel)liveSel=new Set(j.names.filter(n=>n==='battery'||n==='loop_ms'||n.endsWith('.amps')).slice(0,6));
+    const c=$('#lcols');c.innerHTML='';j.names.forEach(n=>{const l=el('label'),b=el('input');b.type='checkbox';b.checked=liveSel.has(n);
+      b.onchange=()=>{b.checked?liveSel.add(n):liveSel.delete(n)};l.append(b,n);c.append(l)})}
+  const p=$('#lplots');p.innerHTML='';j.names.forEach(n=>{const h=hist[n];if(liveSel&&liveSel.has(n)&&h&&h.t.length>1)plot(p,n,h.t,h.v)});
+  const tb=$('#ltab');tb.innerHTML='';
+  j.names.forEach((n,i)=>{const r=tb.insertRow();r.insertCell().textContent=n;r.insertCell().textContent=j.values[i]==null?'-':fmtV(+j.values[i])+' '+unit(n)});
+  const w=$('#lwarn');w.innerHTML='';if(!j.warnings.length)w.append(el('div','dim',t().evNone));j.warnings.forEach(x=>w.append(el('div',sev(x),x)));
+}
 
 function csv(text){const Ls=text.trim().split('\n'),h=Ls[0].split(','),cols=h.map(()=>[]);
   for(let i=1;i<Ls.length;i++){const p=Ls[i].split(',');for(let j=0;j<h.length;j++)cols[j].push(p[j]===''||p[j]==null?NaN:(isNaN(+p[j])?p[j]:+p[j]))}return{h,cols}}
 
-function plot(box,name,xs,ys,marks){
-  const c=el('canvas');box.append(c);const W=c.width=c.clientWidth*devicePixelRatio,H=c.height=110*devicePixelRatio,g=c.getContext('2d');
-  let lo=Infinity,hi=-Infinity;ys.forEach(v=>{if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}});if(!isFinite(lo)){lo=0;hi=1}if(hi===lo){hi+=1;lo-=1}
-  const x0=xs[0],x1=xs[xs.length-1]||1,X=x=>(x-x0)/(x1-x0||1)*(W-2)+1,Y=y=>H-4-(y-lo)/(hi-lo)*(H-22);
-  g.strokeStyle='#2a2f3a';g.beginPath();g.moveTo(0,Y(0));g.lineTo(W,Y(0));g.stroke();
-  (marks||[]).forEach(m=>{g.strokeStyle=m.c;g.beginPath();g.moveTo(X(m.t),14);g.lineTo(X(m.t),H);g.stroke()});
-  g.strokeStyle='#4da3ff';g.lineWidth=1.5*devicePixelRatio;g.beginPath();const step=Math.max(1,Math.floor(xs.length/W));let pen=false;
-  for(let i=0;i<xs.length;i+=step){const v=ys[i];if(!isFinite(v)){pen=false;continue}pen?g.lineTo(X(xs[i]),Y(v)):g.moveTo(X(xs[i]),Y(v));pen=true}g.stroke();
-  g.fillStyle='#8a91a0';g.font=11*devicePixelRatio+'px system-ui';g.fillText(name+'   '+lo.toFixed(3)+' .. '+hi.toFixed(3),4,11*devicePixelRatio);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();   // theme colors (dark / light)
+// units by signal name, as FtcBlackBox records them
+const unit=n=>/\.amps$/.test(n)?'A':/^battery|\.volts$|^volts$/.test(n)?'V':/_ms$/.test(n)?'ms':/\.vel$/.test(n)?'ticks/s':/\.pos$/.test(n)?'ticks':/\.temp$/.test(n)?'°C':/heading|\.deg$/.test(n)?'°':'';
+const fmtV=v=>!isFinite(v)?'-':Math.abs(v)>=1000?v.toFixed(0):Math.abs(v)>=10?v.toFixed(1):v.toFixed(2);
+const fmtT=s=>s>=60?`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`:(s<10?s.toFixed(1):s.toFixed(0))+' s';
+
+// One signal over time. xs = seconds (index=true: sample number). Every pixel column draws the min and the max of the
+// samples that fall in it, so a one-loop spike (a stall, a brownout) stays visible however long the session is.
+function plot(box,name,xs,ys,marks,index){
+  const c=el('canvas');box.append(c);const dpr=devicePixelRatio||1,W=c.width=Math.max(1,c.clientWidth*dpr),H=c.height=140*dpr,g=c.getContext('2d'),u=unit(name),C=css;
+  let lo=Infinity,hi=-Infinity;ys.forEach(v=>{if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v)}});const vmin=lo,vmax=hi;
+  if(!isFinite(lo)){lo=0;hi=1}if(hi===lo){hi+=1;lo-=1}const pad=(hi-lo)*0.08;lo-=pad;hi+=pad;
+  const top=22*dpr,bot=18*dpr,x0=xs[0],x1=xs[xs.length-1],X=x=>(x-x0)/((x1-x0)||1)*(W-2)+1,Y=y=>H-bot-(y-lo)/(hi-lo)*(H-top-bot);
+  g.lineWidth=dpr;g.strokeStyle=C('--line');g.setLineDash([3*dpr,4*dpr]);
+  for(let k=0;k<=3;k++){const y=Math.round(top+(H-top-bot)*k/3)+.5;g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}
+  g.setLineDash([]);if(lo<0&&hi>0){g.strokeStyle=C('--dim');g.beginPath();g.moveTo(0,Y(0));g.lineTo(W,Y(0));g.stroke()}
+  (marks||[]).forEach(m=>{g.strokeStyle=C('--'+m.c);g.lineWidth=1.5*dpr;g.beginPath();g.moveTo(X(m.t),top);g.lineTo(X(m.t),H-bot);g.stroke()});
+  // min/max per pixel column, split where the signal is missing
+  const segs=[];let seg=null,cur=null;
+  const emit=()=>{if(!cur)return;if(!seg)segs.push(seg=[]);seg.push([cur.px,cur.f],[cur.px,cur.mn],[cur.px,cur.mx],[cur.px,cur.l]);cur=null};
+  for(let i=0;i<xs.length;i++){const v=ys[i];if(!isFinite(v)||!isFinite(xs[i])){emit();seg=null;continue}const px=Math.round(X(xs[i]));
+    if(cur&&cur.px!==px)emit();if(!cur)cur={px,f:v,mn:v,mx:v,l:v};else{cur.mn=Math.min(cur.mn,v);cur.mx=Math.max(cur.mx,v);cur.l=v}}
+  emit();
+  const data=C('--data'),grad=g.createLinearGradient(0,top,0,H-bot);grad.addColorStop(0,data+'38');grad.addColorStop(1,data+'00');
+  segs.forEach(sg=>{g.beginPath();sg.forEach(([x,y],i)=>i?g.lineTo(x,Y(y)):g.moveTo(x,Y(y)));
+    g.strokeStyle=data;g.lineWidth=1.6*dpr;g.lineJoin='round';g.stroke();
+    g.lineTo(sg[sg.length-1][0],H-bot);g.lineTo(sg[0][0],H-bot);g.closePath();g.fillStyle=grad;g.fill()});
+  g.textBaseline='alphabetic';g.fillStyle=C('--fg');g.font='600 '+12*dpr+'px '+C('--num');g.fillText(name+(u?'  '+u:''),2,13*dpr);
+  g.fillStyle=C('--dim');g.font=11*dpr+'px '+C('--num');g.textAlign='right';g.fillText('min '+fmtV(vmin)+'   max '+fmtV(vmax),W-2,13*dpr);
+  const tl=x=>index?String(Math.round(x)):fmtT(x);
+  g.textAlign='left';g.fillText(tl(x0),2,H-4*dpr);g.textAlign='center';g.fillText(tl((x0+x1)/2),W/2,H-4*dpr);g.textAlign='right';g.fillText(tl(x1),W-2,H-4*dpr);
+  const tip=$('#tip');   // hover: the recorded values under the cursor (min … max when one screen pixel holds many samples)
+  c.onpointermove=e=>{const r=c.getBoundingClientRect(),q=x0+((e.clientX-r.left)*dpr-1)/(W-2)*(x1-x0),dq=(x1-x0)/(W-2)*dpr*1.5;
+    let a=0,b=xs.length-1;while(b-a>1){const m=(a+b)>>1;xs[m]<q-dq?a=m:b=m}
+    let mn=Infinity,mx=-Infinity,best=a;for(let i=a;i<xs.length&&xs[i]<=q+dq;i++){if(Math.abs(xs[i]-q)<Math.abs(xs[best]-q))best=i;if(isFinite(ys[i])){mn=Math.min(mn,ys[i]);mx=Math.max(mx,ys[i])}}
+    const val=isFinite(mn)&&mx-mn>Math.abs(mx)*0.02+1e-9?fmtV(mn)+' … '+fmtV(mx):fmtV(ys[best]);
+    tip.textContent=tl(xs[best])+'   '+val+(u?' '+u:'');tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY-30+'px';tip.style.display='block'};
+  c.onpointerleave=()=>tip.style.display='none';
 }
 
 // "20261116_175029_drive.csv" -> "Drive · 16.11 17:50"
-function nice(f){const m=f.match(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(.+)\.csv$/);if(!m)return[f,''];
-  const kind=t()[m[6]]||m[6];return[kind,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`]}
+function nice(f){const m=f.match(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(.+)\.(csv|txt)$/);if(!m)return[f,''];
+  const kind=t()[m[6]]||m[6].replace(/_/g,' ');return[kind,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`]}
 
-let files=[],current=null;
+let files=[],current=null,showAll=false;   // the automatic recorder adds a session per run: the newest 40 first
 async function loadFiles(){try{files=JSON.parse(await get('/api/files'))}catch(e){files=[]}renderList();
   const y=$('#ylist');y.innerHTML='';files.filter(f=>f.startsWith('sysid/')&&f.endsWith('.result.txt')).forEach(f=>{const m=f.match(/(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)\d\d_(sysid|verify)_(.+)\.result\.txt$/);const d=el('div',null,m?(m[6]==='verify'?t().verify.split(' (')[0]+': ':'')+m[7]:f.slice(6));if(m)d.append(el('small',null,`${m[3]}.${m[2]} ${m[4]}:${m[5]}`));d.onclick=()=>openSysId(f,d);y.append(d)});
-  if(!y.children.length){y.append(el('div','dim','-'));$('#ysum').innerHTML='';$('#ysum').append(el('div','card dim',t().ynone))}}
+  if(!y.children.length){y.append(el('div','dim','-'));$('#ysum').innerHTML='';$('#ysum').append(el('div','panel dim',t().ynone))}}
 function renderList(){const s=$('#slist');s.innerHTML='';
-  files.filter(f=>/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!f.startsWith('sysid/')&&!/batteries\.csv$/.test(f)).sort().reverse().forEach(f=>{
-    const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openSession(f,d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
+  const rec=files.filter(f=>(/\.csv$/.test(f)&&!/\.(events|summary)\.csv$/.test(f)&&!/batteries\.csv$/.test(f)||/_cog\.txt$/.test(f))&&!f.startsWith('sysid/')).sort().reverse();
+  rec.slice(0,showAll?rec.length:40).forEach(f=>{
+    const [a,b]=nice(f),d=el('div',null,a);d.append(el('small',null,b));d.onclick=()=>openAny(f,d);if(current&&current.f===f)d.classList.add('on');s.append(d)});
+  if(rec.length>40&&!showAll){const m=el('div','more',t().showAll+' ('+rec.length+')');m.onclick=()=>{showAll=true;renderList()};s.append(m)}
   if(!s.children.length)s.append(el('div','dim',t().none));
-  if(!current)$('#summary').innerHTML='',$('#summary').append(el('div','card dim',files.length?t().pick:t().none));}
+  if(!current)$('#summary').innerHTML='',$('#summary').append(el('div','panel dim',files.length?t().pick:t().none));}
 const pick=(box,d)=>{box.querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))};
+const openAny=(f,d)=>/_cog\.txt$/.test(f)?openCog(f,d):openSession(f,d);
+function openNewest(){const d=$('#slist div');if(d&&d.onclick)d.onclick()}
+
+// ---------------------------------------------------------------- center of gravity: drawing + tipping limits
+// Line 1 of "<date>_cog.txt" (written by AsaCenterOfGravity): "ASA COG wheelbase=.. track=.. fromRear=.. ..." in cm, m/s², degrees.
+async function openCog(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.add('hide');const txt=await get('/file/'+f);
+  const k={};(txt.split('\n')[0]||'').replace(/(\w+)=([-\d.eE+]+|NaN)/g,(_,a,b)=>{k[a]=+b});
+  const box=$('#summary');box.innerHTML='';
+  if(!isFinite(k.height)){const c=el('div','panel');c.append(el('div','dim',t().cogOld),el('pre',null,txt));box.append(c);return}
+  const lvA=a=>a>=8?'g':a>=5?'y':'r',lvR=r=>r>=30?'g':r>=15?'y':'r',todo=lv=>lv==='g'?t().tipSafe:lv==='y'?t().tipMaybe:t().tipBad;
+  const rows=[[lvA(k.brake),t().tipBrake(f1(k.brake))],[lvA(k.accel),t().tipAccel(f1(k.accel))],[lvA(k.sideways),t().tipSide(f1(k.sideways))],[lvR(k.ramp),t().tipRamp(Math.round(k.ramp))]]
+    .map(([lv,txt],i)=>({lv,txt,todo:i<3||lv!=='g'?todo(lv):''}));
+  if(Math.abs(k.heightFB-k.heightLR)/k.height>0.10)rows.push({lv:'y',txt:t().cogDiff});
+  const n=tally(rows);
+  box.append(hero(n.r?'r':n.y?'y':'g',n.r?t().urgent:n.y?t().check:t().allOk,nice(f).join(', '),
+    t().cogWhere(f1(k.height),Math.round(100*k.fromRear/k.wheelbase),Math.round(100*k.fromRight/k.track)),n));
+  const svg=cogSvg(k),dc=el('div','panel cog');dc.append(el('h2',null,t().cogDraw));const holder=el('div');holder.innerHTML=svg;dc.append(holder);
+  const a=el('a','dl',t().cogSvg);a.href=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));a.download=f.replace(/\.txt$/,'.svg');a.style.marginTop='12px';dc.append(a);box.append(dc);
+  box.append(group(t().cogLimits,rows));
+}
+// Top view (front up, right side on the right) and side view from the right (front to the right), all in cm.
+function cogSvg(k){
+  const stack=innerWidth<600,cmU=L==='ru'?' см':' cm';   // phone: side view under the top view, so both stay readable
+  const wb=k.wheelbase,tr=k.track,h=k.height,S=Math.max(wb,tr,h),m=S*0.3,fs=S*(stack?0.075:0.06),sw=S*0.006,wr=Math.min(4.8,S*0.09),
+    sideH=Math.max(h*1.4,wb*0.55),ox=m,oy=m*1.1,sx=stack?ox+(tr-wb)/2:ox+tr+m*1.5,sTop=stack?oy+wb+m*1.8:oy,
+    gy=stack?sTop+sideH:oy+Math.max(wb,sideH),W=stack?ox*2+Math.max(tr,wb):sx+wb+m*0.8,HH=gy+m*0.7,
+    cx=ox+tr-k.fromRight,cy=oy+wb-k.fromRear,px=sx+k.fromRear,py=gy-h,r1=v=>(Math.round(v*10)/10),
+    deg=(a,b)=>Math.round(Math.atan2(a,b)*180/Math.PI),acc=css('--data'),dim=css('--dim'),fg=css('--fg'),red=css('--brand'),bg=css('--surf'),ln=css('--line'),wh=css('--surf2'),fl=css('--bg');
+  const T=(x,y,s,c,an)=>`<text x="${r1(x)}" y="${r1(y)}" font-size="${r1(fs)}" fill="${c||fg}" text-anchor="${an||'middle'}" stroke="${bg}" stroke-width="${r1(fs*0.25)}" paint-order="stroke">${s}</text>`;
+  const Ln=(x1,y1,x2,y2,c,dash)=>`<line x1="${r1(x1)}" y1="${r1(y1)}" x2="${r1(x2)}" y2="${r1(y2)}" stroke="${c}" stroke-width="${r1(sw*1.5)}"${dash?` stroke-dasharray="${r1(S*0.02)}"`:''}/>`;
+  const dot=(x,y)=>`<circle cx="${r1(x)}" cy="${r1(y)}" r="${r1(S*0.028)}" fill="${red}" stroke="${fg}" stroke-width="${r1(sw)}"/>`;
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${r1(W)} ${r1(HH)}" font-family="system-ui,sans-serif"><rect width="${r1(W)}" height="${r1(HH)}" rx="${r1(S*0.03)}" fill="${bg}"/>`;
+  // top view
+  s+=T(ox+tr/2,oy-fs*2.4,t().cogTop,dim)+T(ox+tr/2,oy-fs*0.9,'▲ '+t().cogFront,acc);
+  s+=`<rect x="${r1(ox)}" y="${r1(oy)}" width="${r1(tr)}" height="${r1(wb)}" fill="${fl}" stroke="${ln}" stroke-width="${r1(sw)}"/>`;
+  [[ox,oy],[ox+tr,oy],[ox,oy+wb],[ox+tr,oy+wb]].forEach(([x,y])=>s+=`<rect x="${r1(x-wr*0.45)}" y="${r1(y-wr)}" width="${r1(wr*0.9)}" height="${r1(wr*2)}" rx="${r1(wr*0.2)}" fill="${wh}" stroke="${dim}" stroke-width="${r1(sw)}"/>`);
+  s+=T(ox-wr*1.6,oy+wb/2+fs/3,t().cogL,dim)+T(ox+tr+wr*1.6,oy+wb/2+fs/3,t().cogR,dim);
+  s+=Ln(ox+tr/2-S*0.03,oy+wb/2,ox+tr/2+S*0.03,oy+wb/2,dim)+Ln(ox+tr/2,oy+wb/2-S*0.03,ox+tr/2,oy+wb/2+S*0.03,dim);   // geometric center
+  s+=Ln(cx,cy,cx,oy+wb,acc,1)+T(cx+fs*0.4,(cy+oy+wb)/2+fs/3,r1(k.fromRear)+cmU,acc,'start');
+  s+=Ln(cx,cy,ox+tr,cy,acc,1)+T((cx+ox+tr)/2,cy-fs*0.5,r1(k.fromRight)+cmU,acc);
+  s+=dot(cx,cy);
+  s+=T(ox+tr/2,oy+wb+wr+fs*1.3,r1(tr)+' × '+r1(wb)+cmU,dim);
+  // side view
+  s+=T(sx+wb/2,sTop-fs*2.4,t().cogSide,dim)+T(sx+wb,sTop-fs*0.9,t().cogFront+' ▶',acc,'end');
+  s+=Ln(sx-m*0.4,gy,sx+wb+m*0.4,gy,dim);
+  [sx,sx+wb].forEach(x=>s+=`<circle cx="${r1(x)}" cy="${r1(gy-wr)}" r="${r1(wr)}" fill="${wh}" stroke="${dim}" stroke-width="${r1(sw)}"/>`);
+  s+=Ln(px,py,sx,gy,dim,1)+Ln(px,py,sx+wb,gy,dim,1);   // tipping lines: past them the robot falls
+  s+=T(sx+fs*0.2,gy-wr*2-fs*0.6,deg(k.fromRear,h)+'°',dim,'start')+T(sx+wb-fs*0.2,gy-wr*2-fs*0.6,deg(wb-k.fromRear,h)+'°',dim,'end');
+  s+=Ln(px,gy,px,py,acc)+T(px+fs*0.4,(gy+py)/2,'h '+r1(h)+cmU,acc,'start');
+  s+=dot(px,py);
+  s+=T(sx+wb/2,gy+fs*1.4,r1(wb)+cmU,dim);
+  return s+'</svg>';
+}
 
 // ---------------------------------------------------------------- plain-language summary
 const f1=v=>(Math.round(v*10)/10).toString(), f2=v=>(Math.round(v*100)/100).toString();
@@ -230,43 +492,70 @@ function analyze(data,events,report){
   // motors: everything with .power and .amps
   const motors=data.h.filter(n=>n.endsWith('.power')&&col(n.slice(0,-6)+'.amps')).map(n=>n.slice(0,-6));
   const stat={};
-  motors.forEach(m=>{const p=col(m+'.power'),a=col(m+'.amps'),pos=col(m+'.pos');let n=0,sum=0,maxPos=0;
-    for(let i=0;i<p.length;i++){if(Math.abs(p[i])>0.25&&isFinite(a[i])){n++;sum+=a[i];if(pos&&isFinite(pos[i]))maxPos=Math.max(maxPos,Math.abs(pos[i]))}}
-    stat[m]={used:n>20,amps:n?sum/n:0,enc:maxPos>=5}});
-  const used=motors.filter(m=>stat[m].used), noEnc=used.filter(m=>stat[m].amps>=0.2&&!stat[m].enc);
+  // used = any real command (a lift holding at 0.1 is used); current is judged only above 0.25, where a working motor draws clearly
+  motors.forEach(m=>{const p=col(m+'.power'),a=col(m+'.amps'),pos=col(m+'.pos');let n=0,sum=0,maxPos=0,use=0;
+    for(let i=0;i<p.length;i++){if(Math.abs(p[i])>0.05){use++;if(pos&&isFinite(pos[i]))maxPos=Math.max(maxPos,Math.abs(pos[i]))}
+      if(Math.abs(p[i])>0.25&&isFinite(a[i])){n++;sum+=a[i]}}
+    stat[m]={used:use>20,strong:n>20,amps:n?sum/n:NaN,enc:maxPos>=5}});
+  const used=motors.filter(m=>stat[m].used), noEnc=used.filter(m=>!(stat[m].amps<0.2)&&!stat[m].enc);
   used.forEach(m=>{const s=stat[m];let lv='g',txt=t().mOk(f1(s.amps)),todo='';
     const others=used.filter(o=>o!==m&&stat[o].amps>=0.2).map(o=>stat[o].amps).sort((x,y)=>x-y),med=others.length?others[others.length>>1]:0;
-    if(s.amps<0.2){lv='r';txt=t().mNoCur;todo=t().mNoCurDo}
+    let src='robot';   // no current, friction, no encoder: wiring and mechanics
+    if(!s.strong){txt=t().mLow}
+    else if(s.amps<0.2){lv='r';txt=t().mNoCur;todo=t().mNoCurDo}
     // friction: a reason to look, never an emergency; needs both +30% and +0.4 A so noise on small currents stays green
     else if(med>0.3&&s.amps>=1.3*med&&s.amps-med>0.4&&others.length>=2){const pc=Math.round((s.amps/med-1)*100);lv='y';txt=t().mMore(pc,f1(s.amps));todo=t().mMoreDo}
     else if(!s.enc&&noEnc.length<used.length){lv='y';txt=t().mEnc;todo=t().mEncDo}
-    out.motors.push({lv,name:m,txt,todo})});
+    out.motors.push({lv,name:m,txt,todo,src:lv==='g'?'':src})});
   motors.filter(m=>!stat[m].used).forEach(m=>out.motors.push({lv:'n',name:m,txt:t().mOff}));
-  if(used.length&&noEnc.length===used.filter(m=>stat[m].amps>=0.2).length&&noEnc.length>0)out.motors.push({lv:'y',name:'',txt:t().mEncAll,todo:t().mEncDo});
+  if(used.length&&noEnc.length===used.filter(m=>!(stat[m].amps<0.2)).length&&noEnc.length>0)out.motors.push({lv:'y',name:'',txt:t().mEncAll,todo:t().mEncDo,src:'robot'});
   // battery
   const bat=col('battery'),init=col('battery.init');let v0=init&&isFinite(init[0])?init[0]:NaN,vmin=Infinity;
   if(bat)bat.forEach(v=>{if(isFinite(v)&&v>5){if(!isFinite(v0))v0=v;vmin=Math.min(vmin,v)}});
   const rm=report.match(/ ([\d.]+) ohm/),R=rm?+rm[1]:NaN,rs=isFinite(R)?(L==='en'?`, resistance ${f2(R)} Ω`:L==='ro'?`, rezistență ${f2(R)} Ω`:`, сопротивление ${f2(R)} Ом`):'';
   if(isFinite(v0)){
-    if(isFinite(vmin)&&vmin<8)out.power.push({lv:'r',txt:t().bDrop(f1(vmin)),todo:t().bDropDo});
-    if(v0<12.4)out.power.push({lv:'y',txt:t().bLow(f2(v0)),todo:t().bLowDo});
-    if(R>=0.25)out.power.push({lv:'r',txt:t().bWeak(f2(R)),todo:t().bWeakDo});else if(R>=0.15)out.power.push({lv:'y',txt:t().bWatch(f2(R)),todo:t().bWeakDo});
+    if(isFinite(vmin)&&vmin<8)out.power.push({lv:'r',txt:t().bDrop(f1(vmin)),todo:t().bDropDo,src:'robot'});
+    if(v0<12.4)out.power.push({lv:'y',txt:t().bLow(f2(v0)),todo:t().bLowDo,src:'robot'});
+    if(R>=0.25)out.power.push({lv:'r',txt:t().bWeak(f2(R)),todo:t().bWeakDo,src:'robot'});else if(R>=0.15)out.power.push({lv:'y',txt:t().bWatch(f2(R)),todo:t().bWeakDo,src:'robot'});
     if(!out.power.length)out.power.push({lv:'g',txt:t().bOk(f2(v0),rs)});}
   // hubs
   data.h.filter(n=>n.endsWith('.ok')&&!n.startsWith('gamepad')).forEach(n=>{const ok=col(n),tc=col(n.slice(0,-3)+'.temp');let lost=false,tmax=-Infinity;
     ok.forEach(v=>{if(v===0)lost=true});if(tc)tc.forEach(v=>{if(isFinite(v))tmax=Math.max(tmax,v)});
-    if(lost)out.power.push({lv:'r',txt:t().hubLost,todo:t().hubLostDo});else if(tmax>60)out.power.push({lv:'y',txt:t().hubHot(Math.round(tmax))});
+    if(lost)out.power.push({lv:'r',txt:t().hubLost,todo:t().hubLostDo,src:'robot'});else if(tmax>60)out.power.push({lv:'y',txt:t().hubHot(Math.round(tmax))});
     else out.power.push({lv:'g',txt:t().hubOk(isFinite(tmax)?Math.round(tmax):'?')})});
   // loop
-  const lp=col('loop_ms');if(lp){const v=lp.filter(x=>isFinite(x)&&x>0).sort((a,b)=>a-b);if(v.length){const med=v[v.length>>1];
-    out.program.push(med>50?{lv:'y',txt:t().loopSlow(f1(med)),todo:t().loopSlowDo}:{lv:'g',txt:t().loopOk(f1(med))})}}
+  const auto=(events.cols[1]||[]).includes('AUTO_RECORD'),lp=auto?null:col('loop_ms');   // automatic recording: its own clock, not the team's loop
+  if(auto)out.program.push({lv:'n',txt:t().autoRec});
+  if(lp){const v=lp.filter(x=>isFinite(x)&&x>0).sort((a,b)=>a-b);if(v.length){const med=v[v.length>>1];
+    out.program.push(med>50?{lv:'y',txt:t().loopSlow(f1(med)),todo:t().loopSlowDo,src:'code'}:{lv:'g',txt:t().loopOk(f1(med))})}}
+  // ---- the program vs the robot: driver input -> commanded power -> measured motion
+  const T0=(()=>{const i=(events.cols[1]||[]).indexOf('START');return i>=0?events.cols[0][i]:-Infinity})();   // driving only
+  const dtAt=i=>i>0&&isFinite(tt[i]-tt[i-1])?Math.min(0.2,tt[i]-tt[i-1]):0;
+  const isDrive=n=>{const s=n.toLowerCase().replace(/motor|drive|wheel|[^a-z]/g,'');
+    return /left|right/.test(s)&&/front|back|rear/.test(s)||/^([lr][fbr]|[fbr][lr]|left|right)$/.test(s)};
+  // 1. sticks pushed, no drive motor powered: the code does not turn the sticks into power
+  const ly=col('gamepad1.ly'),lx=col('gamepad1.lx'),rx=col('gamepad1.rx'),dm=motors.filter(isDrive),pw=(dm.length?dm:motors).map(m=>col(m+'.power'));
+  if(ly&&pw.length){let dead=0;for(let i=0;i<tt.length;i++){if(tt[i]<T0)continue;
+      const st=Math.max(Math.abs(ly[i]||0),Math.abs(lx?lx[i]||0:0),Math.abs(rx?rx[i]||0:0));
+      if(st>0.5&&pw.every(p=>!(Math.abs(p[i])>0.02)))dead+=dtAt(i)}
+    if(dead>=1)out.program.push({lv:'y',txt:t().cStick(f1(dead)),todo:t().cStickDo,src:'code'})}
+  motors.forEach(m=>{const p=col(m+'.power'),v=col(m+'.vel');
+    // 2. power flipping sign many times a second: an over-tuned controller or two pieces of code fighting
+    let flips=[],last=0;for(let i=0;i<p.length;i++){if(tt[i]<T0||!(Math.abs(p[i])>0.05))continue;const sg=Math.sign(p[i]);if(last&&sg!==last)flips.push(tt[i]);last=sg}
+    let worst=0,bad=0;for(let a=0,b=0;b<flips.length;b++){while(flips[b]-flips[a]>1)a++;const n=b-a+1;worst=Math.max(worst,n);if(n>=6)bad++}
+    if(bad>=6)out.program.push({lv:'y',name:m,txt:t().cOsc(m,worst),todo:t().cOscDo,src:'code'});
+    // 3. the encoder turns against the commanded power: direction in code, or the encoder plugged into another port
+    if(v){let n=0,opp=0;for(let i=0;i<p.length;i++){if(tt[i]<T0||!(Math.abs(p[i])>0.3)||!(Math.abs(v[i])>50))continue;n++;if(Math.sign(p[i])!==Math.sign(v[i]))opp++}
+      if(n>=20&&opp/n>0.8)out.program.push({lv:'y',name:m,txt:t().cDir(Math.round(100*opp/n)),todo:t().cDirDo,src:'code'})}});
   // warnings during the session, in words
   const et=events.cols[0]||[],ety=events.cols[1]||[],ed=events.cols[2]||[];
   et.forEach((x,i)=>{const ty=ety[i];if(ty!=='WARNING'&&ty!=='CRITICAL'&&ty!=='CRASH')return;const d=String(ed[i]||'');const name=(d.split(' ')[0]||'');
     const key=ty==='CRASH'?'crash':Object.keys(t().rule).sort((a,b)=>b.length-a.length).find(k=>name.endsWith(k));
-    const who=key&&key!=='crash'?name.slice(0,name.length-key.length).replace(/-$/,''):'';
+    const who=(key&&key!=='crash'?name.slice(0,name.length-key.length).replace(/-$/,''):'').replace(/^hub-of-/,t().hubOf+' ');
     const mm=Math.floor(x/60),ss=Math.floor(x%60);
-    out.events.push({lv:ty==='WARNING'?'y':'r',name:who,txt:(key?t().rule[key]:d)+`  (${t().at} ${mm}:${String(ss).padStart(2,'0')})`})});
+    // the program's own faults vs the robot's; 'zeroed' can be either, so it gets no label
+    const src=key==='crash'||key==='slow-loop'||key==='loop-pause'?'code':key&&key!=='zeroed'?'robot':'';
+    out.events.push({lv:ty==='WARNING'?'y':'r',name:who,txt:(key?t().rule[key]:d)+`  (${t().at} ${mm}:${String(ss).padStart(2,'0')})`,src})});
   if(!out.events.length)out.events.push({lv:'g',txt:t().evNone});
   // compared with earlier sessions
   if(/first session/.test(report))out.history.push({lv:'n',txt:t().first});
@@ -276,29 +565,34 @@ function analyze(data,events,report){
     if(m&&m[1]!=='battery'&&+m[2]<=500)out.history.push({lv:+m[2]>=60?'r':'y',txt:t().histMore(m[1],m[2]),todo:t().mMoreDo})});
   return out;
 }
-function renderSummary(o,dur){const box=$('#summary');box.innerHTML='';
-  const all=[].concat(o.motors,o.power,o.program,o.events,o.history),nr=all.filter(x=>x.lv==='r').length,ny=all.filter(x=>x.lv==='y').length;
-  const top=el('div','card');const v=el('div','verdict',nr?`🔴 ${t().urgent} (${nr})`:ny?`🟡 ${t().check} (${ny})`:`🟢 ${t().allOk}`);top.append(v);
-  if(dur)top.append(el('div','dim',dur));box.append(top);
-  [['motors',o.motors],['power',o.power],['program',o.program],['events',o.events],['history',o.history]].forEach(([k,rows])=>{if(!rows.length)return;
-    const c=el('div','card');c.append(el('h3',null,t()[k]));
-    rows.forEach(r=>{const row=el('div','row'),d=el('div','dot '+r.lv),body=el('div');const b=el('b');if(r.name)b.append(el('span',null,r.name+' — '));b.append(el('span',null,r.txt));body.append(b);
-      if(r.todo)body.append(el('div','todo',r.todo));row.append(d,body);c.append(row)});box.append(c)});}
+// the verdict block and a group of findings, shared by recordings, center of gravity and SysId
+function hero(lv,title,meta,text,cnt){const h=el('div','hero enter lv-'+lv);h.append(el('h1',null,title));if(meta)h.append(el('div','meta',meta));if(text)h.append(el('p',null,text));
+  if(cnt){const c=el('div','counts');[['r',t().nUrg],['y',t().nChk],['g',t().nOk]].forEach(([l,w])=>{if(cnt[l])c.append(el('span','lv-'+l,cnt[l]+' '+w))});
+    [['code',t().srcCode],['robot',t().srcRobot]].forEach(([k,w])=>{if(cnt[k])c.append(el('span','src '+k,cnt[k]+' '+w))});if(c.children.length)h.append(c)}return h}
+function group(title,rows,cls){const c=el('div','panel'+(cls?' '+cls:''));if(title)c.append(el('h2',null,title));
+  rows.forEach(r=>{const row=el('div','row'),body=el('div'),b=el('b');if(r.name)b.append(el('span','who',r.name));b.append(el('span',null,r.txt));
+    if(r.src&&r.lv!=='g'&&r.lv!=='n')b.append(el('span','src '+r.src,r.src==='code'?t().srcCode:t().srcRobot));body.append(b);
+    if(r.todo)body.append(el('div','todo',r.todo));row.append(el('div','dot lv-'+r.lv),body);c.append(row)});return c}
+const tally=rows=>{const n={r:0,y:0,g:0,code:0,robot:0};rows.forEach(x=>{if(n[x.lv]!=null)n[x.lv]++;if((x.lv==='r'||x.lv==='y')&&x.src)n[x.src]++});return n};
+function renderSummary(o,meta){const box=$('#summary');box.innerHTML='';
+  const n=tally([].concat(o.motors,o.power,o.program,o.events,o.history));
+  box.append(hero(n.r?'r':n.y?'y':'g',n.r?t().urgent:n.y?t().check:t().allOk,meta,null,n));
+  [['motors',o.motors],['power',o.power],['program',o.program],['events',o.events],['history',o.history]].forEach(([k,rows])=>{if(rows.length)box.append(group(t()[k],rows))})}
 
-async function openSession(f,d){current={f,d};pick($('#slist'),d);const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
+async function openSession(f,d){current={f,d};pick($('#slist'),d);$('#raw').classList.remove('hide');const data=csv(await get('/file/'+f));let ev={h:[],cols:[[],[],[]]},rep='';
   try{ev=csv(await get('/file/'+f.replace(/\.csv$/,'.events.csv')))}catch(e){}try{rep=await get('/file/'+f.replace(/\.csv$/,'.report.txt'))}catch(e){}
   const T0=data.cols[0],secs=T0.length?T0[T0.length-1]:0,dur=secs>=60?Math.round(secs/60)+' '+t().min:Math.round(secs)+' '+t().sec;
-  renderSummary(analyze(data,ev,rep),nice(f).join(' · ')+' · '+dur);
-  const marks=(ev.cols[0]||[]).map((x,i)=>({t:x,c:ev.cols[1][i]==='CRITICAL'?'#ff4d5e':ev.cols[1][i]==='WARNING'?'#ffb020':'#3a4252'}));
+  renderSummary(analyze(data,ev,rep),nice(f).concat(dur).filter(Boolean).join(', '));
+  const marks=(ev.cols[0]||[]).map((x,i)=>({t:x,c:ev.cols[1][i]==='CRITICAL'?'crit':ev.cols[1][i]==='WARNING'?'warn':'line'}));
   const cols=$('#scols');cols.innerHTML='';const chosen=new Set(data.h.filter(n=>n==='battery'||n.endsWith('.amps')).slice(0,5));
   const draw=()=>{const p=$('#splots');p.innerHTML='';data.h.forEach((n,i)=>{if(chosen.has(n))plot(p,n,data.cols[0],data.cols[i],marks)})};
-  data.h.slice(1).forEach(n=>{const l=el('label'),c=el('input');c.type='checkbox';c.checked=chosen.has(n);c.onchange=()=>{c.checked?chosen.add(n):chosen.delete(n);draw()};l.append(c,' '+n);cols.append(l)});
+  data.h.slice(1).forEach(n=>{const l=el('label'),c=el('input');c.type='checkbox';c.checked=chosen.has(n);c.onchange=()=>{c.checked?chosen.add(n):chosen.delete(n);draw()};l.append(c,n);cols.append(l)});
   $('#raw').ontoggle=()=>{if($('#raw').open)draw()};if($('#raw').open)draw();
-  const dl=el('a',null,'AdvantageScope .wpilog');dl.href='/wpilog/'+f;dl.style.cssText='display:inline-block;margin:8px 0 0;color:var(--acc)';cols.append(el('br'),dl);
+  const dl=el('a','dl','AdvantageScope .wpilog');dl.href='/wpilog/'+f;$('#splots').before(dl);$('#raw').querySelectorAll('a.dl').forEach(x=>{if(x!==dl)x.remove()});
   $('#sinfo').textContent=(rep?rep+'\n':'')+(ev.cols[0]||[]).map((x,i)=>x.toFixed(2)+' s  '+ev.cols[1][i]+'  '+(ev.cols[2][i]||'')).join('\n');
 }
 
-function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.innerHTML='';const card=el('div','card');
+function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.innerHTML='';
   const head=L1[0]||'',isVerify=/VERIFY/.test(head);let verdict,lv;
   const note=line=>{for(const [re,txt2] of t().notes)if(re.test(line))return txt2;return line};
   if(isVerify){const m=head.match(/RMS -([\d.]+|NaN)%/),pct=m?m[1]:'NaN';
@@ -314,15 +608,13 @@ function sysidSummary(txt){const L1=txt.split('\n'),o=[],box=$('#ysum');box.inne
     for(i++;i<L1.length&&L1[i].trim()&&!L1[i].startsWith('//');i++)o.push({lv:q==='GOOD'?'n':lv,txt:note(L1[i])});
     o.mean=['kS','kG','kV','kA'].filter(x=>k[x]!=null).map(x=>({lv:unc[x]==null?'n':unc[x]<=10?'g':unc[x]<=25?'y':'r',
       txt:t()[x](+(+k[x]).toPrecision(3))+(unc[x]!=null?`  (${t().yUnc} ±${unc[x]}%${unc[x]<=10?' — '+t().ySure:''})`:'')}));}
-  card.append(el('div','verdict',(lv==='g'?'🟢 ':lv==='y'?'🟡 ':'🔴 ')+verdict));
-  o.forEach(r=>{const row=el('div','row');row.append(el('div','dot '+r.lv),el('div',null,r.txt));card.append(row)});box.append(card);
-  if(o.mean&&o.mean.length){const c=el('div','card');c.append(el('h3',null,t().yMean));
-    o.mean.forEach(r=>{const row=el('div','row');row.append(el('div','dot '+r.lv),el('div',null,r.txt));c.append(row)});box.append(c)}}
+  box.append(hero(lv,verdict));box.append(group(null,o));
+  if(o.mean&&o.mean.length)box.append(group(t().yMean,o.mean));}
 let ycur=null;
 async function openSysId(f,d){ycur={f,d};pick($('#ylist'),d);const txt=await get('/file/'+f);$('#yres').textContent=txt;$('#cst').textContent='';sysidSummary(txt);
   $('#copy').onclick=()=>{const j=txt.slice(txt.indexOf('// ASA SysId'));(navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>$('#cst').textContent='copied',()=>$('#cst').textContent='select the text and copy')};
   const p=$('#yplots');p.innerHTML='';try{const data=csv(await get('/file/'+f.replace(/\.result\.txt$/,'.csv'))),idx=data.cols[0].map((_,i)=>i);
-    ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i])})}catch(e){}
+    ['volts','vel','pos'].forEach(n=>{const i=data.h.indexOf(n);if(i>0)plot(p,n,idx,data.cols[i],null,true)})}catch(e){}
 }
-applyLang();detectTools().then(loadFiles);
+applyLang();detectTools().then(loadFiles).then(()=>{if(!current&&!wasOn&&tools.blackbox)openNewest();live()});
 </script></body></html>

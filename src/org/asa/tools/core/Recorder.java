@@ -90,7 +90,9 @@ public class Recorder {
     public Recorder start(File dir, String tag) {
         if (started) return this;
         this.dir = dir;
-        this.session = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) + "_" + safe(tag);
+        String base = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) + "_" + safe(tag);
+        this.session = base;
+        for (int k = 2; dir != null && new File(dir, session + ".csv").exists(); k++) session = base + "_" + k;   // same tag twice in one second
         int n = names.size();
         values = new double[n];
         lastReadNs = new long[n];
@@ -251,5 +253,5 @@ public class Recorder {
         return Double.toString(Math.round(v * 1e4) / 1e4);
     }
 
-    public static String safe(String s) { return s == null ? "" : s.replaceAll("[^A-Za-z0-9_.-]", "_"); }
+    public static String safe(String s) { return s == null ? "" : s.replaceAll("[^\\p{L}\\p{N}_.-]", "_"); }
 }

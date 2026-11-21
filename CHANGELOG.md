@@ -1,5 +1,55 @@
 # Changelog
 
+## 1.5.0 beta (2026-11-21): not yet run on a real robot
+
+- **One program on the Driver Hub: "ASA Black Box".** LB / RB picks the mode (Health check, Center of gravity),
+  X the language (English, Russian, Romanian) for everything on the Driver Hub. Replaces "ASA Health Check" and
+  "ASA Center of Gravity": uploading the new files over the old ones removes those two from the list.
+- **Every match recorded with no code.** Install, restart the robot once, and every OpMode (Java or Blocks) is
+  recorded in the background, named after the OpMode and compared with its earlier runs. It never changes the team's
+  hubs, reads all encoders of a hub with one bulk read (20 samples/s with one hub, 10 with two), motor current every
+  0.4 s, runs below the OpMode's priority, stops itself on any error, steps aside for OpModes that use Black Box in
+  their own code, keeps the newest 300 recordings, and drops INIT-then-STOP runs. Y in "ASA Black Box" switches it.
+- Without the team's code, "all encoders of a hub went to 0" may be the program resetting them: reported as a
+  WARNING with both explanations instead of a CRITICAL hub reset.
+- Two recordings of the same OpMode in the same second no longer share a file.
+- **Recording test** (third mode of ASA Black Box): loop time with and without the automatic recording, samples
+  recorded, encoders read, as green / yellow / red. The INIT screen shows whether every match is recorded, the
+  newest recording and the page address. A 7-step check after installing is in the guides.
+- **In the code or in the robot?** Each problem on the results page says where it is. The recording holds what the
+  driver did (sticks), what the program commanded (motor power) and what the robot did (encoders, current), so the
+  page can tell them apart: sticks pushed but no drive power, power flipping + / − many times a second (an
+  over-tuned controller or two pieces of code driving one motor), an encoder counting against its power
+  (setDirection or a swapped cable) are **in the code**; no current, a stall, friction, a weak battery are
+  **in the robot**. The verdict counts both.
+- A motor holding a position at low power (a lift at 0.1) is no longer shown as "not used".
+- The results page serves each request on its own thread: a phone downloading a long WPILOG no longer freezes the
+  Live tab for everyone (measured: 5 s timeouts before, 1 to 14 ms after). Slower polling when the page is hidden.
+- Health check: Y after the report runs the automatic test again. Driver Hub hints in the chosen language from the
+  first OpMode after power-on. Autonomous detected from the SDK's own list, so Blocks programs count too.
+- **The Driver Hub in ASA's colors**: titles in magenta, every hub, motor, battery and tipping limit with a green,
+  yellow or red light, the selected option marked, step dots for the center of gravity.
+- Automatic recording: the IMU and I2C distance sensors are read only from 1 s after START (the team's INIT may be
+  loading the IMU's firmware then), and Autonomous OpModes do not record the gamepads (no false "disconnected").
+- OpMode names in any alphabet stay readable ("Маршрут", "Mașină"), and their AdvantageScope files keep the name.
+- The page no longer moves away from what someone is reading: a notice offers "Open" instead; it also says when the
+  phone has lost the robot Wi-Fi.
+- The results page shows the newest 40 recordings first, "Show all" for the rest.
+- **The results page starts by itself**: `FtcBlackBox.attachAll` starts it, `AsaWeb.start()` is no longer needed.
+  Open it once and it follows the robot: a program starts → Live tab; it stops → its recording opens.
+  Opened later, it shows the newest recording. It speaks the language chosen on the Driver Hub.
+- **Live graphs**: the last 60 s of battery, motor currents and loop time (any signal can be ticked), about 5 values
+  per second. Values with units in the table.
+- **Graphs are exact now.** Before, a long session was drawn from every Nth sample, so a one-loop spike could vanish
+  (a 9 A stall row in 20000 rows was not drawn). Each pixel now draws the min and max of its samples. Time axis,
+  units, min / max, and hover shows the recorded value (min … max when a pixel holds many samples).
+- **New look in ASA's colors** (magenta on carbon black, the team logo in the header), light theme when the phone is
+  in light mode, a big verdict at the top, recordings as a swipeable strip on phones, graphs with a grid and a soft
+  fill, REC on the Live tab while a program runs, a clear "nothing is running" screen. The SysId tab only appears
+  when SysId is installed.
+- **Center of gravity drawing** on the results page: top view and side view with the point, distances in cm,
+  tipping lines with their angles, a traffic light for each tipping limit, SVG download. The phone layout stacks them.
+
 ## 1.4.2 (2026-11-16)
 
 - **SysId results in plain words**: use these constants or not (traffic light), what kS / kG / kV / kA mean with their

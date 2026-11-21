@@ -105,16 +105,17 @@ public final class AsaWeb {
 
     private void serve(ServerSocket server) {
         while (!server.isClosed()) {
-            Socket s = null;
             try {
-                s = server.accept();
+                final Socket s = server.accept();
                 s.setSoTimeout(30000);   // a long session's WPILOG download takes a while
-                handle(s);
-            } catch (Throwable ignored) {
-                // one bad request must not stop the server
-            } finally {
-                if (s != null) try { s.close(); } catch (Exception ignored) {}
-            }
+                // one thread per request: a phone downloading a long WPILOG must not freeze the Live tab for the others
+                Thread t = new Thread(new Runnable() { public void run() {
+                    try { handle(s); } catch (Throwable ignored) {}   // one bad request must not stop the server
+                    finally { try { s.close(); } catch (Exception ignored) {} }
+                }}, "asa-web-req");
+                t.setDaemon(true);
+                t.start();
+            } catch (Throwable ignored) {}
         }
     }
 
@@ -149,7 +150,7 @@ public final class AsaWeb {
 
     /** Only "name" or "sysid/name" with safe characters: no "..", no absolute paths. */
     private void sendFile(OutputStream out, String rel) throws Exception {
-        if (!rel.matches("(sysid/)?[A-Za-z0-9_.-]+") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
+        if (!rel.matches("(sysid/)?[\\p{L}\\p{N}_.-]+") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: " + f.length()
@@ -164,11 +165,12 @@ public final class AsaWeb {
 
     /** A Black Box session converted to WPILOG on the fly for AdvantageScope (streamed, never fully in memory). */
     private void sendWpiLog(OutputStream out, String rel) throws Exception {
-        if (!rel.matches("[A-Za-z0-9_.-]+\\.csv") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
+        if (!rel.matches("[\\p{L}\\p{N}_.-]+\\.csv") || rel.contains("..")) { send(out, 400, "text/plain", bytes("bad name")); return; }
         File f = new File(dir, rel);
         if (!f.isFile()) { send(out, 404, "text/plain", bytes("not found")); return; }
         out.write(("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Disposition: attachment; filename=\""
-                + rel.replace(".csv", ".wpilog") + "\"\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
+                + rel.replace(".csv", ".wpilog").replaceAll("[^\\x20-\\x7E]", "_") + "\"; filename*=UTF-8''"   // real name ("Маршрут") for browsers that read it
+                + java.net.URLEncoder.encode(rel.replace(".csv", ".wpilog"), "UTF-8").replace("+", "%20") + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
         OutputStream buffered = new java.io.BufferedOutputStream(out, 65536);
         WpiLog.convert(f, buffered);
         buffered.flush();

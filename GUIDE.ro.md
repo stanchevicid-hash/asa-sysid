@@ -27,9 +27,12 @@ Aveți nevoie de ambele biblioteci? Dezarhivați ambele arhive. Fișierele comun
 
 ### OnBot Java (din browser, fără Android Studio)
 
-**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 14 fișiere în
+**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 16 fișiere în
 folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build. Dacă prima compilare nu reușește
 („bad source file”), apăsați Build încă o dată.
+
+**Apoi, o singură dată: Restart Robot** (meniul ⋮ de pe Driver Hub → Restart Robot). Asta pornește înregistrarea
+automată a meciurilor (secțiunea 3). Până atunci pornește prima dată când rulați programul „ASA Black Box”.
 
 **Sau cu foldere:**
 
@@ -41,60 +44,125 @@ folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build
 
 Merge cu FTC SDK de la 9.x la 12.x. Biblioteca a fost compilată cu SDK-urile oficiale 12.0.0 și 9.2.0.
 
+### Verificare după instalare (10 minute)
+
+Parcurgeți pașii în ordine. Dacă la fiecare pas vedeți ce scrie în dreapta, totul funcționează.
+
+| # | Ce faceți | Ce trebuie să vedeți |
+|---|---|---|
+| 1 | **Restart Robot**, apoi alegeți **ASA Black Box** și apăsați INIT (încă nu START) | 🟢 „Fiecare meci se înregistrează (conectat la pornire)” și rândul „REZULTATE: … :8099” |
+| 2 | Telefon sau laptop pe Wi-Fi-ul robotului, deschideți adresa de la pasul 1 | pagina cu logo-ul ASA, sus un punct verde „conectat” |
+| 3 | În ASA Black Box: **RB** până la „Test înregistrare”, START. Robotul nu se mișcă, ~16 s | trei rânduri verzi: ciclul cu înregistrare aproape ca fără ea, cam câte măsurători se așteptau, encoderele citite la toate motoarele |
+| 4 | Ridicați robotul. ASA Black Box → „Verificare robot”, START, **Y** | la fiecare motor un rând verde „OK … encoderul numără în sus”. Roșu sau galben e o problemă reală: fir, port sau direcție |
+| 5 | Porniți **TeleOp-ul vostru** ca de obicei: INIT, START, conduceți un minut, STOP | pe pagină, în timpul condusului, „Acum” cu grafice; după STOP se deschide singură înregistrarea cu numele programului |
+| 6 | Din nou INIT în ASA Black Box | „Ultima înregistrare: <TeleOp-ul vostru>, ora” |
+| 7 | Tot acolo **Y** → „Înregistrarea automată e oprită”, porniți TeleOp-ul vostru | nu apare o înregistrare nouă. Apoi porniți-o la loc (**Y**) |
+
+Culorile la pasul 1: 🟡 „s-a conectat abia acum” — apăsați o dată Restart Robot și repetați pasul 1. Un rând roșu
+despre pagină înseamnă că portul e ocupat de alt program: reporniți robotul.
+
+Culorile la pasul 3: 🟡 „puțin mai lent” — puteți conduce, dar urmăriți dacă robotul se comportă altfel; 🔴 „clar mai
+lent” — opriți înregistrarea automată (**Y**), restul funcționează și fără ea, și trimiteți-ne o poză a ecranului.
+
+**Trimiteți-ne** ([formular](https://github.com/stanchevicid-hash/asa-blackbox/issues/new?template=robot-result.yml)) o
+poză cu rezultatul pasului 3 și tot ce a ieșit roșu. Așa aflăm că biblioteca merge nu doar pe robotul nostru.
+
 ---
 
-## 2. Programe gata făcute pe Driver Hub (fără cod)
+## 2. Programul gata făcut pe Driver Hub (fără cod)
 
-După instalare, în lista de OpMode-uri de pe Driver Hub, grupul **ASA**, apar două programe.
+După instalare, în lista de OpMode-uri de pe Driver Hub, grupul **ASA**, apare un singur program: **ASA Black Box**.
+Dacă aveați „ASA Health Check” și „ASA Center of Gravity”, ele dispar singure când încărcați fișierele noi peste cele
+vechi.
 
-### ASA Health Check: verificarea robotului înainte de meci
+**La INIT (înainte de START):**
+
+| Buton | Ce face |
+|---|---|
+| **LB / RB** | alegeți modul: **Verificare robot**, **Centrul de greutate** sau **Test înregistrare** (secțiunea 1) |
+| **X** | limba: EN → RU → RO. Pagina web va fi în aceeași limbă |
+| **Y** | înregistrarea automată a meciurilor: PORNIT / OPRIT (secțiunea 3) |
+| dpad | setările modului ales (vezi mai jos) |
+
+Programul ține minte modul și limba până data viitoare. Jos pe ecran e adresa paginii cu rezultate.
+
+### Modul „Verificare robot”: înainte de meci
 
 | Când | Buton | Ce face |
 |---|---|---|
 | INIT | dpad ←/→ | ce baterie e pusă (A…H): starea fiecărei baterii este ținută minte |
-| după START | dpad ↑/↓ | alegeți motorul |
-| | **țineți A / B** | motorul se învârte cu puterea +0,3 / −0,3, **doar cât timp țineți butonul** |
+| după START | **Y** | **testează singur toate motoarele**: pe rând, putere 0,3, câte 1,5 s fiecare. **B** = stop |
+| | dpad ↑/↓ | sau alegeți un motor manual… |
+| | **țineți A / B** | …și îl rotiți cu puterea +0,3 / −0,3, **doar cât timp țineți butonul** |
 | | **X** | terminați și vedeți raportul |
 
 Pe ecran apar:
 
 - fiecare hub: dacă răspunde, temperatura, tensiunea, **versiunea de firmware**;
-- pentru motorul ales: dacă encoderul numără și în ce direcție;
+- pentru fiecare motor: dacă are curent, dacă encoderul numără și în ce direcție;
 - istoricul bateriilor: rezistența internă și care baterie a devenit mai slabă decât era.
 
-**Înainte de verificare ridicați robotul sau faceți loc: motorul ales se va învârti.**
+Cât timp durează verificarea, pagina web arată grafice live. Când apăsați X (sau testul automat se termină), pagina
+deschide singură raportul.
 
-### ASA Center of Gravity: centrul de greutate
+**Înainte de verificare ridicați robotul sau faceți loc: motoarele se vor învârti.**
+
+### Modul „Centrul de greutate”
 
 Motoarele nu se mișcă. E nevoie doar de IMU-ul hub-ului (în configurație trebuie să se numească `imu`).
 
 1. INIT: cu dpad ↑/↓ setați **ampatamentul** (distanța față-spate dintre roți), cu ←/→ **ecartamentul**
    (distanța stânga-dreapta), în centimetri, de la punctul de contact al roții cu podeaua la celălalt. START.
-2. Cinci pași. La fiecare puneți robotul cum scrie pe ecran, așteptați să nu se mai clatine și apăsați **A**:
+2. Cinci pași. La fiecare puneți robotul cum scrie pe ecran, așteptați să nu se mai clatine („stabil”) și apăsați **A**:
    - drept pe podea;
    - pe roțile din spate: ridicați partea din față până când robotul stă singur în echilibru;
    - pe roțile din față;
    - pe roțile din dreapta;
    - pe roțile din stânga.
-3. Rezultatul: înălțimea centrului de greutate, poziția lui față-spate și stânga-dreapta. Mai aflați cu ce
-   accelerație poate robotul să frâneze, să accelereze și să vireze fără să se răstoarne, și pe ce pantă maximă
-   poate sta.
+3. Rezultatul pe Driver Hub: înălțimea centrului de greutate, poziția lui față-spate și stânga-dreapta, la ce
+   accelerație se răstoarnă robotul la frânare, accelerare și lateral, și pe ce pantă maximă poate sta.
+4. **Desenul pe pagina web** (se deschide singur): văzut de sus și văzut din dreapta, punctul roșu e centrul de
+   greutate, distanțele în cm, liniile punctate sunt liniile de răsturnare cu unghiurile lor. Sub desen, un semafor
+   pentru fiecare limită: 🟢 roțile alunecă înainte ca robotul să se răstoarne; 🟡 se poate răsturna la o oprire bruscă
+   sau o lovitură; 🔴 se răstoarnă ușor. Desenul se poate descărca (SVG) pentru portofoliu.
 
 **B** = un pas înapoi, **Y** = de la început. Măsurați încă o dată cu liftul ridicat: veți vedea cât de mult ridică
-liftul centrul de greutate. Rezultatul se salvează în `/sdcard/FIRST/asa/`.
+liftul centrul de greutate. Rezultatul se salvează în `/sdcard/FIRST/asa/<data>_cog.txt`.
 
 ---
 
-## 3. Black Box în propriul TeleOp sau Autonomous
+## 3. Fără cod: fiecare meci se înregistrează singur
+
+Instalați biblioteca, reporniți robotul o dată și gata. Când rulează **orice** program (TeleOp-ul vostru în Java,
+Autonomous, chiar și un program în Blocks), Black Box îl înregistrează singur în fundal, fără nimic adăugat în cod:
+motoarele (putere, poziție, viteză, curent), servo-urile, bateria, hub-urile, senzorii și ambele gamepad-uri, cu toate
+avertismentele. Înregistrarea poartă numele programului, așa că „TeleOp Main” se compară cu rulările anterioare.
+
+Cum nu vă încurcă în meci:
+
+- nu schimbă setările hub-urilor (caching, modurile motoarelor). Toate encoderele unui hub se citesc dintr-o **singură**
+  cerere comună: de 20 de ori pe secundă cu Control Hub singur, de 10 ori cu un Expansion Hub în plus. Curentul
+  motoarelor (citirea lentă) la fiecare 0,4 s. Firul înregistrării are prioritate mai mică decât programul vostru;
+- orice eroare oprește înregistrarea, nu robotul;
+- dacă programul folosește deja Black Box în propriul cod (4 rânduri, secțiunea 4), îl înregistrează doar acel cod,
+  fără copie;
+- INIT și apoi STOP fără START nu se păstrează. Pe Control Hub rămân ultimele 300 de înregistrări, cele mai vechi se
+  șterg singure (rezultatele centrului de greutate și istoricul bateriilor nu se șterg niciodată).
+
+Oprire sau pornire: programul **ASA Black Box**, butonul **Y** la INIT. Fără codul vostru înregistrarea nu vede timpul
+ciclului, valorile voastre (ținte, stări) și evenimentele. Pentru ele adăugați cele 4 rânduri din secțiunea 4.
+
+---
+
+## 4. Black Box în propriul TeleOp sau Autonomous
 
 Ajung câteva rânduri în OpMode:
 
 ```java
 BlackBox bb = BlackBox.create("teleop");                 // numele sesiunii
-FtcBlackBox.attachAll(bb, hardwareMap);                   // TOT din configurație + toate regulile
+FtcBlackBox.attachAll(bb, hardwareMap);                   // TOT din configurație + reguli + pagina web
 FtcBlackBox.attachGamepads(bb, gamepad1, gamepad2);       // stick-urile piloților pe aceeași axă de timp
 bb.battery("A");                                          // ce baterie e pusă (opțional)
-AsaWeb.start(); AsaWeb.publish(bb);                       // pagina web (opțional)
 
 waitForStart();
 bb.start();
@@ -186,9 +254,23 @@ bb.update();
 ### Unde vedeți rezultatele
 
 - **Driver Hub**: ultimele avertismente direct în telemetrie.
-- **Pagina web**: pe un laptop sau telefon conectat la Wi-Fi-ul robotului, deschideți `http://192.168.43.1:8099/`
-  (Driver Hub arată singur adresa). Alegeți o înregistrare: pagina spune în cuvinte simple ce e în regulă,
-  ce trebuie verificat și cum. Graficele sunt dedesubt. Limba: EN, RO, RU.
+- **Pagina web** pornește singură în orice program cu Black Box. Conectați un telefon sau un laptop la Wi-Fi-ul
+  robotului și deschideți `http://192.168.43.1:8099/` (Driver Hub scrie adresa pe rândul „REZULTATE”). Deschideți-o o
+  dată și lăsați-o deschisă: pagina urmărește singură robotul:
+  - **programul a pornit** → fila **Live**: grafice live din ultimele 60 s (baterie, curenții motoarelor, timpul
+    ciclului; bifați orice semnal) și avertismentele imediat ce apar;
+  - **programul s-a oprit** → se deschide înregistrarea lui: în cuvinte simple, ce e în regulă, ce trebuie verificat și
+    cum. Graficele sunt dedesubt;
+  - **deschisă mai târziu** → arată ultima înregistrare.
+
+  Fiecare problemă are eticheta **„în cod”** sau **„în robot”**. Înregistrarea păstrează ce a făcut pilotul
+  (stick-urile), ce a comandat programul (puterea motoarelor) și ce a făcut robotul (encodere, curent), iar pagina le
+  compară. Stick apăsat fără putere pe șasiu, puterea care sare între + și − de multe ori pe secundă, un encoder care
+  numără invers față de putere sunt **în cod**. Fără curent, motor blocat, frecare, baterie slabă sunt **în robot**.
+
+  Graficele sunt exacte: fiecare pixel desenează minimul și maximul tuturor punctelor care cad în el, așa că și un vârf
+  de un singur ciclu (stall, cădere de baterie) se vede pe o înregistrare de 4 minute. Treceți cu mouse-ul peste grafic
+  ca să vedeți timpul și valoarea. Limba paginii e cea aleasă pe Driver Hub (X) și se schimbă cu RU / RO / EN.
 - **FTC Dashboard**: dacă îl aveți instalat, toate semnalele apar singure acolo ca grafice.
 - **AdvantageScope**: de pe pagina web, fiecare sesiune se descarcă ca `.wpilog` și se deschide în
   [AdvantageScope](https://github.com/Mechanical-Advantage/AdvantageScope).
@@ -215,7 +297,7 @@ durează microsecunde.
 
 ---
 
-## 4. SysId: constante pentru lift, braț, flywheel, șasiu
+## 5. SysId: constante pentru lift, braț, flywheel, șasiu
 
 ### Pasul 1. Descrieți mecanismul
 
@@ -308,7 +390,7 @@ Precizia e de aproximativ ±15%. E o verificare încrucișată, cântarul e mai 
 
 ---
 
-## 5. Cum funcționează pe dinăuntru
+## 6. Cum funcționează pe dinăuntru
 
 **Black Box.** La fiecare ciclu, `update()` citește toate semnalele. Cele rapide (poziții, puteri) la fiecare
 ciclu, cele lente (curent, IMU, temperatură) după un program: întâi cel care a așteptat cel mai mult, cel mult 2 pe
@@ -329,7 +411,7 @@ incertitudine, iar GOOD se dă doar dacă ea e mică. Datele proaste dau un mesa
 
 ---
 
-## 6. Cât vă puteți baza pe el
+## 7. Cât vă puteți baza pe el
 
 Testele rulează automat pe GitHub Actions la fiecare modificare a codului (Monte Carlo pe un eșantion mai mic;
 cifrele de mai jos sunt rulările complete):
@@ -351,10 +433,20 @@ sau rău.
 
 ---
 
-## 7. Întrebări frecvente
+## 8. Întrebări frecvente
 
-**Unde găsesc programele pe Driver Hub?** În lista TeleOp, grupul ASA. Dacă nu sunt acolo, codul nu s-a încărcat:
-compilați proiectul din nou.
+**Unde găsesc programul pe Driver Hub?** În lista TeleOp, grupul ASA, „ASA Black Box”. Dacă nu e acolo, codul nu s-a
+încărcat: compilați proiectul din nou (în OnBot uneori trebuie apăsat Build de 2–3 ori).
+
+**Au rămas vechile „ASA Health Check” și „ASA Center of Gravity”?** Atunci fișierele noi `AsaHealthCheck.java` și
+`AsaCenterOfGravity.java` nu s-au încărcat peste cele vechi. Încărcați-le din nou și apăsați Build.
+
+**Meciul nu s-a înregistrat?** Înregistrările apar doar dacă programul a ajuns la START. Dacă după instalare robotul
+nu a fost repornit, rulați o dată „ASA Black Box” sau apăsați Restart Robot. Verificați că în „ASA Black Box” la INIT
+scrie „Înregistrează automat fiecare meci: PORNIT”.
+
+**Înregistrarea în fundal încurcă robotul?** N-ar trebui (vezi secțiunea 3), dar verificați pe robotul vostru: dacă
+ciclul devine mai lent cu ea, opriți-o cu Y în „ASA Black Box” și scrieți-ne: e important pentru toate echipele.
 
 **Black Box încetinește robotul?** Nu. Citirile grele sunt împărțite în timp, iar scrierea se face într-un fir
 separat.
@@ -366,7 +458,12 @@ arătat măcar o dată mișcare.
 `backRight` etc. Dacă numele sunt altele, adăugați-le voi: `bb.imbalanceRule("a", "b", "c", "d")`.
 
 **Cum deschid pagina cu rezultate?** Conectați un laptop sau un telefon la Wi-Fi-ul robotului și deschideți
-`http://192.168.43.1:8099/`. Adresa apare și în telemetrie.
+`http://192.168.43.1:8099/`. Adresa apare și în telemetrie. Pagina nu se deschide singură în browser: Android nu lasă
+robotul să pornească browserul pe alt dispozitiv. Dar ajunge s-o deschideți o dată: apoi trece singură între graficele
+live și înregistrări. E comod s-o puneți la marcaje sau pe ecranul principal al telefonului.
+
+**Pagina scrie „offline”?** Telefonul s-a deconectat de la Wi-Fi-ul robotului (des trece singur pe o rețea cu
+internet). Reconectați-l și pagina continuă singură.
 
 Făcut de echipa **ASA, FTC 28284**. Licență MIT, gratuit pentru toate echipele.
 
