@@ -103,18 +103,30 @@ public final class AsaWeb {
         } catch (Exception ignored) {}
     }
 
+    /**
+     * At most this many requests at once. This runs on the robot during matches: anyone on the robot Wi-Fi opening
+     * many slow connections must get "busy", never fill the Control Hub's memory with threads.
+     */
+    static final int MAX_REQUESTS = 8;
+    private final java.util.concurrent.Semaphore slots = new java.util.concurrent.Semaphore(MAX_REQUESTS);
+
     private void serve(ServerSocket server) {
         while (!server.isClosed()) {
             try {
                 final Socket s = server.accept();
-                s.setSoTimeout(30000);   // a long session's WPILOG download takes a while
-                // one thread per request: a phone downloading a long WPILOG must not freeze the Live tab for the others
+                s.setSoTimeout(5000);   // the request line and headers must arrive within 5 s
+                if (!slots.tryAcquire()) {
+                    try { send(s.getOutputStream(), 503, "text/plain", bytes("busy")); } catch (Throwable ignored) {}
+                    try { s.close(); } catch (Exception ignored) {}
+                    continue;
+                }
+                // one thread per request (bounded): a phone downloading a long WPILOG must not freeze the Live tab for the others
                 Thread t = new Thread(new Runnable() { public void run() {
                     try { handle(s); } catch (Throwable ignored) {}   // one bad request must not stop the server
-                    finally { try { s.close(); } catch (Exception ignored) {} }
+                    finally { try { s.close(); } catch (Exception ignored) {} slots.release(); }
                 }}, "asa-web-req");
                 t.setDaemon(true);
-                t.start();
+                try { t.start(); } catch (Throwable e) { slots.release(); try { s.close(); } catch (Exception ignored) {} }
             } catch (Throwable ignored) {}
         }
     }
@@ -122,8 +134,13 @@ public final class AsaWeb {
     private void handle(Socket s) throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
         String line = in.readLine();
-        if (line == null) return;
-        while (true) { String h = in.readLine(); if (h == null || h.isEmpty()) break; }
+        if (line == null || line.length() > 2048) return;
+        for (int n = 0; ; n++) {   // headers are not used: skip them, but not forever
+            String h = in.readLine();
+            if (h == null || h.isEmpty()) break;
+            if (n > 64 || h.length() > 4096) return;
+        }
+        s.setSoTimeout(30000);   // sending: a long session's WPILOG download takes a while
         String[] parts = line.split(" ");
         OutputStream out = s.getOutputStream();
         if (parts.length < 2 || !parts[0].equals("GET")) { send(out, 405, "text/plain", bytes("GET only")); return; }
@@ -177,7 +194,7 @@ public final class AsaWeb {
     }
 
     private static void send(OutputStream out, int code, String type, byte[] body) throws Exception {
-        String reason = code == 200 ? "OK" : code == 404 ? "Not Found" : code == 405 ? "Method Not Allowed" : "Bad Request";
+        String reason = code == 200 ? "OK" : code == 404 ? "Not Found" : code == 405 ? "Method Not Allowed" : code == 503 ? "Service Unavailable" : "Bad Request";
         out.write(("HTTP/1.1 " + code + " " + reason + "\r\nContent-Type: " + type + "\r\nContent-Length: " + body.length
                 + "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n").getBytes("UTF-8"));
         out.write(body);

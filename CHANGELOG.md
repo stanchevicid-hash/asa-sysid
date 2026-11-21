@@ -24,7 +24,9 @@
   **in the robot**. The verdict counts both.
 - A motor holding a position at low power (a lift at 0.1) is no longer shown as "not used".
 - The results page serves each request on its own thread: a phone downloading a long WPILOG no longer freezes the
-  Live tab for everyone (measured: 5 s timeouts before, 1 to 14 ms after). Slower polling when the page is hidden.
+  Live tab for everyone (measured: 5 s timeouts before, 1 to 14 ms after). At most 8 requests at once and 5 s to send
+  a request, so nobody on the robot Wi-Fi can exhaust the Control Hub with open connections (tested: 50 idle
+  connections get "busy" at once, the page answers again 5 s later). Slower polling when the page is hidden.
 - Health check: Y after the report runs the automatic test again. Driver Hub hints in the chosen language from the
   first OpMode after power-on. Autonomous detected from the SDK's own list, so Blocks programs count too.
 - **The Driver Hub in ASA's colors**: titles in magenta, every hub, motor, battery and tipping limit with a green,
