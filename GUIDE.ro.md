@@ -27,7 +27,7 @@ Aveți nevoie de ambele biblioteci? Dezarhivați ambele arhive. Fișierele comun
 
 ### OnBot Java (din browser, fără Android Studio)
 
-**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 16 fișiere în
+**Cel mai simplu:** descărcați din release `asa-blackbox-onbot.zip`, dezarhivați și încărcați toate cele 17 fișiere în
 folderul obișnuit `teamcode` din OnBot Java, fără subfoldere. Apăsați Build. Dacă prima compilare nu reușește
 („bad source file”), apăsați Build încă o dată.
 
@@ -79,7 +79,7 @@ vechi.
 
 | Buton | Ce face |
 |---|---|
-| **LB / RB** | alegeți modul: **Verificare robot**, **Centrul de greutate**, **Test înregistrare** (secțiunea 1) sau **Șterge datele ASA** (secțiunea 8) |
+| **LB / RB** | alegeți modul: **Verificare robot**, **Centrul de greutate**, **Test înregistrare** (secțiunea 1) sau **Șterge ASA** (secțiunea 8) |
 | **X** | limba: EN → RU → RO. Pagina web va fi în aceeași limbă |
 | **Y** | înregistrarea automată a meciurilor: PORNIT / OPRIT (secțiunea 3) |
 | dpad | setările modului ales (vezi mai jos) |
@@ -435,18 +435,26 @@ sau rău.
 
 ## 8. Cum scoateți complet ASA
 
-ASA nu schimbă nimic în codul echipei, în configurația robotului sau în SDK. Tot ce creează stă într-un singur
-folder pe Control Hub: `FIRST/asa`. De aceea scoaterea are trei pași.
+ASA nu schimbă nimic în codul echipei, în configurația robotului sau în SDK. Tot ce creează sunt fișierele ei din
+OnBot Java și un singur folder pe Control Hub, `FIRST/asa`.
 
-1. **Datele (opțional).** ASA Black Box → modul „Șterge datele ASA” → START → țineți **A + B** 3 secunde.
-   Se șterge doar folderul `FIRST/asa`: înregistrări, rezultate, setări.
-2. **Fișierele bibliotecii.** În OnBot Java ștergeți cele 16 fișiere: `AsaAutoRecorder` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaHealthCheck` `AsaWeb` `AsaWebPage` `BatteryHealth` `BlackBox` `CenterOfGravity` `Dashboard` `Ftc` `FtcBlackBox` `Live` `Recorder` `Rule` `WpiLog` (`.java`).
-   În Android Studio — folderul `TeamCode/src/main/java/org/asa`. Apăsați **Build**.
-3. **Restart Robot.** Până la repornire, biblioteca deja încărcată rămâne în memorie. După repornire nu mai e:
-   nici înregistrare, nici pagină, nici programul ASA în listă.
+**Cu un singur buton:** ASA Black Box → modul **„Șterge ASA”** → START → țineți **A + B** 3 secunde → STOP → în OnBot
+Java apăsați **Build**. Programul ASA Black Box dispare din listă.
 
-Dacă ați adăugat Black Box în propriul cod (cele 4 rânduri din secțiunea 4), scoateți și rândurile acelea, altfel
-proiectul nu se compilează.
+Ce șterge butonul, și doar asta:
+- înregistrările, rezultatele și setările (folderul `FIRST/asa`);
+- fișierele bibliotecii din OnBot Java. Doar cele care încep cu rândul `// ASA Black Box library file`: chiar dacă
+  aveți propriul `Recorder.java` sau `Rule.java`, nu e atins;
+- înregistrarea și pagina de rezultate se opresc imediat, încă înainte de Build.
+
+Ce nu face butonul:
+- dacă codul vostru folosește Black Box (cele 4 rânduri din secțiunea 4), **nu șterge nimic** și arată din ce fișiere
+  să-l scoateți: altfel proiectul vostru nu s-ar mai compila;
+- dacă e instalat ASA SysId, fișierele comune rămân și SysId merge în continuare;
+- fișierele dintr-o versiune veche, fără marcaj, nu le șterge, ci le numește ca să le verificați voi.
+
+**Manual** (de exemplu, dacă ați instalat cu Android Studio): ștergeți cele 17 fișiere `AsaAutoRecorder` `AsaBlackBoxOpMode` `AsaCenterOfGravity` `AsaHealthCheck` `AsaRemover` `AsaWeb` `AsaWebPage` `BatteryHealth` `BlackBox` `CenterOfGravity` `Dashboard` `Ftc` `FtcBlackBox` `Live` `Recorder` `Rule` `WpiLog` (`.java`) sau
+folderul `TeamCode/src/main/java/org/asa`, apăsați Build / instalați din nou aplicația, apoi **Restart Robot**.
 
 Vreți doar s-o opriți, nu s-o scoateți? ASA Black Box → **Y** → „Înregistrarea automată e oprită”. Atunci la
 pornirea robotului ASA nu pornește nimic: nici înregistrare, nici pagină.

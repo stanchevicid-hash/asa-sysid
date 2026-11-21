@@ -69,6 +69,14 @@ public final class AsaWeb {
         return w;
     }
 
+    /** Stops the page server (Remove ASA). */
+    public static synchronized void stop() {
+        AsaWeb w = instance;
+        instance = null;
+        live = null;
+        if (w != null && w.socket != null) try { w.socket.close(); } catch (Exception ignored) {}
+    }
+
     /** Show this on the Live tab, e.g. a BlackBox (null to clear). */
     public static void publish(Live source) { live = source; }
 

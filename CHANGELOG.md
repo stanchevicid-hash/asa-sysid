@@ -13,8 +13,10 @@
 - Without the team's code, "all encoders of a hub went to 0" may be the program resetting them: reported as a
   WARNING with both explanations instead of a CRITICAL hub reset.
 - Two recordings of the same OpMode in the same second no longer share a file.
-- **Easy to remove.** "Delete ASA data" (fourth mode, hold A + B for 3 s) deletes only the folder FIRST/asa; the
-  guides list the three steps to remove ASA completely. With the automatic recording switched off (Y), nothing of
+- **Remove ASA with one button** (fourth mode, hold A + B for 3 s): stops the recording and the page at once, deletes
+  the folder FIRST/asa and the library's own files in OnBot Java. Only files whose first line is the ASA mark are
+  deleted (never a team's own Recorder.java), ASA SysId's shared files stay, and if the team's code still uses Black
+  Box nothing is deleted and the files to change are listed. Tested on the real 17-file bundle (test/RemoverTest). With the automatic recording switched off (Y), nothing of
   ASA starts at power-on, not even the page. The page server runs below the OpMode's priority.
 - **Recording test** (third mode of ASA Black Box): loop time with and without the automatic recording, samples
   recorded, encoders read, as green / yellow / red. The INIT screen shows whether every match is recorded, the
