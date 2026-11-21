@@ -1,6 +1,9 @@
 # Changelog
 
-## 1.5.0 beta (2026-11-21): not yet run on a real robot
+## 1.5.0 (2026-11-21)
+
+Not yet run on a real robot: the results of our robot test come in 1.5.1. Anything odd? Switch the automatic
+recording off with Y in "ASA Black Box" and tell us.
 
 - **Code review (12 parallel reviewers) and the fixes it led to:**
   - automatic recording: motors on an Expansion Hub were matched to the Control Hub (same USB serial): now by module;
